@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>小百的 AI 知识库 · 每日 AI 知识点</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #F8F7F4;
+  --bg-card: #FFFFFF;
+  --ink: #1A1F2E;
+  --ink2: #4A5468;
+  --ink3: #8A93A6;
+  --line: #E8E5DE;
+  --blue: #3A6FA8;
+  --blue-deep: #2A5278;
+  --blue-soft: #E8F0F9;
+  --gold: #B89B6A;
+  --gold-soft: #F7F1E5;
+  --teal: #3D8B8B;
+  --teal-soft: #E5F0F0;
+  --pink: #C97A8E;
+  --pink-soft: #FBE4EA;
+  --green: #5A8C5A;
+  --green-soft: #E8F1E5;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+/* ====== 顶部 Hero ====== */
+.hero {
+  background: linear-gradient(135deg, #E8F0F9 0%, #F7F1E5 50%, #FBE4EA 100%);
+  padding: 60px 0 50px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -150px;
+  right: -150px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(184,155,106,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  bottom: -100px;
+  left: -100px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(201,122,142,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 1;
+}
+.hero-tag {
+  display: inline-block;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--blue-deep);
+  background: rgba(255,255,255,0.7);
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 18px;
+  font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.6);
+}
+.hero h1 {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+}
+.hero h1 span {
+  background: linear-gradient(90deg, var(--blue-deep) 0%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: 17px;
+  color: var(--ink2);
+  max-width: 720px;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+.hero-stats {
+  display: flex;
+  gap: 36px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.hero-stat-num {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--blue-deep);
+  line-height: 1;
+}
+.hero-stat-num.gold { color: var(--gold); }
+.hero-stat-num.teal { color: var(--teal); }
+.hero-stat-num.pink { color: var(--pink); }
+.hero-stat-label {
+  font-size: 13px;
+  color: var(--ink2);
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+/* ====== 章节标题 ====== */
+.section {
+  padding: 60px 0;
+}
+.section-title-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+.section-num {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--blue-deep);
+  letter-spacing: 3px;
+  background: var(--blue-soft);
+  padding: 5px 12px;
+  border-radius: 14px;
+}
+.section-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.section-subtitle {
+  font-size: 14px;
+  color: var(--ink2);
+  margin-bottom: 24px;
+  max-width: 720px;
+}
+
+/* ====== 课程列表（紧凑单列） ====== */
+.course-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.course-item {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 22px;
+  text-decoration: none;
+  color: var(--ink);
+  transition: all 0.2s;
+  box-shadow: 0 1px 4px rgba(26,31,46,0.04);
+}
+.course-item:hover {
+  border-color: var(--blue);
+  box-shadow: 0 4px 16px rgba(58,111,168,0.12);
+  transform: translateX(4px);
+}
+.course-thumb-inline {
+  flex-shrink: 0;
+  width: 56px; height: 56px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg);
+}
+.course-thumb-inline img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+.course-day {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 800;
+}
+.course-day.day1 { background: linear-gradient(135deg, #3A6FA8 0%, #5A8FC8 100%); }
+.course-day.day2 { background: linear-gradient(135deg, #3D8B8B 0%, #5DABAB 100%); }
+.course-day.future { background: linear-gradient(135deg, #B89B6A 0%, #D4B58A 100%); }
+.course-day-label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  opacity: 0.85;
+}
+.course-day-num {
+  font-size: 24px;
+  line-height: 1;
+  margin-top: 2px;
+}
+.course-body {
+  flex: 1;
+  min-width: 0;
+}
+.course-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.course-title-row h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.2px;
+}
+.course-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: var(--blue-soft);
+  color: var(--blue-deep);
+}
+.course-tag.new { background: var(--pink-soft); color: var(--pink); }
+.course-tag.soon { background: var(--gold-soft); color: var(--gold); }
+.course-desc {
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.course-arrow {
+  flex-shrink: 0;
+  font-size: 20px;
+  color: var(--ink3);
+  font-weight: 300;
+}
+.course-item:hover .course-arrow {
+  color: var(--blue);
+  transform: translateX(4px);
+}
+
+/* ====== 占位行（敬请期待） ====== */
+.course-item.placeholder {
+  background: var(--bg);
+  opacity: 0.75;
+}
+.course-item.placeholder .course-title-row h3 { color: var(--ink2); }
+
+/* ====== 关于我 ====== */
+.about-section {
+  background: linear-gradient(160deg, #2A2D3A 0%, #3A3F50 100%);
+  color: #fff;
+  padding: 50px 0;
+  position: relative;
+  overflow: hidden;
+}
+.about-section::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(184,155,106,0.2) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 36px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+/* ====== 移动端响应式 ====== */
+/* 平板 */
+@media (max-width: 768px) {
+  .container { padding: 0 20px; }
+  .hero { padding: 50px 0 40px; }
+  .hero h1 { font-size: 38px; }
+  .hero-sub { font-size: 16px; }
+  .hero-stats { gap: 24px; }
+  .hero-stat-num { font-size: 28px; }
+  .section { padding: 44px 0; }
+  .section-title { font-size: 22px; }
+  .course-item { padding: 14px 16px; gap: 14px; }
+  .course-thumb-inline { width: 48px; height: 48px; border-radius: 10px; }
+  .course-title-row { flex-wrap: wrap; gap: 6px; }
+  .course-title-row h3 { font-size: 16px; }
+  .course-tag { font-size: 11px; padding: 2px 8px; }
+  .course-desc { font-size: 13px; }
+  .about-grid { grid-template-columns: 1fr; text-align: center; }
+  .about-avatar { width: 100px; height: 100px; font-size: 44px; margin: 0 auto; }
+  .about-info h2 { font-size: 24px; }
+  .about-info .role { font-size: 14px; }
+  .about-info p { font-size: 13px; }
+  .about-tags { justify-content: center; }
+  footer { padding: 20px 16px; font-size: 12px; }
+  footer a { margin: 0 4px; }
+}
+
+/* 手机 */
+@media (max-width: 480px) {
+  .container { padding: 0 16px; }
+  .hero { padding: 40px 0 32px; }
+  .hero h1 { font-size: 30px; letter-spacing: -0.5px; }
+  .hero-sub { font-size: 15px; }
+  .hero-stats { gap: 16px; }
+  .hero-stat-num { font-size: 24px; }
+  .hero-stat-label { font-size: 12px; }
+  .section { padding: 36px 0; }
+  .section-num { font-size: 11px; padding: 4px 10px; letter-spacing: 2px; }
+  .section-title { font-size: 20px; }
+  .section-subtitle { font-size: 13px; }
+  .course-list { gap: 10px; }
+  .course-item { padding: 12px 14px; gap: 12px; }
+  .course-thumb-inline { width: 44px; height: 44px; }
+  .course-title-row h3 { font-size: 15px; }
+  .course-arrow { font-size: 18px; }
+  .about-section { padding: 40px 0; }
+  .about-avatar { width: 84px; height: 84px; font-size: 36px; }
+  .about-info h2 { font-size: 22px; }
+  .about-info .role { font-size: 13px; margin-bottom: 10px; }
+  .about-info p { font-size: 13px; line-height: 1.65; }
+  .about-tag { font-size: 12px; padding: 5px 12px; }
+  footer p { font-size: 12px; }
+  footer a { display: inline-block; margin: 4px 6px; }
+}
+.about-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--blue) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  font-weight: 900;
+  color: #fff;
+  box-shadow: 0 8px 28px rgba(184,155,106,0.3);
+  margin: 0 auto;
+}
+.about-info h2 {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: #fff;
+}
+.about-info .role {
+  color: var(--gold);
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  letter-spacing: 2px;
+}
+.about-info p {
+  color: #C8CCD8;
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+.about-tags {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.about-tag {
+  background: rgba(184,155,106,0.15);
+  color: var(--gold);
+  border: 1px solid rgba(184,155,106,0.3);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 14px;
+}
+
+/* ====== Footer ====== */
+footer {
+  background: #1A1F2E;
+  color: #8A93A6;
+  text-align: center;
+  padding: 24px;
+  font-size: 13px;
+}
+footer a {
+  color: var(--gold);
+  text-decoration: none;
+  margin: 0 8px;
+}
+</style>
+</head>
+<body>
+
+<!-- ====== Hero ====== -->
+<header class="hero">
+  <div class="container">
+    <span class="hero-tag">📚 每日 AI 知识点 · 持续更新中</span>
+    <h1>小百的<br><span>AI 产品经理知识库</span></h1>
+    <p class="hero-sub">
+      每天讲一个 AI 知识点——从寓言故事到技术架构，从案例分析到最佳实践。<br>
+      让 AI 不再神秘，让产品经理也能听懂。
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">2</div>
+        <div class="hero-stat-label">已发布课程</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num gold">10+</div>
+        <div class="hero-stat-label">核心概念</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num teal">15+</div>
+        <div class="hero-stat-label">真实案例</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num pink">∞</div>
+        <div class="hero-stat-label">持续更新</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ====== 已发布课程 ====== -->
+<section class="section">
+  <div class="container">
+    <div class="section-title-row">
+      <span class="section-num">COURSE 01</span>
+      <h2 class="section-title">📚 已发布课程</h2>
+    </div>
+    <p class="section-subtitle">点击进入每日专题，每课都有完整的讲解、案例和速查表。</p>
+
+    <div class="course-list">
+
+      <!-- AI Agent 企业工程化 -->
+      <a href="./index.html" class="course-item" target="_blank">
+        <div class="course-thumb-inline">
+          <img src="./agent_icon.png" alt="AI Agent 企业工程化">
+        </div>
+        <div class="course-body">
+          <div class="course-title-row">
+            <h3>AI Agent 企业工程化</h3>
+            <span class="course-tag">10 大核心问题</span>
+            <span class="course-tag">5 个真实案例</span>
+          </div>
+          <p class="course-desc">从「会说话的 Demo」到「可控、可信、可计费的生产系统」</p>
+        </div>
+        <span class="course-arrow">→</span>
+      </a>
+
+      <!-- RAG 主题 -->
+      <a href="./rag_story.html" class="course-item" target="_blank">
+        <div class="course-day day2">
+          <span class="course-day-label">RAG</span>
+          <span class="course-day-num">📚</span>
+        </div>
+        <div class="course-body">
+          <div class="course-title-row">
+            <h3>RAG 检索增强生成</h3>
+            <span class="course-tag new">寓言版</span>
+            <span class="course-tag">12 页绘本</span>
+          </div>
+          <p class="course-desc">博学老人 + 索引女巫，1 个故事讲清 RAG 本质</p>
+        </div>
+        <span class="course-arrow">→</span>
+      </a>
+
+      <a href="./rag_full.html" class="course-item" target="_blank">
+        <div class="course-day day2" style="background: linear-gradient(135deg, #C97A8E 0%, #DBA0AE 100%);">
+          <span class="course-day-label">RAG</span>
+          <span class="course-day-num" style="font-size: 22px;">深度</span>
+        </div>
+        <div class="course-body">
+          <div class="course-title-row">
+            <h3>RAG 全维度解析</h3>
+            <span class="course-tag new">深度专题</span>
+            <span class="course-tag">5 案例</span>
+            <span class="course-tag">6 场景</span>
+          </div>
+          <p class="course-desc">从入门到企业落地 · 6 大应用场景 + 5 个真实案例 + 数据指标</p>
+        </div>
+        <span class="course-arrow">→</span>
+      </a>
+
+      <a href="./rag_9concepts.html" class="course-item" target="_blank">
+        <div class="course-day" style="background: linear-gradient(135deg, #3D8B8B 0%, #5DA5A5 100%);">
+          <span class="course-day-label">RAG</span>
+          <span class="course-day-num" style="font-size: 22px;">概念</span>
+        </div>
+        <div class="course-body">
+          <div class="course-title-row">
+            <h3>RAG 9 大核心概念通俗详解</h3>
+            <span class="course-tag new">🆕 通俗版</span>
+            <span class="course-tag">9 概念</span>
+            <span class="course-tag">代码</span>
+            <span class="course-tag">案例</span>
+          </div>
+          <p class="course-desc">Embedding / 向量库 / 切片 / Rerank / 改写 / 过滤 / 混合检索 / Prompt 组装</p>
+        </div>
+        <span class="course-arrow">→</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ====== 敬请期待 ====== -->
+<section class="section" style="background: #F0EAD9;">
+  <div class="container">
+    <div class="section-title-row">
+      <span class="section-num">COURSE 02</span>
+      <h2 class="section-title">🚧 敬请期待</h2>
+    </div>
+    <p class="section-subtitle">候选主题清单，呼声最高的优先做。</p>
+
+    <div class="course-list">
+
+      <div class="course-item placeholder">
+        <div class="course-day future">
+          <span class="course-day-label">DAY</span>
+          <span class="course-day-num">3</span>
+        </div>
+        <div class="course-body">
+          <div class="course-title-row">
+            <h3>候选主题</h3>
+            <span class="course-tag soon">投票中</span>
+          </div>
+          <p class="course-desc">MCP · Fine-tuning · Prompt 进阶 · 多模态 · Agent 评估</p>
+        </div>
+        <span class="course-arrow">💭</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ====== About ====== -->
+<section class="about-section">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-avatar">小</div>
+      <div class="about-info">
+        <h2>关于我</h2>
+        <div class="role">AI 产品经理 · 持续学习者</div>
+        <p>
+          一个想从传统 PM 转型 AI PM 的产品经理。<br>
+          10 年+ IT/数字化项目管理经验（医疗器械+供应链），<br>
+          现在专注于 AI Agent、RAG、多模态等方向的深度学习。<br>
+          目标：每天讲一个 AI 知识点，用 1 年时间系统化转型。
+        </p>
+        <div class="about-tags">
+          <span class="about-tag">🤖 AI Agent</span>
+          <span class="about-tag">📚 RAG</span>
+          <span class="about-tag">🏥 医疗 AI</span>
+          <span class="about-tag">📖 知识分享</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 小百的 AI 知识库 · 持续更新中</p>
+  <p style="margin-top: 8px;">
+    <a href="#">📚 课程首页</a> ·
+    <a href="#">📱 小红书</a> ·
+    <a href="#">💬 微信</a> ·
+    <a href="#">📧 邮件</a>
+  </p>
+</footer>
+
+</body>
+</html>
