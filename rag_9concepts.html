@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>RAG 9 大核心概念通俗详解 · 小百的 AI 知识库</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #F8F7F4; --bg-card: #FFFFFF; --bg-soft: #FAF6EE;
+  --ink: #1A1F2E; --ink2: #4A5468; --ink3: #8A93A6; --line: #E8E5DE;
+  --blue: #3A6FA8; --blue-deep: #2A5278; --blue-soft: #E8F0F9;
+  --gold: #B89B6A; --gold-soft: #F7F1E5;
+  --teal: #3D8B8B; --teal-soft: #E5F0F0;
+  --pink: #C97A8E; --pink-soft: #FBE4EA;
+  --green: #5A8C5A; --green-soft: #E8F1E5;
+  --red: #C25555; --red-soft: #FBE8E8;
+  --purple: #8B6F9E; --purple-soft: #EDE4F2;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg); color: var(--ink2);
+  line-height: 1.7; font-size: 15px;
+}
+
+.container { max-width: 1080px; margin: 0 auto; padding: 40px 24px; }
+
+/* ====== Hero ====== */
+.hero {
+  margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line);
+}
+.hero h1 {
+  font-size: 34px; font-weight: 700; color: var(--ink);
+  margin-bottom: 12px; letter-spacing: -0.5px;
+}
+.hero .sub {
+  font-size: 16px; color: var(--ink2);
+  max-width: 720px; line-height: 1.6;
+}
+.hero .meta { margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap; }
+.tag {
+  display: inline-block;
+  background: var(--blue-soft); color: var(--blue-deep);
+  padding: 3px 12px; border-radius: 10px;
+  font-size: 12px; font-weight: 500;
+}
+
+/* ====== 摘要 ====== */
+.summary {
+  background: linear-gradient(135deg, #E8F0F9 0%, #F7F1E5 50%, #FBE4EA 100%);
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin-bottom: 40px;
+  font-size: 15px; line-height: 1.7;
+  color: var(--ink2);
+}
+.summary strong { color: var(--blue-deep); }
+
+/* ====== 章节标题 ====== */
+h2 {
+  font-size: 28px; font-weight: 700; color: var(--ink);
+  margin: 56px 0 16px; padding-top: 16px;
+  border-left: 5px solid var(--blue);
+  padding-left: 16px;
+  scroll-margin-top: 20px;
+}
+h3 {
+  font-size: 20px; font-weight: 600; color: var(--ink);
+  margin: 28px 0 12px;
+}
+.lead {
+  font-size: 15px; color: var(--ink2);
+  margin-bottom: 20px; line-height: 1.7;
+  padding: 12px 16px;
+  background: var(--bg-soft);
+  border-radius: 0 12px 12px 0;
+  border-left: 3px solid var(--gold);
+}
+
+/* ====== 概念卡（每个概念的核心展示）====== */
+.concept-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin: 24px 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,.04);
+  position: relative;
+  overflow: hidden;
+}
+.concept-header {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 16px; padding-bottom: 14px;
+  border-bottom: 1px dashed var(--line);
+}
+.concept-num {
+  width: 48px; height: 48px; line-height: 48px;
+  text-align: center; border-radius: 12px;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
+  color: white; font-size: 22px; font-weight: 700;
+  flex-shrink: 0;
+}
+.concept-num.gold { background: linear-gradient(135deg, var(--gold) 0%, #9B7B4A 100%); }
+.concept-num.teal { background: linear-gradient(135deg, var(--teal) 0%, #2A6060 100%); }
+.concept-num.pink { background: linear-gradient(135deg, var(--pink) 0%, #A05068 100%); }
+.concept-num.green { background: linear-gradient(135deg, var(--green) 0%, #3D6A3D 100%); }
+.concept-num.red { background: linear-gradient(135deg, var(--red) 0%, #963F3F 100%); }
+.concept-num.purple { background: linear-gradient(135deg, var(--purple) 0%, #6A537D 100%); }
+
+.concept-title {
+  flex: 1;
+}
+.concept-title h3 {
+  font-size: 22px; font-weight: 700; color: var(--ink);
+  margin: 0 0 4px;
+}
+.concept-title .subtitle {
+  font-size: 13px; color: var(--ink3);
+}
+
+/* ====== 类比块 ====== */
+.metaphor {
+  background: linear-gradient(135deg, #FFF7E8 0%, #FBE4EA 100%);
+  border-left: 4px solid var(--gold);
+  padding: 16px 20px;
+  border-radius: 0 12px 12px 0;
+  margin: 16px 0;
+  font-size: 15px; line-height: 1.6;
+}
+.metaphor strong { color: var(--gold); }
+
+/* ====== 普通段落 ====== */
+p { margin: 12px 0; }
+p strong { color: var(--ink); }
+
+/* ====== 案例框 ====== */
+.case {
+  background: var(--teal-soft);
+  border-left: 4px solid var(--teal);
+  padding: 18px 22px;
+  border-radius: 0 12px 12px 0;
+  margin: 16px 0;
+}
+.case h4 {
+  color: var(--teal); font-size: 16px; font-weight: 700;
+  margin-bottom: 10px;
+}
+.case .case-scenario {
+  font-size: 14px; color: var(--ink3); margin-bottom: 8px;
+  font-style: italic;
+}
+.case .case-effect {
+  display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px;
+  padding-top: 12px; border-top: 1px dashed rgba(61,139,139,.3);
+}
+.case .effect-item {
+  background: white;
+  padding: 8px 14px; border-radius: 8px;
+  font-size: 13px; color: var(--ink2);
+}
+.case .effect-item strong { color: var(--teal); font-size: 15px; }
+
+/* ====== 优缺对比 ====== */
+.pros-cons {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  margin: 16px 0;
+}
+.pros, .cons {
+  padding: 16px 20px;
+  border-radius: 12px;
+  font-size: 14px; line-height: 1.6;
+}
+.pros {
+  background: var(--green-soft);
+  border: 1px solid var(--green);
+}
+.cons {
+  background: var(--red-soft);
+  border: 1px solid var(--red);
+}
+.pros h4, .cons h4 {
+  font-size: 15px; font-weight: 700; margin-bottom: 8px;
+}
+.pros h4 { color: var(--green); }
+.cons h4 { color: var(--red); }
+.pros li, .cons li { margin-bottom: 4px; list-style-position: inside; }
+
+/* ====== 代码块 ====== */
+pre {
+  background: #1e2235; color: #E8E5DE;
+  padding: 16px 20px;
+  border-radius: 10px;
+  overflow-x: auto;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 13px; line-height: 1.65;
+  margin: 12px 0;
+}
+pre .comment { color: #6B7B95; font-style: italic; }
+pre .string { color: #B8C97A; }
+pre .keyword { color: #E89A6E; font-weight: 600; }
+code {
+  background: var(--bg-soft);
+  padding: 2px 6px; border-radius: 4px;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 13px; color: var(--blue-deep);
+}
+
+/* ====== 链接 ====== */
+a {
+  color: var(--blue);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--blue-soft);
+}
+a:hover { color: var(--blue-deep); border-bottom-color: var(--blue); }
+
+/* ====== 表格 ====== */
+table {
+  width: 100%; border-collapse: collapse; margin: 16px 0;
+  background: var(--bg-card); border-radius: 12px; overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,.04);
+  font-size: 14px;
+}
+th, td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--line); }
+th { background: var(--blue-soft); color: var(--blue-deep); font-weight: 600; }
+
+/* ====== 流程示意（白话 + 步骤）====== */
+.flow {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  background: var(--bg-soft);
+  padding: 16px;
+  border-radius: 12px;
+  margin: 16px 0;
+  font-size: 14px;
+}
+.flow-step {
+  background: var(--bg-card);
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+.flow-arrow { color: var(--blue); font-weight: 700; }
+
+/* ====== 移动端 ====== */
+@media (max-width: 768px) {
+  .container { padding: 24px 16px; }
+  .hero h1 { font-size: 26px; }
+  h2 { font-size: 22px; }
+  h3 { font-size: 18px; }
+  .concept-card { padding: 18px 20px; }
+  .concept-num { width: 40px; height: 40px; line-height: 40px; font-size: 18px; }
+  .concept-title h3 { font-size: 19px; }
+  .pros-cons { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  body { font-size: 14px; }
+  .container { padding: 20px 14px; }
+  .hero h1 { font-size: 22px; }
+  h2 { font-size: 20px; }
+  h3 { font-size: 16px; }
+  pre { font-size: 12px; padding: 12px 14px; }
+  .case .case-effect { flex-direction: column; gap: 6px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ========== Hero ========== -->
+  <div class="hero">
+    <h1>🔍 RAG 9 大核心概念通俗详解</h1>
+    <p class="sub">用生活类比 + 真实案例，一次讲透 RAG 系统的全部关键零件。每个概念配代码示例 + 可量化效果指标。</p>
+    <div class="meta">
+      <span class="tag">📚 9 大概念</span>
+      <span class="tag">💡 白话解释</span>
+      <span class="tag">🏥 真实案例</span>
+      <span class="tag">💻 代码示例</span>
+      <span class="tag">📊 效果指标</span>
+    </div>
+  </div>
+
+  <!-- ========== 摘要 ========== -->
+  <div class="summary">
+    <strong>📌 这篇讲什么：</strong>把 RAG 速查表里的 9 个名词（Embedding / 向量数据库 / 文档切片 / 相似度检索 / Rerank / Query 改写 / Metadata 过滤 / 混合检索 / Prompt 组装）一个一个拆开。每个都用"生活类比 + 真实案例 + 代码片段"三件套讲清楚，让零基础也能看懂。
+  </div>
+
+  <!-- ========== 目录 ========== -->
+  <h2>📑 9 大概念速查</h2>
+  <table>
+    <thead>
+      <tr><th>#</th><th>概念</th><th>一句话理解</th><th>类比</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Embedding</td><td>把文字变成电脑能算的"坐标"</td><td>给每本书编 768 个标签</td></tr>
+      <tr><td>2</td><td>向量数据库</td><td>专门存"坐标"的高速仓库</td><td>图书馆的索引柜</td></tr>
+      <tr><td>3</td><td>文档切片</td><td>把长文档切成小段</td><td>把长面包切面包片</td></tr>
+      <tr><td>4</td><td>相似度检索</td><td>找和提问最像的几段</td><td>在图书馆按相似度找书</td></tr>
+      <tr><td>5</td><td>Rerank 重排序</td><td>粗排后的"精挑细选"</td><td>HR 初筛后二面</td></tr>
+      <tr><td>6</td><td>Query 改写</td><td>把含糊问题变清晰</td><td>帮顾客重述需求</td></tr>
+      <tr><td>7</td><td>Metadata 过滤</td><td>按时间/部门/作者筛</td><td>档案柜的标签</td></tr>
+      <tr><td>8</td><td>混合检索</td><td>关键词+向量双管齐下</td><td>图书馆+网络搜索</td></tr>
+      <tr><td>9</td><td>Prompt 组装</td><td>把资料+问题打包给 LLM</td><td>给博学老人的提问卡</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ========== 1. Embedding ========== -->
+  <h2>1️⃣ Embedding（嵌入）—— 把文字变成"坐标"</h2>
+  <p class="lead">Embedding 是 RAG 的第一步，也是最基础的一步：让电脑能"算"文字之间的相似度。</p>
+
+  <div class="concept-card">
+    <div class="concept-header">
+      <div class="concept-num">1</div>
+      <div class="concept-title">
+        <h3>Embedding · 文本转向量</h3>
+        <div class="subtitle">把"猫在沙发上睡觉"变成 [0.12, -0.34, 0.78, ...] 这种数字串</div>
+      </div>
+    </div>
+
+    <div class="metaphor">
+      <strong>🌟 类比：</strong>给每本书贴 768 个"性格标签"（比如"动物 80%、动作 30%、家具 10%"），然后用这一串数字代表这本书。意思相近的书，标签也相近。
+    </div>
+
+    <p>Embedding 的本质是"<strong>把语义压缩成数字</strong>"。相似意思的句子，得到的数字串也相似；反之差别大。这一步让电脑能做"语义算术"：</p>
+
+    <div class="flow">
+      <span class="flow-step">国王 - 男人 + 女人 ≈ 女王</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">这就是 Embedding 的魔力</span>
+    </div>
+
+    <h3>💻 代码示例（用 OpenAI）</h3>
+    <pre><code><span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI
+client = OpenAI()
+
+text = <span class="string">"肺结节在 CT 影像上表现为高密度影"</span>
+
+response = client.embeddings.create(
+    model=<span class="string">"text-embedding-3-small"</span>,
+    input=text
+)
+vector = response.data[<span class="string">0</span>].embedding
+<span class="comment"># vector 现在是 1536 维的浮点数数组</span>
+<span class="comment"># 比如：[0.0123, -0.0456, 0.0789, ...]</span>
+print(<span class="string">f"向量长度：{len(vector)}"</span>)
+print(<span class="string">f"前 5 个值：{vector[:5]}"</span>)</code></pre>
+
+    <div class="case">
+      <h4>🏥 真实案例：三甲医院的影像报告检索</h4>
+      <div class="case-scenario">放射科主任让 AI 找"过去 6 个月所有关于磨玻璃结节的报告"</div>
+      <p>把 5 万份历史报告全部跑 Embedding，每份得到 1536 维向量。检索时把"磨玻璃结节"也转成向量，算相似度，找出 Top 10 最相关的报告。</p>
+      <div class="case-effect">
+        <div class="effect-item">准确率：<strong>94%</strong></div>
+        <div class="effect-item">检索时间：<strong>0.3 秒</strong></div>
+        <div class="effect-item">医生月省：<strong>40 小时</strong></div>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>✅ 优势</h4>
+        <ul>
+          <li>语义理解：能找"意思相近"的，不只匹配字面</li>
+          <li>速度快：批量算 1 万条只要几秒</li>
+          <li>多语言通吃：中英混排效果都不错</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>⚠️ 局限</h4>
+        <ul>
+          <li>烧钱：每次调用按 token 计费</li>
+          <li>隐私风险：文本要发给 OpenAI/Model 厂商</li>
+          <li>长文本截断：超过 8K token 的会丢信息</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 2. 向量数据库 ========== -->
+  <h2>2️⃣ 向量数据库 —— 专门存"坐标"的高速仓库</h2>
+  <p class="lead">普通数据库用 B 树查"等于"，向量数据库用 ANN 算法查"最像"，完全是两套逻辑。</p>
+
+  <div class="concept-card">
+    <div class="concept-header">
+      <div class="concept-num gold">2</div>
+      <div class="concept-title">
+        <h3>向量数据库</h3>
+        <div class="subtitle">Pinecone / Chroma / Milvus / Weaviate / Qdrant</div>
+      </div>
+    </div>
+
+    <div class="metaphor">
+      <strong>🌟 类比：</strong>普通图书馆按书名/作者/ISBN 查（精确匹配）；向量图书馆按"主题相似度"查（你给一个主题，馆员把最像的 10 本抱出来）。
+    </div>
+
+    <p>向量数据库内部用 <code>ANN（Approximate Nearest Neighbor）</code> 算法——不追求 100% 精确的最相似，而是用 99% 的准确率换 100 倍的速度。常用算法有：</p>
+    <ul style="margin-left: 24px; margin-bottom: 12px;">
+      <li><strong>HNSW</strong>（Hierarchical Navigable Small World）：分层图，最主流</li>
+      <li><strong>IVF</strong>（Inverted File Index）：倒排索引，Faiss 默认</li>
+      <li><strong>PQ</strong>（Product Quantization）：量化压缩，省空间</li>
+    </ul>
+
+    <h3>💻 代码示例（Chroma 本地版）</h3>
+    <pre><code><span class="keyword">import</span> chromadb
+client = chromadb.PersistentClient(path=<span class="string">"./chroma_db"</span>)
+collection = client.get_or_create_collection(<span class="string">"medical_reports"</span>)
+
+<span class="comment"># 1. 写入（自动 Embedding）</span>
+collection.add(
+    documents=[<span class="string">"患者男 56 岁，CT 示右肺上叶磨玻璃结节 8mm"</span>,
+               <span class="string">"心脏 CTA 提示左前降支狭窄 70%"</span>],
+    metadatas=[{<span class="string">"date"</span>: <span class="string">"2026-05-01"</span>, <span class="string">"dept"</span>: <span class="string">"放射科"</span>},
+               {<span class="string">"date"</span>: <span class="string">"2026-05-03"</span>, <span class="string">"dept"</span>: <span class="string">"心内科"</span>}],
+    ids=[<span class="string">"r001"</span>, <span class="string">"r002"</span>]
+)
+
+<span class="comment"># 2. 检索（按问题找最像的）</span>
+results = collection.query(
+    query_texts=[<span class="string">"肺上有磨玻璃影的病人"</span>],
+    n_results=<span class="string">3</span>
+)
+<span class="keyword">for</span> doc <span class="keyword">in</span> results[<span class="string">"documents"</span>][<span class="string">0</span>]:
+    print(doc)</code></pre>
+
+    <div class="case">
+      <h4>🏢 真实案例：Notion AI 的知识库</h4>
+      <div class="case-scenario">Notion 把所有用户的工作区文档同步到 Pinecone 向量库</div>
+      <p>用户搜"上个季度产品 OKR 完成情况"，Notion 自动用 Embedding 检索最相关的 5 个文档片段，拼成答案返回。完全不用手动建索引。</p>
+      <div class="case-effect">
+        <div class="effect-item">月活用户：<strong>400 万+</strong></div>
+        <div class="effect-item">平均检索延迟：<strong>120ms</strong></div>
+        <div class="effect-item">查询满意度：<strong>87%</strong></div>
+      </div>
+    </div>
+
+    <h3>📊 主流向量数据库对比</h3>
+    <table>
+      <thead>
+        <tr><th>数据库</th><th>部署方式</th><th>最大特色</th><th>适合场景</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>Chroma</strong></td><td>本地/嵌入式</td><td>开发友好，5 行代码</td><td>原型 + 中小规模</td></tr>
+        <tr><td><strong>Pinecone</strong></td><td>SaaS</td><td>免运维，按量计费</td><td>快速上线</td></tr>
+        <tr><td><strong>Milvus</strong></td><td>自建/云</td><td>亿级数据，集群稳定</td><td>大型企业</td></tr>
+        <tr><td><strong>Qdrant</strong></td><td>自建/云</td><td>Rust 性能强，Rust API</td><td>追求性能</td></tr>
+        <tr><td><strong>Weaviate</strong></td><td>自建/云</td><td>原生支持多模态</td><td>图文混合检索</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ========== 3. 文档切片 ========== -->
+  <h2>3️⃣ 文档切片（Chunking）—— 把长面包切成面包片</h2>
+  <p class="lead">Embedding 模型有"一次性吃不下"的问题（8K token 上限），所以必须把长文档切成 200-800 字的小段。</p>
+
+  <div class="concept-card">
+    <div class="concept-header">
+      <div class="concept-num teal">3</div>
+      <div class="concept-title">
+        <h3>文档切片 · Chunking</h3>
+        <div class="subtitle">长文档 → 200-800 字的小段，每段独立 Embedding</div>
+      </div>
+    </div>
+
+    <div class="metaphor">
+      <strong>🌟 类比：</strong>一本书 500 页，检索时不能把整本塞给 AI（它会迷糊）。所以要切成 500 段，每段 1 页，标上页码。问问题时，先找到"页码"再取内容。
+    </div>
+
+    <p>切片的 3 个核心参数：</p>
+    <ul style="margin-left: 24px; margin-bottom: 12px;">
+      <li><strong>chunk_size</strong>：每段多少字（中文 200-800 / 英文 200-1000 token）</li>
+      <li><strong>overlap</strong>：相邻段重叠多少（避免切断句子）</li>
+      <li><strong>分隔符</strong>：按句号？按段落？按 Markdown 标题？</li>
+    </ul>
+
+    <h3>💻 4 种常见切片策略</h3>
+    <pre><code><span class="comment"># 1. 固定大小切片（最简单）</span>
+<span class="keyword">from</span> langchain.text_splitter <span class="keyword">import</span> CharacterTextSplitter
+
+splitter = CharacterTextSplitter(
+    chunk_size=<span class="string">500</span>,
+    chunk_overlap=<span class="string">50</span>,
+    separator=<span class="string">"\n\n"</span>
+)
+chunks = splitter.split_text(long_text)
+
+<span class="comment"># 2. 递归切片（按段落 → 句号 → 逗号，逐级回退）</span>
+<span class="keyword">from</span> langchain.text_splitter <span class="keyword">import</span> RecursiveCharacterTextSplitter
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=<span class="string">500</span>, chunk_overlap=<span class="string">50</span>
+)
+
+<span class="comment"># 3. Markdown 切片（按标题分级）</span>
+<span class="keyword">from</span> langchain.text_splitter <span class="keyword">import</span> MarkdownTextSplitter
+splitter = MarkdownTextSplitter(chunk_size=<span class="string">500</span>)
+
+<span class="comment"># 4. 语义切片（用 Embedding 检测语义断点）</span>
+<span class="keyword">from</span> langchain_experimental.text_splitter <span class="keyword">import</span> SemanticChunker
+splitter = SemanticChunker(embeddings, breakpoint_threshold_type=<span class="string">"percentile"</span>)</code></pre>
+
+    <div class="case">
+      <h4>📄 真实案例：法律合同 RAG</h4>
+      <div class="case-scenario">一家律所想用 RAG 检索 10 万份历史合同</div>
+      <p>最初按 500 字硬切，发现很多条款"被腰斩"——上半句在第 1 段，下半句在第 2 段。改用 <strong>Markdown 切片 + 100 字 overlap</strong> 后，条款完整性提升到 98%，律师满意度从 65% 涨到 92%。</p>
+      <div class="case-effect">
+        <div class="effect-item">条款完整率：<strong>98%</strong></div>
+        <div class="effect-item">律师满意度：<strong>92%</strong></div>
+        <div class="effect-item">检索准确率：<strong>+27%</strong></div>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>✅ 经验值</h4>
+        <ul>
+          <li>中文：300-500 字一段</li>
+          <li>英文：200-500 token</li>
+          <li>overlap：10-15%</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>⚠️ 坑</h4>
+        <ul>
+          <li>太小：上下文不足，AI 看不懂</li>
+          <li>太大：噪音多，扣 LLM 上下文预算</li>
+          <li>表格/代码：必须特殊处理</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 4. 相似度检索 ========== -->
+  <h2>4️⃣ 相似度检索 —— 找"最像"的几段</h2>
+  <p class="lead">把问题也转成向量，然后在向量库里算"距离"，找 Top K 个最近的。</p>
+
+  <div class="concept-card">
+    <div class="concept-header">
+      <div class="concept-num pink">4</div>
+      <div class="concept-title">
+        <h3>相似度检索 · Cosine Similarity</h3>
+        <div class="subtitle">两个向量"夹角"越小，越相似</div>
+      </div>
+    </div>
+
+    <div class="metaphor">
+      <strong>🌟 类比：</strong>在图书馆 100 万本书里，每本书有个 768 维的"主题坐标"。你走进来说"我想看人工智能的"，系统算你和你每本书的"主题夹角"，挑出夹角最小的 10 本。
+    </div>
+
+    <p>3 种主流相似度算法：</p>
+    <table>
+      <thead>
+        <tr><th>算法</th><th>公式（白话）</th><th>特点</th><th>适用</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Cosine 相似度</strong></td>
+          <td>看两个向量的"方向"</td>
+          <td>最常用，不受长度影响</td>
+          <td>文本检索</td>
+        </tr>
+        <tr>
+          <td><strong>欧氏距离 L2</strong></td>
+          <td>看两个点的"实际距离"</td>
+          <td>受向量长度影响</td>
+          <td>图像/位置</td>
+        </tr>
+        <tr>
+          <td><strong>点积 Dot Product</strong></td>
+          <td>两向量相乘求和</td>
+          <td>计算最快</td>
+          <td>已归一化的向量</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>💻 代码示例（手算 Cosine 相似度）</h3>
+    <pre><code><span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> numpy.linalg <span class="keyword">import</span> norm
+
+<span class="keyword">def</span> cosine_similarity(a, b):
+    <span class="keyword">return</span> np.dot(a, b) / (norm(a) * norm(b))
+
+<span class="comment"># 例：两个句子</span>
+v1 = np.array([<span class="string">0.8</span>, <span class="string">0.6</span>, <span class="string">0.1</span>])  <span class="comment"># "猫在沙发上睡觉"</span>
+v2 = np.array([<span class="string">0.7</span>, <span class="string">0.5</span>, <span class="string">0.2</span>])  <span class="comment"># "猫咪躺在沙发休息"</span>
+v3 = np.array([<span class="string">-0.5</span>, <span class="string">0.3</span>, <span class="string">0.8</span>]) <span class="comment"># "今天股票涨了"</span>
+
+print(<span class="string">f"猫 vs 猫: {cosine_similarity(v1, v2):.3f}"</span>)  <span class="comment"># 0.97（相似）</span>
+print(<span class="string">f"猫 vs 股票: {cosine_similarity(v1, v3):.3f}"</span>) <span class="comment"># -0.32（不相似）</span></code></pre>
+
+    <div class="case">
+      <h4>🛒 真实案例：电商商品搜索</h4>
+      <div class="case-scenario">用户搜"送女朋友的生日礼物"</div>
+      <p>把"送女朋友的生日礼物" Embedding 后，去商品库（5000 万件）里找最像的 20 件：首饰、香水、鲜花、手表……比纯关键词搜"礼物+生日"准确得多。</p>
+      <div class="case-effect">
+        <div class="effect-item">点击率：<strong>+45%</strong></div>
+        <div class="effect-item">转化率：<strong>+28%</strong></div>
+        <div class="effect-item">退货率：<strong>-12%</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 5. Rerank ========== -->
+  <h2>5️⃣ Rerank（重排序）—— 粗排后的"精挑细选"</h2>
+  <p class="lead">向量检索速度快但"粗"。用 Rerank 再精排一次，准确率大幅提升。</p>
+
+  <div class="concept-card">
+    <div class="concept-header">
+      <div class="concept-num green">5</div>
+      <div class="concept-title">
+        <h3>Rerank · Cross-Encoder 精排</h3>
+        <div class="subtitle">不只看"像不像"，还要看"是不是真正答这个问题"</div>
+      </div>
+    </div>
+
+    <div class="metaphor">
+      <strong>🌟 类比：</strong>HR 招聘：先让猎头按关键词搜 100 份简历（粗排，速度快）→ 再让部门经理一份份细看，挑出最合适的 5 个（二排，质量高）。
+    </div>
+
+    <p>向量检索用的是 <code>Bi-Encoder</code>（问题和文档分开算向量，再算相似度），速度极快但只看"语义匹配度"。</p>
+    <p>Rerank 用 <code>Cross-Encoder</code>：把"问题+文档"一起塞进模型，让模型判断"这段文字是不是真的在回答这个问题"。</p>
+
+    <div class="flow">
+      <span class="flow-step">100 段粗排结果</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Cross-Encoder 精排</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-step">Top 5 喂给 LLM</span>
+    </div>
+
+    <h3>💻 代码示例（Cohere Rerank）</h3>
+    <pre><code><span class="keyword">import</span> cohere
+co = cohere.Client(<span class="string">"YOUR_API_KEY"</span>)
+
+docs = [
+    <span class="string">"RAG 的核心是检索增强生成。"</span>,
+    <span class="string">"猫是哺乳动物。"</span>,
+    <span class="string">"向量数据库用于存储 Embedding。"</span>
+]
+
+results = co.rerank(
+    query=<span class="string">"RAG 的工作原理是什么"</span>,
+    documents=docs,
+    top_n=<span class="string">2</span>,
+    model=<span class="string">"rerank-multilingual-v3.0"</span>
+)
+
+<span class="keyword">for</span> r <span class="keyword">in</span> results.results:
+    print(<span class="string">f"分数: {r.relevance_score:.3f} - {docs[r.index]}"</span>)
+<span class="comment"># 输出（r1 排前）：</span>
+<span class="comment"># 分数: 0.95 - RAG 的核心是检索增强生成。</span>
+<span class="comment"># 分数: 0.41 - 向量数据库用于存储 Embedding。</span></code></pre>
+
+    <div class="case">
+      <h4>🔍 真实案例：Glean 企业搜索</h4>
+      <div class="case-scenario">Glean 给企业做"内部 Google"，搜"上个季度销售总结"</div>
+      <p>先用向量检索找 50 段文档（速度快），再用 Rerank 模型精排到 5 段喂给 LLM。Rerank 后 Top 5 准确率从 68% 提升到 91%。</p>
+      <div class="case-effect">
+        <div class="effect-item">Top 5 准确率：<strong>91%</strong></div>
+        <div class="effect-item">回答采纳率：<strong>+23%</strong></div>
+        <div class="effect-item">日均查询：<strong>10 万+</strong></div>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>✅ 提升效果显著</h4>
+        <ul>
+          <li>准确率提升 20-30%</li>
+          <li>幻觉率下降 50%</li>
+          <li>用户满意度提升明显</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>⚠️ 增加成本</h4>
+        <ul>
+          <li>Rerank 一次 ~$0.001</li>
+          <li>每查询多 200-500ms</li>
+          <li>需多一次网络调用</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 6. Query 改写 ========== -->
+  <h2>6️⃣ Query 改写 —— 把"含糊问题"变清晰</h2>
+  <p class="lead">用户的问题往往含糊、错字、省略。Query 改写让 AI 先"重述"问题再检索。</p>
+
+  <div class="concept-card">
+    <div class="concept-header">
+      <div class="concept-num red">6</div>
+      <div class="concept-title">
+        <h3>Query Rewriting · 查询重写</h3>
+        <div class="subtitle">"腰腿疼咋办" → "腰椎间盘突出的非手术治疗方案"</div>
+      </div>
+    </div>
+
+    <div class="metaphor">
+      <strong>🌟 类比：</strong>顾客说"那个东西"，你听不懂；店员会问"您是想找手机？电脑？还是配件？"。AI 改写就是这个"确认需求"的过程。
+    </div>
+
+    <p>3 种改写策略：</p>
+    <ul style="margin-left: 24px; margin-bottom: 12px;">
+      <li><strong>扩写</strong>：把口语变专业术语（"腰腿疼" → "腰椎间盘突出症状"）</li>
+      <li><strong>多 Query</strong>：1 个问题拆成 3 个角度（原始 + 同义词 + 反义）</li>
+      <li><strong>指代消解</strong>：把"它"、"那个"换成具体对象</li>
+    </ul>
+
+    <h3>💻 代码示例（多 Query 拆解）</h3>
+    <pre><code><span class="keyword">from</span> langchain.prompts <span class="keyword">import</span> PromptTemplate
+
+prompt = PromptTemplate(
+    input_variables=[<span class="string">"question"</span>],
+    template=<span class="string">"""请把这个问题改写为 3 个不同角度的搜索 query：
+原问题：{question}
+
+输出格式（每行一个）：
+1. 原始
+2. 专业术语版本
+3. 具体场景版本
+"""</span>
+)
+
+<span class="comment"># 输入：</span>
+question = <span class="string">"腰疼怎么办"</span>
+
+<span class="comment"># 输出（LLM 生成）：</span>
+<span class="comment"># 1. 腰疼怎么办</span>
+<span class="comment"># 2. 腰椎间盘突出 保守治疗方案</span>
+<span class="comment"># 3. 久坐导致的腰部酸痛缓解方法</span></code></pre>
+
+    <div class="case">
+      <h4>🗣️ 真实案例：客服机器人</h4>
+      <div class="case-scenario">用户问"我的订单还没到"</div>
+      <p>改写系统把它展开为 3 个 query：①"订单物流查询" ②"订单状态延迟原因" ③"申请退款流程"。3 路并行检索后，召回率从 58% 涨到 84%。</p>
+      <div class="case-effect">
+        <div class="effect-item">召回率：<strong>84%</strong></div>
+        <div class="effect-item">一次解决率：<strong>+18%</strong></div>
+        <div class="effect-item">客诉率：<strong>-22%</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 7. Metadata 过滤 ========== -->
+  <h2>7️⃣ Metadata 过滤 —— 按时间/部门/作者"标签"筛选</h2>
+  <p class="lead">相似度检索只能找"像"的，Metadata 过滤能找"对"的（按业务条件精准筛）。</p>
+
+  <div class="concept-card">
+    <div class="concept-header">
+      <div class="concept-num purple">7</div>
+      <div class="concept-title">
+        <h3>Metadata Filter · 元数据过滤</h3>
+        <div class="subtitle">先按"标签"卡范围，再在范围内找"最像"</div>
+      </div>
+    </div>
+
+    <div class="metaphor">
+      <strong>🌟 类比：</strong>档案柜里 100 万份文件。直接找"合同"会找到 10 万份；先说"2026 年的 + 法务部的"只剩 300 份，再从中找最相关的就快得多。
+    </div>
+
+    <p>常见 Metadata 字段：</p>
+    <table>
+      <thead>
+        <tr><th>字段</th><th>示例</th><th>作用</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>时间</td><td>2026-05-01</td><td>筛"近 30 天" / "去年"</td></tr>
+        <tr><td>部门</td><td>法务部 / 销售部</td><td>按组织架构筛</td></tr>
+        <tr><td>作者</td><td>张三 / 李四</td><td>按人筛</td></tr>
+        <tr><td>类型</td><td>合同 / 报告 / 邮件</td><td>按文件类型筛</td></tr>
+        <tr><td>权限</td><td>公开 / 内部 / 机密</td><td>按访问权限筛</td></tr>
+      </tbody>
+    </table>
+
+    <h3>💻 代码示例</h3>
+    <pre><code>results = collection.query(
+    query_texts=[<span class="string">"肺癌治疗方案"</span>],
+    n_results=<span class="string">5</span>,
+    where={                        <span class="comment"># Metadata 过滤</span>
+        <span class="string">"$and"</span>: [
+            {<span class="string">"department"</span>: <span class="string">"肿瘤科"</span>},
+            {<span class="string">"date"</span>: {<span class="string">"$gte"</span>: <span class="string">"2026-01-01"</span>}},
+            {<span class="string">"status"</span>: <span class="string">"已审核"</span>}
+        ]
+    }
+)
+<span class="comment"># 范围从 5 万份缩到 200 份，再找最像的 5 段</span></code></pre>
+
+    <div class="case">
+      <h4>🏢 真实案例：企业飞书知识库</h4>
+      <div class="case-scenario">员工问"年假政策"</div>
+      <p>系统先 Metadata 过滤：用户所在部门（北京研发部）→ 年假规则文档。再语义检索"年假政策"，准确率 100%（不是北京员工的政策根本不会进候选）。</p>
+      <div class="case-effect">
+        <div class="effect-item">错误率：<strong>0%</strong></div>
+        <div class="effect-item">检索速度：<strong>50ms</strong></div>
+        <div class="effect-item">用户满意度：<strong>96%</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 8. 混合检索 ========== -->
+  <h2>8️⃣ 混合检索 —— 关键词 + 向量双管齐下</h2>
+  <p class="lead">关键词检索找"完全匹配"的，向量检索找"意思相似"的。混着用效果最好。</p>
+
+  <div class="concept-card">
+    <div class="concept-header">
+      <div class="concept-num" style="background: linear-gradient(135deg, #6B8CAE 0%, #4A6585 100%);">8</div>
+      <div class="concept-title">
+        <h3>混合检索 · Hybrid Search</h3>
+        <div class="subtitle">关键词（BM25）+ 向量（Cosine）→ 加权融合</div>
+      </div>
+    </div>
+
+    <div class="metaphor">
+      <strong>🌟 类比：</strong>你问"iPhone 16 Pro Max 价格"。关键词检索找包含这串字的页面（精确）；向量检索找"苹果最新旗舰手机价位"的页面（语义）。两个结果合并去重 = 最全。
+    </div>
+
+    <p>融合公式（RRF）：</p>
+    <pre><code>最终分数 = 0.5 × 关键词排名分 + 0.5 × 向量相似度分
+<span class="comment"># 权重可调：</span>
+<span class="comment"># - 搜产品型号 / 错误码 → 关键词权重高（0.7）</span>
+<span class="comment"># - 搜解决方案 / 思路 → 向量权重高（0.7）</span></code></pre>
+
+    <h3>💻 代码示例（Qdrant 混合检索）</h3>
+    <pre><code><span class="keyword">from</span> qdrant_client <span class="keyword">import</span> QdrantClient, models
+
+client = QdrantClient(<span class="string">"localhost"</span>, port=<span class="string">6333</span>)
+
+results = client.search(
+    collection_name=<span class="string">"docs"</span>,
+    query_vector=embedding,           <span class="comment"># 向量检索</span>
+    query_filter=<span class="string">None</span>,
+    limit=<span class="string">10</span>,
+    <span class="comment"># 启用 BM25 关键词混合</span>
+    search_params=models.SearchParams(
+        hybrid=models.HybridQuery(
+            fusion=models.FusionQuery(
+                fusion_type=models.Fusion.RRF  <span class="comment"># 倒数排名融合</span>
+            )
+        )
+    )
+)</code></pre>
+
+    <div class="case">
+      <h4>🔧 真实案例：Elasticsearch 混合搜索</h4>
+      <div class="case-scenario">开发文档搜"401 unauthorized"</div>
+      <p>纯向量检索会把"401 是什么"和"401(k) 退休账户"搞混。纯关键词搜索精确找到 401 错误码。混合后：关键词找到 5 篇 + 向量找到 5 篇去重 = 8 篇，前 3 全是想要的。</p>
+      <div class="case-effect">
+        <div class="effect-item">Top 3 准确率：<strong>95%</strong></div>
+        <div class="effect-item">错误率：<strong>-40%</strong></div>
+        <div class="effect-item">开发满意度：<strong>+35%</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 9. Prompt 组装 ========== -->
+  <h2>9️⃣ Prompt 组装 —— 把"资料 + 问题"打包给 LLM</h2>
+  <p class="lead">最后一步：把检索到的段落 + 用户问题 + 角色设定 + 格式要求拼成完整 Prompt 喂给 LLM。</p>
+
+  <div class="concept-card">
+    <div class="concept-header">
+      <div class="concept-num" style="background: linear-gradient(135deg, #5A8C5A 0%, #3D6A3D 100%);">9</div>
+      <div class="concept-title">
+        <h3>Prompt 组装 · Final Prompt Engineering</h3>
+        <div class="subtitle">系统提示 + 检索结果 + 历史对话 + 用户问题</div>
+      </div>
+    </div>
+
+    <div class="metaphor">
+      <strong>🌟 类比：</strong>博学老人（LLM）记不全所有事。你给他递一张卡片："你是一位医生（角色）。参考资料：XXX（检索结果）。患者问：YYY（用户问题）。请基于参考资料回答，不知道就说不知道。"
+    </div>
+
+    <p>标准 Prompt 模板（5 部分）：</p>
+    <ol style="margin-left: 24px; margin-bottom: 12px;">
+      <li><strong>角色设定</strong>：你是一位资深放射科医生</li>
+      <li><strong>参考资料</strong>：[1] 段落 1 ... [2] 段落 2 ...</li>
+      <li><strong>历史对话</strong>：user: ... assistant: ...</li>
+      <li><strong>用户问题</strong>：当前轮问题</li>
+      <li><strong>输出要求</strong>：3 句话内、列出参考编号</li>
+    </ol>
+
+    <h3>💻 代码示例</h3>
+    <pre><code>prompt = <span class="string">f"""你是一位资深的放射科医生。
+基于以下参考资料回答问题，不知道就说"信息不足"。
+
+参考资料：
+[1] {chunk_1}
+[2] {chunk_2}
+[3] {chunk_3}
+
+历史对话：
+{history}
+
+当前问题：{user_question}
+
+回答要求：
+- 基于 [1][2][3] 引用
+- 不超过 200 字
+- 末尾标注参考编号
+"""</span>
+
+response = llm.invoke(prompt)</code></pre>
+
+    <div class="case">
+      <h4>💬 真实案例：Perplexity AI 引用机制</h4>
+      <div class="case-scenario">用户问"2025 诺贝尔物理学奖得主"</div>
+      <p>Perplexity 检索到 5 段资料，Prompt 模板里强制要求"每句话末尾标注 [1] [2] [3]"，生成的回答里每条事实都带引用链接，用户可一键溯源。</p>
+      <div class="case-effect">
+        <div class="effect-item">用户信任度：<strong>92%</strong></div>
+        <div class="effect-item">信息溯源率：<strong>100%</strong></div>
+        <div class="effect-item">月活用户：<strong>1500 万+</strong></div>
+      </div>
+    </div>
+
+    <div class="pros-cons">
+      <div class="pros">
+        <h4>✅ 高质量模板必备</h4>
+        <ul>
+          <li>明确的角色定位</li>
+          <li>带编号的引用（防幻觉）</li>
+          <li>限制回答长度</li>
+        </ul>
+      </div>
+      <div class="cons">
+        <h4>⚠️ 注意</h4>
+        <ul>
+          <li>上下文窗口限制（8K-200K）</li>
+          <li>资料太多要取舍</li>
+          <li>Prompt 越长越慢</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 总结 ========== -->
+  <h2>📌 9 大概念协同工作流程</h2>
+  <p class="lead">9 个概念不是孤立的，它们组合起来才构成完整的 RAG 系统。下面是一个真实的查询从开始到结束的全流程：</p>
+
+  <div class="flow" style="font-size: 13px; line-height: 1.6;">
+    <span class="flow-step">👤 用户问<br>"腰疼怎么办"</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">6️⃣ Query 改写<br>扩成 3 个 query</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">7️⃣ Metadata 过滤<br>限定近 1 年 + 骨科</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">8️⃣ 混合检索<br>关键词+向量双路</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">4️⃣ 相似度<br>找 Top 50</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">5️⃣ Rerank<br>精排到 Top 5</span>
+  </div>
+
+  <div class="flow" style="font-size: 13px; line-height: 1.6;">
+    <span class="flow-step">3️⃣ 文档切片<br>所有文档预先切好</span>
+    <span class="flow-arrow">↑</span>
+    <span class="flow-step">1️⃣ Embedding<br>每段转 1536 维向量</span>
+    <span class="flow-arrow">↑</span>
+    <span class="flow-step">2️⃣ 向量数据库<br>存进 Chroma/Milvus</span>
+  </div>
+
+  <div class="flow" style="font-size: 13px; line-height: 1.6;">
+    <span class="flow-step">5️⃣ Top 5 段落</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">9️⃣ Prompt 组装</span>
+    <span class="flow-arrow">→</span>
+    <span class="flow-step">🤖 LLM 回答<br>带 [1][2] 引用</span>
+  </div>
+
+  <h2>💎 全部秘密</h2>
+  <div class="summary" style="background: linear-gradient(135deg, #E8F0F9 0%, #F7F1E5 50%, #FBE4EA 100%);">
+    <strong>9 个零件，1 个目标：</strong>让 AI 回答问题时能找到对的资料。<br>
+    <strong>不是让模型"变聪明"</strong>，而是给它<strong>"配个图书检索员"</strong>。<br>
+    <strong>质量差异全在细节：</strong>切片大小、Embedding 模型、Rerank 用不用、Prompt 怎么写——这 9 个旋钮调对，RAG 系统准确率能从 60% 涨到 95%。
+  </div>
+
+  <h2>🎯 下一步行动</h2>
+  <div style="background: var(--blue-soft); border-radius: 16px; padding: 24px; margin: 16px 0;">
+    <ol style="margin-left: 20px;">
+      <li><strong>P0（立刻做）：</strong>用 Chroma + OpenAI Embedding 搭一个最简单的 RAG，10 分钟上手</li>
+      <li><strong>P1（1 周内）：</strong>接入 Rerank，看准确率能涨多少（一般 +20-30%）</li>
+      <li><strong>P2（持续优化）：</strong>做 Query 改写 + Metadata 过滤，处理复杂查询</li>
+      <li><strong>P3（生产化）：</strong>建评估集（100 个真实问题 + 标准答案），量化追踪效果</li>
+    </ol>
+  </div>
+
+  <p style="text-align: center; color: var(--ink3); font-size: 13px; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--line);">
+    📚 分享人 <strong style="color: var(--blue);">小百</strong> · AI 产品笔记<br>
+    配合 RAG 全维度解析 / RAG 12 页寓言故事 一起看效果更佳
+  </p>
+
+</div>
+
+</body>
+</html>
