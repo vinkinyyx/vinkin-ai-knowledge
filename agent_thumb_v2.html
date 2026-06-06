@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { 
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    background: #fff;
+  }
+  .thumb {
+    width: 600px; height: 400px;
+    background: linear-gradient(135deg, #E8F0F9 0%, #F0EAD9 50%, #FBE4EA 100%);
+    position: relative; overflow: hidden;
+  }
+  
+  /* 顶部监控条 */
+  .monitor {
+    position: absolute; top: 20px; left: 30px; right: 30px;
+    height: 38px; background: #FFFFFF; border-radius: 10px;
+    display: flex; align-items: center; padding: 0 14px; gap: 6px;
+    box-shadow: 0 2px 8px rgba(26,31,46,0.06);
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; }
+  .dot.g { background: #5A8C5A; }
+  .dot.y { background: #B89B6A; }
+  .dot.p { background: #C97A8E; }
+  .bar { height: 8px; border-radius: 4px; background: #E8E5DE; }
+  .bar.b1 { width: 60px; background: linear-gradient(90deg, #3A6FA8 60%, #E8E5DE 60%); }
+  .bar.b2 { width: 50px; background: linear-gradient(90deg, #B89B6A 50%, #E8E5DE 50%); }
+  .bar.b3 { width: 70px; background: linear-gradient(90deg, #3D8B8B 40%, #E8E5DE 40%); }
+  .sla { margin-left: auto; font-size: 11px; font-weight: 700; color: #3A6FA8; }
+  
+  /* 中央 Agent */
+  .agent {
+    position: absolute; top: 175px; left: 50%; transform: translateX(-50%);
+    width: 110px; height: 110px; border-radius: 50%;
+    background: linear-gradient(135deg, #3A6FA8 0%, #2A5278 100%);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 24px rgba(42,82,120,0.3);
+    border: 3px solid rgba(255,255,255,0.4);
+  }
+  .agent svg { width: 56px; height: 56px; }
+  .agent-label {
+    position: absolute; top: 290px; left: 50%; transform: translateX(-50%);
+    font-size: 14px; font-weight: 800; color: #1A1F2E; white-space: nowrap;
+  }
+  .agent-sublabel {
+    position: absolute; top: 308px; left: 50%; transform: translateX(-50%);
+    font-size: 9px; color: #8A93A6; letter-spacing: 2px; font-weight: 600;
+  }
+  
+  /* 连接线（用 SVG） */
+  .connections {
+    position: absolute; top: 80px; left: 0; width: 600px; height: 320px;
+    pointer-events: none;
+  }
+  
+  /* 4 个工具节点 */
+  .tool {
+    position: absolute;
+    width: 110px; height: 80px;
+    background: #FFFFFF; border-radius: 14px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(26,31,46,0.08);
+    gap: 4px;
+  }
+  .tool-icon { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; }
+  .tool-name { font-size: 11px; font-weight: 700; color: #1A1F2E; }
+  .tool.tl { top: 110px; left: 50px; }
+  .tool.tr { top: 110px; right: 50px; }
+  .tool.bl { bottom: 60px; left: 50px; }
+  .tool.br { bottom: 60px; right: 50px; }
+  
+  /* 底部标识 */
+  .badge-dark {
+    position: absolute; bottom: 18px; left: 30px;
+    background: #1A1F2E; color: #fff; font-size: 12px; font-weight: 700;
+    padding: 8px 16px; border-radius: 20px; letter-spacing: 1px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .badge-dark .live { width: 7px; height: 7px; border-radius: 50%; background: #5A8C5A; }
+  .badge-light {
+    position: absolute; bottom: 18px; right: 30px;
+    background: #FFFFFF; color: #3A6FA8; font-size: 11px; font-weight: 700;
+    padding: 8px 16px; border-radius: 20px; border: 1px solid #E8E5DE;
+  }
+</style>
+</head>
+<body>
+<div class="thumb">
+  <!-- 顶部监控条 -->
+  <div class="monitor">
+    <span class="dot g"></span>
+    <span class="dot y"></span>
+    <span class="dot p"></span>
+    <span class="bar b1"></span>
+    <span class="bar b2"></span>
+    <span class="bar b3"></span>
+    <span class="sla">99.2% SLA</span>
+  </div>
+  
+  <!-- 连接线 SVG -->
+  <svg class="connections" viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg">
+    <g stroke="#3A6FA8" stroke-width="1.6" stroke-dasharray="4,4" fill="none" opacity="0.45">
+      <line x1="160" y1="150" x2="280" y2="220"/>
+      <line x1="440" y1="150" x2="320" y2="220"/>
+      <line x1="160" y1="270" x2="280" y2="240"/>
+      <line x1="440" y1="270" x2="320" y2="240"/>
+    </g>
+  </svg>
+  
+  <!-- 中央 Agent -->
+  <div class="agent">
+    <svg viewBox="0 0 60 60" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M 18 22 Q 12 14 18 8 Q 24 4 30 10 L 30 10 Q 36 4 42 8 Q 48 14 42 22 L 42 38 Q 48 46 42 52 Q 36 56 30 50 L 30 50 Q 24 56 18 52 Q 12 46 18 38 Z"/>
+      <path d="M 24 22 Q 30 28 30 30 Q 30 32 24 38"/>
+      <path d="M 36 22 Q 30 28 30 30 Q 30 32 36 38"/>
+      <line x1="30" y1="10" x2="30" y2="50"/>
+    </svg>
+  </div>
+  <div class="agent-label">AI Agent</div>
+  <div class="agent-sublabel">CORE</div>
+  
+  <!-- 4 个工具节点 -->
+  <div class="tool tl">
+    <div class="tool-icon">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#3A6FA8" stroke-width="2.2" stroke-linecap="round">
+        <circle cx="10" cy="10" r="6"/>
+        <line x1="14.5" y1="14.5" x2="20" y2="20"/>
+      </svg>
+    </div>
+    <div class="tool-name">Search</div>
+  </div>
+  <div class="tool tr">
+    <div class="tool-icon">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#3D8B8B" stroke-width="2.2" stroke-linecap="round">
+        <ellipse cx="12" cy="6" rx="8" ry="2.5"/>
+        <path d="M 4 6 L 4 18 Q 4 20.5 12 20.5 Q 20 20.5 20 18 L 20 6"/>
+        <path d="M 4 12 Q 4 14.5 12 14.5 Q 20 14.5 20 12"/>
+      </svg>
+    </div>
+    <div class="tool-name">Vector DB</div>
+  </div>
+  <div class="tool bl">
+    <div class="tool-icon">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#B89B6A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 6 8 L 16 8 L 16 4 L 22 12 L 16 20 L 16 16 L 6 16 Z"/>
+      </svg>
+    </div>
+    <div class="tool-name">API Tool</div>
+  </div>
+  <div class="tool br">
+    <div class="tool-icon">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#C97A8E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M 6 4 L 14 4 L 20 10 L 20 20 L 6 20 Z"/>
+        <path d="M 14 4 L 14 10 L 20 10"/>
+        <line x1="9" y1="14" x2="17" y2="14"/>
+        <line x1="9" y1="17" x2="14" y2="17"/>
+      </svg>
+    </div>
+    <div class="tool-name">Doc RAG</div>
+  </div>
+  
+  <!-- 底部标识 -->
+  <div class="badge-dark">
+    <span class="live"></span>
+    <span>AI AGENT · 企业工程化</span>
+  </div>
+  <div class="badge-light">10 大核心问题</div>
+</div>
+</body></html>
