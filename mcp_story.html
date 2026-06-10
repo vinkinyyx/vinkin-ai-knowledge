@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>造物王国与万能插头 · MCP 插画故事</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root { --bg: #F5EFE6; --bg-card: #FBF7F0; --ink: #2A2A2A; --ink2: #5C544A; --ink3: #9A8F82;
+  --blue: #6B8CAE; --blue-deep: #4A6B8A; --blue-soft: #DCE6EE; --gold: #C9A876; --gold-deep: #8B6F3D;
+  --gold-soft: #F5E6CC; --pink: #DBA8A8; --pink-deep: #B07474; --pink-soft: #F5DCDC;
+  --teal: #7AA89C; --teal-soft: #D8E5DF; --line: #E5DCC8; --bronze: #B89B6A; }
+body { font-family: "PingFang SC", "Noto Serif SC", "Microsoft YaHei", serif;
+  background: var(--bg); color: var(--ink); display: flex; flex-direction: column;
+  align-items: center; padding: 0; margin: 0; min-height: 100vh; overflow-x: hidden; }
+.page { width: 1080px; height: 1440px; background: var(--bg-card); border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(74, 67, 38, 0.12); position: relative; overflow: hidden;
+  display: flex; flex-direction: column; margin-bottom: 20px; }
+.page-num { position: absolute; top: 32px; right: 40px; font-size: 18px; color: var(--ink3);
+  font-family: "Georgia", serif; z-index: 10; }
+.corner-deco { position: absolute; width: 60px; height: 60px; border: 2px solid var(--gold);
+  border-radius: 50%; opacity: 0.3; }
+.corner-deco.tl { top: 20px; left: 20px; } .corner-deco.tr { top: 20px; right: 20px; }
+.corner-deco.bl { bottom: 20px; left: 20px; } .corner-deco.br { bottom: 20px; right: 20px; }
+.cover { background: linear-gradient(165deg, #FBF7F0 0%, #F5E6CC 35%, #DCE6EE 75%, #D8E5DF 100%);
+  justify-content: center; align-items: center; text-align: center; padding: 100px 80px; }
+.cover h1 { font-size: 72px; font-weight: 800; color: var(--ink); line-height: 1.15;
+  margin-bottom: 30px; letter-spacing: 4px; }
+.cover h1 span { color: var(--bronze); font-size: 88px; display: block; margin-top: 12px; }
+.cover-subtitle { font-size: 28px; color: var(--ink2); font-style: italic; margin-bottom: 40px; }
+.cover-tag { display: inline-block; background: var(--bronze); color: #FFF; font-size: 22px;
+  padding: 12px 36px; border-radius: 30px; letter-spacing: 6px; font-weight: 600; margin-top: 30px; }
+.content { padding: 100px 80px 60px; flex: 1; display: flex; flex-direction: column; }
+.section-title { font-size: 44px; font-weight: 800; color: var(--blue-deep);
+  margin-bottom: 30px; text-align: center; letter-spacing: 2px; }
+.section-narrative { font-size: 26px; color: var(--ink); line-height: 1.85;
+  text-indent: 2em; margin-bottom: 20px; text-align: justify; }
+.illustration { flex: 1; display: flex; align-items: center; justify-content: center; margin: 16px 0; }
+.illustration svg { max-width: 920px; max-height: 580px; width: 100%; height: auto; }
+.step-list { margin: 16px 0; }
+.step-item { background: #FFF; border: 2px solid var(--line); border-left: 8px solid var(--gold);
+  padding: 16px 22px; border-radius: 8px; margin-bottom: 12px; font-size: 22px; line-height: 1.6; }
+.step-item .step-num { display: inline-block; background: var(--bronze); color: #FFF;
+  font-size: 18px; padding: 3px 12px; border-radius: 18px; margin-right: 8px; font-weight: 700; }
+.step-item .step-title { font-weight: 700; color: var(--blue-deep); font-size: 24px; margin-right: 6px; }
+.step-item .step-modern { display: block; margin-top: 4px; font-size: 17px; color: var(--teal); font-style: italic; }
+.summary-card { background: linear-gradient(135deg, var(--blue-soft) 0%, var(--gold-soft) 100%);
+  border: 2px solid var(--gold); border-radius: 16px; padding: 28px 36px; margin: 16px 0;
+  font-size: 22px; line-height: 1.7; }
+.summary-card .key { background: var(--bronze); color: #FFF; padding: 2px 10px;
+  border-radius: 6px; font-weight: 700; font-size: 20px; }
+.ending-quote { text-align: center; font-size: 28px; font-weight: 600; color: var(--blue-deep);
+  line-height: 1.7; margin: 24px 0; padding: 24px; border-top: 2px dashed var(--gold);
+  border-bottom: 2px dashed var(--gold); }
+.highlight-blue { color: var(--blue-deep); font-weight: 700; }
+.highlight-gold { color: var(--bronze); font-weight: 700; }
+.highlight-pink { color: var(--pink-deep); font-weight: 700; }
+.highlight-teal { color: var(--teal); font-weight: 700; }
+</style>
+</head>
+<body>
+
+<div class="page cover">
+  <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
+  <div class="corner-deco bl"></div><div class="corner-deco br"></div>
+  <h1>造物王国<span>与万能插头</span></h1>
+  <div class="cover-subtitle">— 一个让大模型能"调用一切"的故事 —</div>
+  <div class="cover-art" style="margin: 0 auto;">
+    <svg viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg">
+      <rect x="290" y="120" width="140" height="200" fill="var(--blue-soft)" stroke="var(--blue-deep)" stroke-width="3"/>
+      <polygon points="280,120 360,40 440,120" fill="var(--bronze)" stroke="var(--bronze)"/>
+      <rect x="335" y="60" width="50" height="40" fill="var(--blue-soft)" stroke="var(--blue-deep)" stroke-width="2"/>
+      <circle cx="360" cy="80" r="6" fill="var(--gold)"/>
+      <circle cx="360" cy="180" r="20" fill="var(--gold-soft)" stroke="var(--ink)" stroke-width="2"/>
+      <ellipse cx="360" cy="167" rx="16" ry="7" fill="var(--ink)"/>
+      <path d="M340 200 Q360 220 380 200 L382 270 L338 270 Z" fill="var(--blue-deep)"/>
+      <rect x="40" y="280" width="100" height="70" fill="var(--pink-soft)" stroke="var(--pink-deep)" stroke-width="2"/>
+      <polygon points="35,280 90,235 145,280" fill="var(--pink-deep)"/>
+      <text x="90" y="320" text-anchor="middle" font-size="14" fill="var(--ink)">⚒️ 铁匠</text>
+      <rect x="160" y="290" width="100" height="60" fill="var(--teal-soft)" stroke="var(--teal)" stroke-width="2"/>
+      <polygon points="155,290 210,245 265,290" fill="var(--teal)"/>
+      <text x="210" y="325" text-anchor="middle" font-size="14" fill="var(--ink)">🏥 药王</text>
+      <rect x="280" y="285" width="100" height="65" fill="var(--blue-soft)" stroke="var(--blue-deep)" stroke-width="2"/>
+      <polygon points="275,285 330,240 385,285" fill="var(--blue-deep)"/>
+      <text x="330" y="320" text-anchor="middle" font-size="14" fill="var(--ink)">⛵ 船坞</text>
+      <rect x="460" y="280" width="100" height="70" fill="var(--teal-soft)" stroke="var(--teal)" stroke-width="2"/>
+      <polygon points="455,280 510,235 565,280" fill="var(--teal)"/>
+      <text x="510" y="320" text-anchor="middle" font-size="14" fill="var(--ink)">✉️ 邮驿</text>
+      <rect x="580" y="290" width="100" height="60" fill="var(--pink-soft)" stroke="var(--pink-deep)" stroke-width="2"/>
+      <polygon points="575,290 630,245 685,290" fill="var(--pink-deep)"/>
+      <text x="630" y="325" text-anchor="middle" font-size="14" fill="var(--ink)">🔭 观象</text>
+      <rect x="320" y="365" width="80" height="32" fill="var(--bronze)" stroke="var(--ink)" stroke-width="3" rx="4"/>
+      <circle cx="335" cy="381" r="3" fill="var(--ink)"/><circle cx="350" cy="381" r="3" fill="var(--ink)"/>
+      <circle cx="365" cy="381" r="3" fill="var(--ink)"/><circle cx="380" cy="381" r="3" fill="var(--ink)"/>
+      <text x="360" y="382" text-anchor="middle" font-size="11" font-weight="700" fill="#FFF">MCP</text>
+      <line x1="340" y1="365" x2="140" y2="350" stroke="var(--gold)" stroke-width="2" stroke-dasharray="3,3"/>
+      <line x1="360" y1="365" x2="210" y2="350" stroke="var(--gold)" stroke-width="2" stroke-dasharray="3,3"/>
+      <line x1="380" y1="365" x2="510" y2="350" stroke="var(--gold)" stroke-width="2" stroke-dasharray="3,3"/>
+      <text x="360" y="412" text-anchor="middle" font-size="14" font-weight="700" fill="var(--bronze)">🔌 万能插头</text>
+    </svg>
+  </div>
+  <div class="cover-tag">MCP 入门 · 概念篇</div>
+  <div class="page-num">P 1 / 12</div>
+</div>
+
+
+<div class="page">
+  <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
+  <div class="corner-deco bl"></div><div class="corner-deco br"></div>
+  <div class="content">
+    <div class="section-title">🧙 塔楼里的大法师</div>
+    <div class="section-narrative">在造物王国的高塔里，住着一位<span class="highlight-gold">大法师</span>。他已三百岁，通晓七国语言，能吟诵千年古诗，能推演未来二十年。王国上下遇到任何文字相关的事，第一反应就是求助于他。</div>
+    <div class="section-narrative">然而，法师虽能<span class="highlight-blue">「言」</span>，却<span class="highlight-pink">手无缚鸡之力</span>。</div>
+    <div class="illustration">
+      <svg viewBox="0 0 920 480" xmlns="http://www.w3.org/2000/svg">
+        <rect x="380" y="100" width="160" height="260" fill="var(--blue-soft)" stroke="var(--blue-deep)" stroke-width="3"/>
+        <polygon points="370,100 460,20 550,100" fill="var(--bronze)" stroke="var(--bronze)"/>
+        <rect x="435" y="40" width="50" height="50" fill="var(--blue-soft)" stroke="var(--blue-deep)" stroke-width="2"/>
+        <rect x="430" y="160" width="60" height="80" fill="var(--gold)" stroke="var(--ink)" stroke-width="2" rx="20"/>
+        <line x1="460" y1="160" x2="460" y2="240" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="430" y1="200" x2="490" y2="200" stroke="var(--ink)" stroke-width="2"/>
+        <circle cx="460" cy="190" r="14" fill="var(--ink)"/>
+        <path d="M445 205 Q460 220 475 205 L478 240 L442 240 Z" fill="var(--ink)"/>
+        <rect x="540" y="180" width="40" height="50" fill="var(--bg-card)" stroke="var(--ink)" stroke-width="2" transform="rotate(10 560 205)"/>
+        <rect x="360" y="200" width="40" height="50" fill="var(--bg-card)" stroke="var(--ink)" stroke-width="2" transform="rotate(-10 380 225)"/>
+        <text x="200" y="100" font-size="32" fill="var(--gold)">✦</text>
+        <text x="700" y="80" font-size="24" fill="var(--gold)">✦</text>
+        <text x="750" y="180" font-size="20" fill="var(--gold)">★</text>
+        <text x="180" y="220" font-size="20" fill="var(--gold)">✦</text>
+        <g transform="translate(50, 320)">
+          <rect x="0" y="0" width="380" height="120" fill="#FFF" stroke="var(--line)" stroke-width="2" rx="12"/>
+          <text x="20" y="35" font-size="24" font-weight="700" fill="var(--blue-deep)">✅ 他能做的：</text>
+          <text x="20" y="70" font-size="20" fill="var(--ink)">· 写诗 · 翻译 · 推演 · 推理</text>
+          <text x="20" y="100" font-size="20" fill="var(--ink)">· 总结 · 问答 · 编程思路</text>
+        </g>
+        <g transform="translate(490, 320)">
+          <rect x="0" y="0" width="380" height="120" fill="#FFF" stroke="var(--pink)" stroke-width="2" rx="12"/>
+          <text x="20" y="35" font-size="24" font-weight="700" fill="var(--pink-deep)">❌ 他做不了的：</text>
+          <text x="20" y="70" font-size="20" fill="var(--ink)">· 烧锅炉 · 炼铁 · 修船</text>
+          <text x="20" y="100" font-size="20" fill="var(--ink)">· 抓药 · 驾船 · 看星象</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="page-num">P 2 / 12</div>
+</div>
+
+
+<div class="page">
+  <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
+  <div class="corner-deco bl"></div><div class="corner-deco br"></div>
+  <div class="content">
+    <div class="section-title">⚒️🏥⛵📒✉️🔭📚 王国的七大工坊</div>
+    <div class="section-narrative">王国境内有<span class="highlight-blue">七座著名工坊</span>，各自有独门本领。每一座工坊，<span class="highlight-pink">规矩都不同</span>。</div>
+    <div class="illustration">
+      <svg viewBox="0 0 920 580" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(40, 60)"><rect x="0" y="20" width="180" height="120" fill="var(--pink-soft)" stroke="var(--pink-deep)" stroke-width="2" rx="8"/><polygon points="-5,20 90,-20 185,20" fill="var(--pink-deep)"/><text x="90" y="80" text-anchor="middle" font-size="50">⚒️</text><text x="90" y="120" text-anchor="middle" font-size="22" font-weight="700" fill="var(--ink)">铁匠铺</text><text x="90" y="148" text-anchor="middle" font-size="14" fill="var(--ink2)">锻造兵器</text></g>
+        <g transform="translate(260, 60)"><rect x="0" y="20" width="180" height="120" fill="var(--teal-soft)" stroke="var(--teal)" stroke-width="2" rx="8"/><polygon points="-5,20 90,-20 185,20" fill="var(--teal)"/><text x="90" y="80" text-anchor="middle" font-size="50">🏥</text><text x="90" y="120" text-anchor="middle" font-size="22" font-weight="700" fill="var(--ink)">药王堂</text><text x="90" y="148" text-anchor="middle" font-size="14" fill="var(--ink2)">抓药问诊</text></g>
+        <g transform="translate(480, 60)"><rect x="0" y="20" width="180" height="120" fill="var(--blue-soft)" stroke="var(--blue-deep)" stroke-width="2" rx="8"/><polygon points="-5,20 90,-20 185,20" fill="var(--blue-deep)"/><text x="90" y="80" text-anchor="middle" font-size="50">⛵</text><text x="90" y="120" text-anchor="middle" font-size="22" font-weight="700" fill="var(--ink)">船 坞</text><text x="90" y="148" text-anchor="middle" font-size="14" fill="var(--ink2)">修船出海</text></g>
+        <g transform="translate(700, 60)"><rect x="0" y="20" width="180" height="120" fill="var(--gold-soft)" stroke="var(--gold-deep)" stroke-width="2" rx="8"/><polygon points="-5,20 90,-20 185,20" fill="var(--gold-deep)"/><text x="90" y="80" text-anchor="middle" font-size="50">📒</text><text x="90" y="120" text-anchor="middle" font-size="22" font-weight="700" fill="var(--ink)">账 房</text><text x="90" y="148" text-anchor="middle" font-size="14" fill="var(--ink2)">算账出票</text></g>
+        <g transform="translate(150, 300)"><rect x="0" y="20" width="180" height="120" fill="var(--teal-soft)" stroke="var(--teal)" stroke-width="2" rx="8"/><polygon points="-5,20 90,-20 185,20" fill="var(--teal)"/><text x="90" y="80" text-anchor="middle" font-size="50">✉️</text><text x="90" y="120" text-anchor="middle" font-size="22" font-weight="700" fill="var(--ink)">邮 驿</text><text x="90" y="148" text-anchor="middle" font-size="14" fill="var(--ink2)">千里传书</text></g>
+        <g transform="translate(370, 300)"><rect x="0" y="20" width="180" height="120" fill="var(--pink-soft)" stroke="var(--pink-deep)" stroke-width="2" rx="8"/><polygon points="-5,20 90,-20 185,20" fill="var(--pink-deep)"/><text x="90" y="80" text-anchor="middle" font-size="50">🔭</text><text x="90" y="120" text-anchor="middle" font-size="22" font-weight="700" fill="var(--ink)">观象台</text><text x="90" y="148" text-anchor="middle" font-size="14" fill="var(--ink2)">观天象</text></g>
+        <g transform="translate(590, 300)"><rect x="0" y="20" width="180" height="120" fill="var(--blue-soft)" stroke="var(--blue-deep)" stroke-width="2" rx="8"/><polygon points="-5,20 90,-20 185,20" fill="var(--blue-deep)"/><text x="90" y="80" text-anchor="middle" font-size="50">📚</text><text x="90" y="120" text-anchor="middle" font-size="22" font-weight="700" fill="var(--ink)">图书馆</text><text x="90" y="148" text-anchor="middle" font-size="14" fill="var(--ink2)">检索典籍</text></g>
+        <g transform="translate(820, 380)"><text x="0" y="0" font-size="60" font-weight="800" fill="var(--pink-deep)">!</text></g>
+      </svg>
+    </div>
+  </div>
+  <div class="page-num">P 3 / 12</div>
+</div>
+
+
+<div class="page">
+  <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
+  <div class="corner-deco bl"></div><div class="corner-deco br"></div>
+  <div class="content">
+    <div class="section-title">😵 大法师的噩梦</div>
+    <div class="section-narrative">法师每次要去一座工坊办事，都得<span class="highlight-pink">先学那套规矩</span>。王国的贤士把这称作：<span class="highlight-pink">「七工坊的接口地狱」</span>。</div>
+    <div class="illustration">
+      <svg viewBox="0 0 920 540" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(420, 100)">
+          <circle cx="40" cy="40" r="30" fill="var(--gold-soft)" stroke="var(--ink)" stroke-width="2"/>
+          <ellipse cx="40" cy="22" rx="25" ry="10" fill="var(--ink)"/>
+          <path d="M14 70 Q40 100 66 70 L70 180 L10 180 Z" fill="var(--blue-deep)"/>
+          <line x1="28" y1="38" x2="34" y2="34" stroke="var(--ink)" stroke-width="2"/>
+          <line x1="46" y1="34" x2="52" y2="38" stroke="var(--ink)" stroke-width="2"/>
+          <ellipse cx="76" cy="42" rx="3" ry="6" fill="var(--blue)"/>
+        </g>
+        <g><ellipse cx="160" cy="100" rx="80" ry="35" fill="#FFF" stroke="var(--pink)" stroke-width="2"/><text x="160" y="92" text-anchor="middle" font-size="14" fill="var(--ink)">脱鞋 + 背</text><text x="160" y="112" text-anchor="middle" font-size="16" font-weight="700" fill="var(--pink-deep)">"打铁令"</text></g>
+        <g><ellipse cx="800" cy="100" rx="80" ry="35" fill="#FFF" stroke="var(--teal)" stroke-width="2"/><text x="800" y="92" text-anchor="middle" font-size="14" fill="var(--ink)">焚香 + 念</text><text x="800" y="112" text-anchor="middle" font-size="16" font-weight="700" fill="var(--teal)">"岐黄咒"</text></g>
+        <g><ellipse cx="100" cy="280" rx="90" ry="35" fill="#FFF" stroke="var(--blue-deep)" stroke-width="2"/><text x="100" y="272" text-anchor="middle" font-size="14" fill="var(--ink)">申请</text><text x="100" y="292" text-anchor="middle" font-size="16" font-weight="700" fill="var(--blue-deep)">"海事令牌"</text></g>
+        <g><ellipse cx="820" cy="280" rx="90" ry="35" fill="#FFF" stroke="var(--gold-deep)" stroke-width="2"/><text x="820" y="272" text-anchor="middle" font-size="14" fill="var(--ink)">学</text><text x="820" y="292" text-anchor="middle" font-size="16" font-weight="700" fill="var(--gold-deep)">"珠算密文"</text></g>
+        <g><ellipse cx="160" cy="440" rx="80" ry="35" fill="#FFF" stroke="var(--pink)" stroke-width="2"/><text x="160" y="432" text-anchor="middle" font-size="14" fill="var(--ink)">用</text><text x="160" y="452" text-anchor="middle" font-size="16" font-weight="700" fill="var(--pink-deep)">"羽书格式"</text></g>
+        <g><ellipse cx="460" cy="470" rx="100" ry="35" fill="#FFF" stroke="var(--blue-deep)" stroke-width="2"/><text x="460" y="462" text-anchor="middle" font-size="14" fill="var(--ink)">用</text><text x="460" y="482" text-anchor="middle" font-size="16" font-weight="700" fill="var(--blue-deep)">"黄道术语"</text></g>
+        <g><ellipse cx="800" cy="440" rx="80" ry="35" fill="#FFF" stroke="var(--teal)" stroke-width="2"/><text x="800" y="432" text-anchor="middle" font-size="14" fill="var(--ink)">念</text><text x="800" y="452" text-anchor="middle" font-size="16" font-weight="700" fill="var(--teal)">"索引咒语"</text></g>
+        <line x1="420" y1="180" x2="240" y2="100" stroke="var(--pink)" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="500" y1="180" x2="720" y2="100" stroke="var(--teal)" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="410" y1="220" x2="190" y2="280" stroke="var(--blue-deep)" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="510" y1="220" x2="730" y2="280" stroke="var(--gold-deep)" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="430" y1="280" x2="240" y2="440" stroke="var(--pink)" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="460" y1="280" x2="460" y2="435" stroke="var(--blue-deep)" stroke-width="1" stroke-dasharray="3,3"/>
+        <line x1="490" y1="280" x2="720" y2="440" stroke="var(--teal)" stroke-width="1" stroke-dasharray="3,3"/>
+        <g transform="translate(280, 530)"><text x="180" y="0" text-anchor="middle" font-size="32" font-weight="800" fill="var(--pink-deep)">🔥 七工坊 · 接口地狱 🔥</text></g>
+      </svg>
+    </div>
+  </div>
+  <div class="page-num">P 4 / 12</div>
+</div>
+
+
+<div class="page">
+  <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
+  <div class="corner-deco bl"></div><div class="corner-deco br"></div>
+  <div class="content">
+    <div class="section-title">⚔️ 七国同时告急！</div>
+    <div class="section-narrative">某个深秋之夜，<span class="highlight-pink">七国信使同时入宫</span>。国王急召大法师。法师满头大汗：<span class="highlight-pink">一个晚上不可能学完七套规矩</span>。</div>
+    <div class="illustration">
+      <svg viewBox="0 0 920 520" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="320" width="920" height="200" fill="var(--gold-soft)" opacity="0.4"/>
+        <rect x="0" y="320" width="920" height="10" fill="var(--gold)"/>
+        <rect x="100" y="100" width="20" height="220" fill="var(--gold)" opacity="0.6"/>
+        <rect x="800" y="100" width="20" height="220" fill="var(--gold)" opacity="0.6"/>
+        <rect x="400" y="200" width="120" height="120" fill="var(--bronze)" stroke="var(--ink)" stroke-width="2"/>
+        <polygon points="400,200 460,140 520,200" fill="var(--bronze)"/>
+        <circle cx="460" cy="180" r="20" fill="var(--gold-soft)" stroke="var(--ink)" stroke-width="2"/>
+        <polygon points="445,160 460,145 475,160 470,170 450,170" fill="var(--gold)"/>
+        <path d="M444 198 Q460 220 476 198 L478 230 L442 230 Z" fill="var(--ink)"/>
+        <g transform="translate(280, 350)"><circle cx="0" cy="0" r="14" fill="var(--gold-soft)" stroke="var(--ink)" stroke-width="1.5"/><path d="M-12 14 Q0 28 12 14 L14 60 L-14 60 Z" fill="var(--blue-deep)"/><text x="0" y="6" text-anchor="middle" font-size="14">😰</text></g>
+        <text x="100" y="60" font-size="36">🏔️</text><rect x="60" y="65" width="100" height="40" fill="#FFF" stroke="var(--ink)" stroke-width="1.5" rx="6"/><text x="110" y="92" text-anchor="middle" font-size="14" fill="var(--ink)">北境：山洪</text>
+        <text x="830" y="60" font-size="36">🌾</text><rect x="780" y="65" width="100" height="40" fill="#FFF" stroke="var(--ink)" stroke-width="1.5" rx="6"/><text x="830" y="92" text-anchor="middle" font-size="14" fill="var(--ink)">南方：瘟疫</text>
+        <text x="450" y="30" font-size="36">🌊</text><rect x="400" y="35" width="100" height="40" fill="#FFF" stroke="var(--ink)" stroke-width="1.5" rx="6"/><text x="450" y="62" text-anchor="middle" font-size="14" fill="var(--ink)">东海：海盗</text>
+        <text x="40" y="160" font-size="36">💰</text><rect x="0" y="170" width="100" height="40" fill="#FFF" stroke="var(--ink)" stroke-width="1.5" rx="6"/><text x="50" y="197" text-anchor="middle" font-size="14" fill="var(--ink)">西域：国库空</text>
+        <text x="830" y="160" font-size="36">✉️</text><rect x="780" y="170" width="100" height="40" fill="#FFF" stroke="var(--ink)" stroke-width="1.5" rx="6"/><text x="830" y="197" text-anchor="middle" font-size="14" fill="var(--ink)">中都：六国信</text>
+        <text x="200" y="160" font-size="36">🔭</text><rect x="160" y="170" width="100" height="40" fill="#FFF" stroke="var(--ink)" stroke-width="1.5" rx="6"/><text x="210" y="197" text-anchor="middle" font-size="14" fill="var(--ink)">天象：彗星</text>
+        <text x="660" y="160" font-size="36">📚</text><rect x="620" y="170" width="100" height="40" fill="#FFF" stroke="var(--ink)" stroke-width="1.5" rx="6"/><text x="670" y="197" text-anchor="middle" font-size="14" fill="var(--ink)">学宫：备考</text>
+        <g transform="translate(160, 420)"><text x="300" y="0" text-anchor="middle" font-size="22" font-weight="700" fill="var(--ink2)">"陛下，臣需要</text><text x="300" y="30" text-anchor="middle" font-size="22" font-weight="700" fill="var(--pink-deep)">一个翻译</text><text x="300" y="60" text-anchor="middle" font-size="22" font-weight="700" fill="var(--ink2)">让所有工坊都说同一种话。"</text></g>
+      </svg>
+    </div>
+  </div>
+  <div class="page-num">P 5 / 12</div>
+</div>
+
+
+<div class="page">
+  <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
+  <div class="corner-deco bl"></div><div class="corner-deco br"></div>
+  <div class="content">
+    <div class="section-title">🔌 万能插头登场</div>
+    <div class="section-narrative">工部尚书匆匆赶来，打开木匣。里面躺着一只<span class="highlight-gold">金色小盒子</span>，上面有<span class="highlight-blue">七个插槽</span>，每个插槽形状都不同，却都<span class="highlight-gold">能对接七座工坊</span>。</div>
+    <div class="illustration">
+      <svg viewBox="0 0 920 540" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(80, 200)"><circle cx="0" cy="0" r="32" fill="var(--gold-soft)" stroke="var(--ink)" stroke-width="2"/><ellipse cx="0" cy="-18" rx="26" ry="10" fill="var(--ink)"/><path d="M-26 32 Q0 60 26 32 L30 150 L-30 150 Z" fill="var(--teal)"/><text x="0" y="8" text-anchor="middle" font-size="24">👨‍💼</text><text x="0" y="180" text-anchor="middle" font-size="18" font-weight="700" fill="var(--ink)">工部尚书</text></g>
+        <g transform="translate(220, 180)"><path d="M0 80 L40 0 L260 0 L300 80 Z" fill="var(--bronze)" stroke="var(--ink)" stroke-width="2"/><path d="M0 80 L300 80 L300 180 L0 180 Z" fill="var(--gold-deep)" stroke="var(--ink)" stroke-width="2"/><line x1="150" y1="0" x2="150" y2="80" stroke="var(--ink)" stroke-width="1" opacity="0.5"/></g>
+        <g transform="translate(540, 280)"><circle cx="0" cy="0" r="120" fill="var(--gold)" opacity="0.15"/><circle cx="0" cy="0" r="80" fill="var(--gold)" opacity="0.25"/><rect x="-90" y="-40" width="180" height="80" fill="var(--bronze)" stroke="var(--ink)" stroke-width="3" rx="8"/><text x="0" y="6" text-anchor="middle" font-size="32" font-weight="800" fill="#FFF">MCP</text><circle cx="-70" cy="40" r="6" fill="var(--ink)"/><circle cx="-50" cy="40" r="6" fill="var(--ink)"/><circle cx="-30" cy="40" r="6" fill="var(--ink)"/><circle cx="-10" cy="40" r="6" fill="var(--ink)"/><circle cx="10" cy="40" r="6" fill="var(--ink)"/><circle cx="30" cy="40" r="6" fill="var(--ink)"/><circle cx="50" cy="40" r="6" fill="var(--ink)"/><text x="0" y="80" text-anchor="middle" font-size="18" font-weight="700" fill="var(--bronze)">万能插头</text></g>
+        <g transform="translate(800, 200)"><circle cx="0" cy="0" r="28" fill="var(--gold-soft)" stroke="var(--ink)" stroke-width="2"/><polygon points="-12,-18 0,-30 12,-18 8,-12 -8,-12" fill="var(--gold)"/><path d="M-22 28 Q0 50 22 28 L24 60 L-24 60 Z" fill="var(--ink)"/><text x="0" y="80" text-anchor="middle" font-size="18" font-weight="700" fill="var(--ink)">国王</text><text x="0" y="100" text-anchor="middle" font-size="20">😃</text></g>
+        <g transform="translate(700, 380)"><circle cx="0" cy="0" r="22" fill="var(--gold-soft)" stroke="var(--ink)" stroke-width="1.5"/><ellipse cx="0" cy="-12" rx="18" ry="7" fill="var(--ink)"/><path d="M-18 22 Q0 38 18 22 L20 70 L-20 70 Z" fill="var(--blue-deep)"/><text x="0" y="6" text-anchor="middle" font-size="18">😌</text><text x="0" y="92" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">法师</text></g>
+        <g transform="translate(60, 80)"><ellipse cx="60" cy="0" rx="100" ry="30" fill="var(--gold-soft)" stroke="var(--bronze)" stroke-width="2"/><text x="60" y="6" text-anchor="middle" font-size="16" font-weight="700" fill="var(--ink)">"只有一套规矩！"</text></g>
+      </svg>
+    </div>
+  </div>
+  <div class="page-num">P 6 / 12</div>
+</div>
+
+
+<div class="page">
+  <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
+  <div class="corner-deco bl"></div><div class="corner-deco br"></div>
+  <div class="content">
+    <div class="section-title">✨ 万能插头的五步魔法仪式</div>
+    <div class="section-narrative">工部尚书解释了<span class="highlight-gold">万能插头的运作过程</span>。每一步都有它的现代 AI 对应物。</div>
+    <div class="step-list">
+      <div class="step-item"><span class="step-num">①</span><span class="step-title">📜 宣告（Discover）</span>法师念统一咒语：<span class="highlight-blue">"吾需要所有能调用的工坊名单。"</span> 插头自动列出 7 工坊的"招牌菜"。<span class="step-modern">→ 现代：MCP 客户端向 Server 查询"你有什么工具"</span></div>
+      <div class="step-item"><span class="step-num">②</span><span class="step-title">🤝 立约（Connect）</span>法师说：<span class="highlight-blue">"今天要调：铁匠 + 药王 + 船坞。"</span> 插头自动去那 3 座工坊立约，<span class="highlight-pink">无需法师亲往</span>。<span class="step-modern">→ 现代：MCP 客户端建立 session，与选定的 Server 握手</span></div>
+    </div>
+    <div class="illustration">
+      <svg viewBox="0 0 920 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(80, 120)"><circle cx="0" cy="0" r="32" fill="var(--gold-soft)" stroke="var(--ink)" stroke-width="2"/><ellipse cx="0" cy="-18" rx="26" ry="10" fill="var(--ink)"/><path d="M-26 32 Q0 60 26 32 L30 130 L-30 130 Z" fill="var(--blue-deep)"/><text x="0" y="8" text-anchor="middle" font-size="20">🧙</text></g>
+        <g transform="translate(460, 120)"><rect x="-50" y="-30" width="100" height="60" fill="var(--bronze)" stroke="var(--ink)" stroke-width="3" rx="8"/><text x="0" y="8" text-anchor="middle" font-size="20" font-weight="800" fill="#FFF">MCP</text><circle cx="-30" cy="30" r="4" fill="var(--ink)"/><circle cx="-15" cy="30" r="4" fill="var(--ink)"/><circle cx="0" cy="30" r="4" fill="var(--ink)"/><circle cx="15" cy="30" r="4" fill="var(--ink)"/><circle cx="30" cy="30" r="4" fill="var(--ink)"/></g>
+        <g transform="translate(660, 70)"><text x="0" y="0" font-size="32">⚒️</text><text x="0" y="50" font-size="32">🏥</text><text x="0" y="100" font-size="32">⛵</text><text x="0" y="150" font-size="32">📒</text><text x="120" y="0" font-size="32">✉️</text><text x="120" y="50" font-size="32">🔭</text><text x="120" y="100" font-size="32">📚</text></g>
+        <line x1="120" y1="120" x2="400" y2="120" stroke="var(--gold-deep)" stroke-width="3" marker-end="url(#arrow)"/>
+        <line x1="520" y1="120" x2="640" y2="120" stroke="var(--gold-deep)" stroke-width="3" marker-end="url(#arrow)"/>
+        <text x="260" y="105" text-anchor="middle" font-size="14" font-weight="700" fill="var(--gold-deep)">Discover</text>
+        <text x="580" y="105" text-anchor="middle" font-size="14" font-weight="700" fill="var(--gold-deep)">Connect</text>
+        <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--gold-deep)"/></marker></defs>
+      </svg>
+    </div>
+  </div>
+  <div class="page-num">P 7 / 12</div>
+</div>
+
+
+<div class="page">
+  <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
+  <div class="corner-deco bl"></div><div class="corner-deco br"></div>
+  <div class="content">
+    <div class="section-title">✨ 五步魔法仪式（续）</div>
+    <div class="step-list">
+      <div class="step-item"><span class="step-num">③</span><span class="step-title">📞 召唤（Call）</span>法师发出指令：<span class="highlight-blue">"请铁匠锻造 100 把铁剑，配方：精钢 + 硬木柄。"</span> 插头自动把指令翻译成老铁听得懂的话。法师全程用<span class="highlight-gold">同一套话</span>。<span class="step-modern">→ 现代：MCP 客户端发起 tool call，Server 执行</span></div>
+      <div class="step-item"><span class="step-num">④</span><span class="step-title">📬 回应（Response）</span>工坊的产出由<span class="highlight-gold">插头统一回收</span>：100 把铁剑 / 10 副方子 / 1 张海图。插头按标准格式打包成清单。<span class="step-modern">→ 现代：MCP Server 返回标准 JSON 结果</span></div>
+      <div class="step-item"><span class="step-num">⑤</span><span class="step-title">🛡️ 守门（Guard）</span>插头有<span class="highlight-pink">三道门</span>：<span class="highlight-blue">权限</span> · <span class="highlight-blue">令牌</span> · <span class="highlight-blue">不可篡改</span>。不是乱接的！<span class="step-modern">→ 现代：MCP 的鉴权、沙箱、审计</span></div>
+    </div>
+    <div class="illustration">
+      <svg viewBox="0 0 920 220" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(80, 110)"><circle cx="0" cy="0" r="28" fill="var(--gold-soft)" stroke="var(--ink)" stroke-width="2"/><ellipse cx="0" cy="-15" rx="22" ry="8" fill="var(--ink)"/><path d="M-22 28 Q0 50 22 28 L24 80 L-24 80 Z" fill="var(--blue-deep)"/><text x="0" y="6" text-anchor="middle" font-size="18">🧙</text></g>
+        <g><circle cx="220" cy="110" r="22" fill="var(--bronze)" stroke="var(--ink)" stroke-width="2"/><text x="220" y="118" text-anchor="middle" font-size="20" font-weight="800" fill="#FFF">③</text><text x="220" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Call</text></g>
+        <g><circle cx="380" cy="110" r="22" fill="var(--bronze)" stroke="var(--ink)" stroke-width="2"/><text x="380" y="118" text-anchor="middle" font-size="20" font-weight="800" fill="#FFF">④</text><text x="380" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Response</text></g>
+        <g><circle cx="560" cy="110" r="22" fill="var(--bronze)" stroke="var(--ink)" stroke-width="2"/><text x="560" y="118" text-anchor="middle" font-size="20" font-weight="800" fill="#FFF">⑤</text><text x="560" y="160" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)">Guard</text></g>
+        <g transform="translate(720, 110)"><text x="0" y="0" text-anchor="middle" font-size="40">🗡️</text><text x="0" y="50" text-anchor="middle" font-size="40">💊</text><text x="80" y="0" text-anchor="middle" font-size="40">🗺️</text><text x="80" y="50" text-anchor="middle" font-size="40">💰</text></g>
+        <line x1="108" y1="110" x2="198" y2="110" stroke="var(--gold-deep)" stroke-width="2" marker-end="url(#arrow2)"/>
+        <line x1="242" y1="110" x2="358" y2="110" stroke="var(--gold-deep)" stroke-width="2" marker-end="url(#arrow2)"/>
+        <line x1="402" y1="110" x2="538" y2="110" stroke="var(--gold-deep)" stroke-width="2" marker-end="url(#arrow2)"/>
+        <line x1="582" y1="110" x2="680" y2="110" stroke="var(--gold-deep)" stroke-width="2" marker-end="url(#arrow2)"/>
+        <defs><marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--gold-deep)"/></marker></defs>
+      </svg>
+    </div>
+  </div>
+  <div class="page-num">P 8 / 12</div>
+</div>
+
+
+<div class="page">
+  <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
+  <div class="corner-deco bl"></div><div class="corner-deco br"></div>
+  <div class="content">
+    <div class="section-title">👑 七国危机 · 一夕平定</div>
+    <div class="section-narrative">那个夜晚，大法师<span class="highlight-gold">只用了 1 个时辰</span>。他全程只说<span class="highlight-blue">同一套话</span>，由<span class="highlight-gold">万能插头</span>翻译。</div>
+    <div class="illustration">
+      <svg viewBox="0 0 920 480" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(360, 200)"><circle cx="0" cy="0" r="32" fill="var(--gold-soft)" stroke="var(--ink)" stroke-width="2"/><ellipse cx="0" cy="-18" rx="26" ry="10" fill="var(--ink)"/><path d="M-26 32 Q0 60 26 32 L30 130 L-30 130 Z" fill="var(--blue-deep)"/><text x="0" y="6" text-anchor="middle" font-size="20">🧙</text></g>
+        <g transform="translate(460, 200)"><rect x="-50" y="-30" width="100" height="60" fill="var(--bronze)" stroke="var(--ink)" stroke-width="3" rx="8"/><text x="0" y="8" text-anchor="middle" font-size="18" font-weight="800" fill="#FFF">MCP</text><circle cx="-30" cy="30" r="4" fill="var(--ink)"/><circle cx="-15" cy="30" r="4" fill="var(--ink)"/><circle cx="0" cy="30" r="4" fill="var(--ink)"/><circle cx="15" cy="30" r="4" fill="var(--ink)"/><circle cx="30" cy="30" r="4" fill="var(--ink)"/></g>
+        <text x="100" y="80" font-size="40">⚒️</text><text x="140" y="80" font-size="16" font-weight="700" fill="var(--ink)">→ 🗡️ 1000 把</text>
+        <text x="100" y="160" font-size="40">🏥</text><text x="140" y="160" font-size="16" font-weight="700" fill="var(--ink)">→ 💊 1000 副</text>
+        <text x="100" y="240" font-size="40">⛵</text><text x="140" y="240" font-size="16" font-weight="700" fill="var(--ink)">→ ⛵ 50 艘</text>
+        <text x="100" y="320" font-size="40">📒</text><text x="140" y="320" font-size="16" font-weight="700" fill="var(--ink)">→ 💰 50 万币</text>
+        <text x="700" y="80" font-size="40">✉️</text><text x="650" y="80" text-anchor="end" font-size="16" font-weight="700" fill="var(--ink)">6 国回信 ✉️</text>
+        <text x="700" y="160" font-size="40">🔭</text><text x="650" y="160" text-anchor="end" font-size="16" font-weight="700" fill="var(--ink)">彗星图谱 📊</text>
+        <text x="700" y="240" font-size="40">📚</text><text x="650" y="240" text-anchor="end" font-size="16" font-weight="700" fill="var(--ink)">备考要点 📜</text>
+        <line x1="450" y1="200" x2="140" y2="80" stroke="var(--gold)" stroke-width="2" stroke-dasharray="3,3"/>
+        <line x1="450" y1="200" x2="140" y2="160" stroke="var(--gold)" stroke-width="2" stroke-dasharray="3,3"/>
+        <line x1="450" y1="200" x2="140" y2="240" stroke="var(--gold)" stroke-width="2" stroke-dasharray="3,3"/>
+        <line x1="450" y1="200" x2="140" y2="320" stroke="var(--gold)" stroke-width="2" stroke-dasharray="3,3"/>
+        <line x1="470" y1="200" x2="660" y2="80" stroke="var(--gold)" stroke-width="2" stroke-dasharray="3,3"/>
+        <line x1="470" y1="200" x2="660" y2="160" stroke="var(--gold)" stroke-width="2" stroke-dasharray="3,3"/>
+        <line x1="470" y1="200" x2="660" y2="240" stroke="var(--gold)" stroke-width="2" stroke-dasharray="3,3"/>
+        <g transform="translate(360, 410)"><text x="100" y="0" text-anchor="middle" font-size="36" font-weight="800" fill="var(--bronze)">⏰ 1 个时辰 · 七国平定</text></g>
+      </svg>
+    </div>
+  </div>
+  <div class="page-num">P 9 / 12</div>
+</div>
+
+
+<div class="page">
+  <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
+  <div class="corner-deco bl"></div><div class="corner-deco br"></div>
+  <div class="content">
+    <div class="section-title">📖 三个真相</div>
+    <div class="section-narrative" style="font-size:24px"><span class="highlight-blue">真相一</span>：万能插头的精髓不是"快"，而是<span class="highlight-gold">「标准化」</span>。<br>一次接入，永久通用。</div>
+    <div class="section-narrative" style="font-size:24px"><span class="highlight-blue">真相二</span>：万能插头让大法师<span class="highlight-pink">不学规矩</span>。<br>法师专注"想做什么"，插头负责"让工坊听懂"。</div>
+    <div class="section-narrative" style="font-size:24px"><span class="highlight-blue">真相三</span>：<span class="highlight-gold">工坊主人也不必迁就法师</span>。<br>每一座工坊保持自己的"独立语言"，插头负责翻译 —— 这叫<span class="highlight-teal">「解耦」</span>。</div>
+    <div class="summary-card">工部尚书说：<br>"法师<span class="key">解耦</span>了工坊，工坊<span class="key">解耦</span>了法师。<br><strong>中间靠'插头'。</strong>"</div>
+  </div>
+  <div class="page-num">P 10 / 12</div>
+</div>
+
+
+<div class="page">
+  <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
+  <div class="corner-deco bl"></div><div class="corner-deco br"></div>
+  <div class="content">
+    <div class="section-title">💡 国王顿悟</div>
+    <div class="section-narrative">国王听完汇报，沉吟良久，忽然拍案：</div>
+    <div class="ending-quote">"朕明白了！<br>大法师还是那位大法师——<br>他还是<span class="highlight-pink">只能想和说</span>，不能亲手做。<br>万能插头<span class="highlight-gold">没有让大法师变万能</span>，<br>它只是<span class="highlight-blue">给了大法师一个标准化的入口</span>——<br>通过这个入口，<br>法师能<span class="highlight-blue">指挥任何愿意接插头的工坊</span>。"</div>
+    <div class="illustration">
+      <svg viewBox="0 0 920 320" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(460, 160)">
+          <circle cx="0" cy="-30" r="60" fill="var(--gold)" opacity="0.2"/>
+          <circle cx="0" cy="-30" r="40" fill="var(--gold)" opacity="0.3"/>
+          <text x="0" y="-110" text-anchor="middle" font-size="32" fill="var(--gold)">✦</text>
+          <text x="80" y="-60" text-anchor="middle" font-size="24" fill="var(--gold)">✦</text>
+          <text x="-80" y="-60" text-anchor="middle" font-size="24" fill="var(--gold)">✦</text>
+          <text x="60" y="0" text-anchor="middle" font-size="20" fill="var(--gold)">★</text>
+          <text x="-60" y="0" text-anchor="middle" font-size="20" fill="var(--gold)">★</text>
+          <circle cx="0" cy="0" r="32" fill="var(--gold-soft)" stroke="var(--ink)" stroke-width="2"/>
+          <polygon points="-14,-22 0,-36 14,-22 10,-14 -10,-14" fill="var(--gold)"/>
+          <path d="M-26 30 Q0 60 26 30 L30 80 L-30 80 Z" fill="var(--ink)"/>
+          <text x="0" y="8" text-anchor="middle" font-size="18">😃</text>
+          <text x="0" y="120" text-anchor="middle" font-size="20" font-weight="700" fill="var(--ink)">国王</text>
+        </g>
+        <g transform="translate(140, 60)"><rect x="0" y="0" width="200" height="100" fill="#FFF" stroke="var(--bronze)" stroke-width="2" rx="12"/><text x="100" y="35" text-anchor="middle" font-size="16" fill="var(--ink2)">法师的能力？</text><text x="100" y="65" text-anchor="middle" font-size="20" font-weight="700" fill="var(--pink-deep)">没有变大</text><text x="100" y="90" text-anchor="middle" font-size="14" fill="var(--ink2)">只是多了"标准入口"</text></g>
+        <g transform="translate(580, 60)"><rect x="0" y="0" width="200" height="100" fill="#FFF" stroke="var(--blue-deep)" stroke-width="2" rx="12"/><text x="100" y="35" text-anchor="middle" font-size="16" fill="var(--ink2)">能指挥的工坊？</text><text x="100" y="65" text-anchor="middle" font-size="20" font-weight="700" fill="var(--blue-deep)">任何接插头的</text><text x="100" y="90" text-anchor="middle" font-size="14" fill="var(--ink2)">工坊不必为法师改造</text></g>
+      </svg>
+    </div>
+  </div>
+  <div class="page-num">P 11 / 12</div>
+</div>
+
+
+<div class="page">
+  <div class="corner-deco tl"></div><div class="corner-deco tr"></div>
+  <div class="corner-deco bl"></div><div class="corner-deco br"></div>
+  <div class="content" style="justify-content: center; text-align: center; padding-top: 80px;">
+    <div class="section-title">✨ 从今天起，请记住：</div>
+    <div class="summary-card" style="margin-top: 30px;">
+      <div style="font-size: 22px; color: var(--ink2); margin-bottom: 12px;">大法师 =</div>
+      <div style="font-size: 32px; font-weight: 800; color: var(--blue-deep); margin-bottom: 24px;">大语言模型（LLM）</div>
+      <div style="font-size: 22px; color: var(--ink2); margin-bottom: 12px;">万能插头 =</div>
+      <div style="font-size: 32px; font-weight: 800; color: var(--bronze); margin-bottom: 24px;">Model Context Protocol（MCP）</div>
+      <div style="font-size: 22px; color: var(--ink2); margin-bottom: 12px;">七座工坊 =</div>
+      <div style="font-size: 28px; font-weight: 700; color: var(--teal);">数据库 / API / 浏览器 / IDE / 各种工具</div>
+    </div>
+    <div class="ending-quote" style="margin-top: 40px;">MCP 真正做的：<br>让"<span class="highlight-blue">AI 能调用工具</span>"这件事，<br>从 "<span style="color:var(--pink-deep);">N 次定制开发</span>"<br>变成 "<span class="highlight-gold">接上插头就能用</span>"。</div>
+    <div style="margin-top: 40px; font-size: 18px; color: var(--ink2); line-height: 1.8;">📚 <span class="highlight-blue">配套资源</span>：<br>· MCP 官方文档：modelcontextprotocol.io<br>· Python SDK：github.com/modelcontextprotocol/python-sdk<br>· 本仓库 MCP 章节：course/AI应用开发实战： 实战智能出行Agent助手-附代码和前后端可视化界面 .docx</div>
+    <div style="margin-top: 30px; font-size: 16px; color: var(--ink3); font-style: italic;">— 故事完 —<br>vinkin-ai-knowledge · 小百出品</div>
+  </div>
+  <div class="page-num">P 12 / 12</div>
+</div>
+
+</body>
+</html>
