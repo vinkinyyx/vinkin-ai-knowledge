@@ -536,6 +536,7 @@ footer a { color: var(--gold); text-decoration: none; margin: 0 8px; }
     <li><a href="#s6"><span class="toc-num">6</span>合规护栏：4 道防火墙</a></li>
     <li><a href="#s7"><span class="toc-num">7</span>CI/CD 与生产部署</a></li>
     <li><a href="#s8"><span class="toc-num">8</span>落地指南：避坑清单</a></li>
+    <li><a href="#s9"><span class="toc-num">9</span>实操指南：从 0 到 1 跑通 Harness 🆕</a></li>
   </ul>
 </nav>
 
@@ -1354,6 +1355,417 @@ docker service update --image agent:v1.<span class="num">1.0</span> agent_servic
   </div>
 </section>
 
+<!-- ========== 9. 实操指南 ========== -->
+<section class="section" id="s9">
+  <span class="section-num">PART 09 · 实操指南</span>
+  <h2><span class="icon">🛠️</span>从 0 到 1 跑通 Harness</h2>
+  <p class="section-sub">
+    前 8 章讲了"是什么 / 为什么 / 怎么架构"。这一章讲"今天下午你就能照着做的步骤"——把 Harness 思想落到真实项目里。
+  </p>
+
+  <h3>9.0 核心心法（先记住这 5 句话）</h3>
+  <div class="callout gold">
+    <div class="callout-title">💡 Harness 实操 5 句话</div>
+    <ol>
+      <li><strong>从最小闭环开始</strong>——别上来就 7 层，先 1 层（LLM + Prompt）跑通</li>
+      <li><strong>第 1 天就设计评估</strong>——评估数据集跟代码一起进 Git</li>
+      <li><strong>每加一层就回测</strong>——加完工具 / 加完记忆 / 加完护栏，都跑一次评估</li>
+      <li><strong>第 1 个用户必须是你自己</strong>——自己用 3 天，比 100 个用户用 1 天有用</li>
+      <li><strong>可观测性先行</strong>——Trace 没接，出了问题就是盲人摸象</li>
+    </ol>
+  </div>
+
+  <h3>9.1 第 0 步：选一个"5 天能跑通"的小项目</h3>
+  <p>实操 Harness 的最佳起点——<strong>不要拿公司核心业务练手</strong>。选一个：</p>
+  <ul>
+    <li>✅ <strong>个人能完成</strong>（不是 5 人团队项目）</li>
+    <li>✅ <strong>5 个工作日内能跑通</strong>（不是 3 个月）</li>
+    <li>✅ <strong>有真实用户痛点</strong>（不是"我想做个 Agent"）</li>
+    <li>✅ <strong>失败成本低</strong>（错了不烧钱）</li>
+  </ul>
+  <div class="callout teal">
+    <div class="callout-title">📋 5 个适合 Harness 实操的"5 天项目"</div>
+    <ol>
+      <li><strong>个人 RAG 知识库</strong>：把你过去 1 年的笔记 / 文档做成 RAG，问它"我 3 月写过什么"</li>
+      <li><strong>行业资讯日报</strong>：每天自动抓 10 个 RSS / 公众号，LLM 摘要 + 推送到微信</li>
+      <li><strong>简历优化助手</strong>：上传简历 → LLM 分析 → 给出 5 条具体改进建议</li>
+      <li><strong>竞品监控 Agent</strong>：监控 3 个竞品官网，每周生成 1 份对比报告</li>
+      <li><strong>客户邮件回复助手</strong>：上传 100 封历史邮件 → 学你的语气 → 给新邮件 3 个回复草稿</li>
+    </ol>
+    <p style="margin-top: 12px;"><strong>推荐第 1 个</strong>（个人 RAG）—— 因为代码全在你脑子里，错也错不到哪去。</p>
+  </div>
+
+  <h3>9.2 第 1-2 天：跑通"LLM + Prompt"（L0 基线）</h3>
+  <p>这是 Harness 七层架构的<strong>起点</strong>：只有 LLM + Prompt，其他什么都没有。</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <div class="step-title">环境准备（30 分钟）</div>
+      <div class="step-desc">Python 3.11+ / pip / 一个 LLM API key（DeepSeek / OpenAI / Anthropic 任一）</div>
+    </div>
+  </div>
+  <pre><span class="com"># 项目结构（v0.1）</span>
+my-agent/
+├── app.py            <span class="com"># 主程序</span>
+├── prompts/
+│   └── v1.0.0.txt   <span class="com"># Prompt 文件（版本管理）</span>
+├── .env              <span class="com"># API key（不进 Git）</span>
+├── .gitignore
+└── README.md</pre>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <div class="step-title">写第一版 Prompt（1 小时）</div>
+      <div class="step-desc">把你"想问 LLM 什么"写成结构化 Prompt。记住：<strong>Prompt 是 Harness 的核心资产</strong>，要版本管理</div>
+    </div>
+  </div>
+  <pre><span class="com"># prompts/v1.0.0.txt</span>
+你是一个个人知识库助手。
+
+用户会问你"我过去 X 月写过什么"。
+请基于用户提供的文档回答。
+
+要求：
+1. 回答要简洁，3-5 句话
+2. 引用具体文档名 / 日期
+3. 找不到就明说"我没找到"
+4. 不要编造内容
+
+文档：
+{context}
+
+用户问题：{query}
+</pre>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <div class="step-title">跑通 LLM 调用（1 小时）</div>
+      <div class="step-desc">用 Python 读 Prompt + 调 LLM API + 打印结果</div>
+    </div>
+  </div>
+  <pre><span class="com"># app.py（v0.1）</span>
+<span class="kw">import</span> os
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+<span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+
+client = <span class="fn">OpenAI</span>(api_key=os.environ[<span class="str">"OPENAI_API_KEY"</span>])
+
+<span class="kw">def</span> <span class="fn">load_prompt</span>(version: <span class="kw">str</span>) -> <span class="kw">str</span>:
+    <span class="kw">return</span> Path(<span class="str">f"prompts/{version}.txt"</span>).<span class="fn">read_text</span>()
+
+<span class="kw">def</span> <span class="fn">ask_llm</span>(query: <span class="kw">str</span>, context: <span class="kw">str</span> = <span class="str">""</span>) -> <span class="kw">str</span>:
+    prompt = <span class="fn">load_prompt</span>(<span class="str">"v1.0.0"</span>).<span class="fn">format</span>(query=query, context=context)
+    resp = client.chat.completions.<span class="fn">create</span>(
+        model=<span class="str">"gpt-4o-mini"</span>,
+        messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: prompt}],
+    )
+    <span class="kw">return</span> resp.choices[<span class="num">0</span>].message.content
+
+<span class="com"># 测试</span>
+<span class="kw">print</span>(<span class="fn">ask_llm</span>(<span class="str">"什么是 Harness Engineering？"</span>))</pre>
+
+  <div class="callout blue">
+    <div class="callout-title">✅ v0.1 验收标准</div>
+    <p>能跑通一次 LLM 调用 + Prompt 从文件读 + 结果打印到屏幕。 <strong>不用 Streamlit / 不用 web / 不用任何花哨的东西</strong>。</p>
+  </div>
+
+  <h3>9.3 第 3 天：加 RAG 检索层（L2 记忆层）</h3>
+  <p>v0.1 只能回答"LLM 自己知道的问题"。v0.2 加 RAG，让 LLM 能用<strong>你自己的文档</strong>回答。</p>
+
+  <div class="grid-2">
+    <div>
+      <p style="font-weight: 700; color: var(--blue-deep);">📁 数据准备</p>
+      <pre><span class="com"># 把你的笔记 / 文档放到 docs/</span>
+my-agent/
+├── docs/                  <span class="com"># 你的真实数据</span>
+│   ├── 2024-01-15-RAG笔记.md
+│   ├── 2024-03-22-AI PM.md
+│   └── ...
+├── rag.py                 <span class="com"># 检索逻辑</span></pre>
+    </div>
+    <div>
+      <p style="font-weight: 700; color: var(--teal);">🔍 简单 RAG（关键词 + LLM）</p>
+      <pre><span class="com"># rag.py</span>
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+<span class="kw">import</span> re
+
+<span class="kw">def</span> <span class="fn">search_docs</span>(query, top_k=<span class="num">3</span>):
+    <span class="str">"""简单关键词检索（v0.2）"""</span>
+    docs = <span class="kw">list</span>(Path(<span class="str">"docs"</span>).<span class="fn">glob</span>(<span class="str">"**/*.md"</span>))
+    scores = []
+    <span class="kw">for</span> doc <span class="kw">in</span> docs:
+        text = doc.<span class="fn">read_text</span>()
+        <span class="com"># 简单打分：query 关键词命中次数</span>
+        score = <span class="fn">sum</span>(<span class="num">1</span> <span class="kw">for</span> kw <span class="kw">in</span> query.<span class="fn">split</span>()
+                  <span class="kw">if</span> kw <span class="kw">in</span> text)
+        scores.<span class="fn">append</span>((score, doc, text))
+    scores.<span class="fn">sort</span>(reverse=<span class="kw">True</span>)
+    <span class="kw">return</span> scores[:top_k]</pre>
+    </div>
+  </div>
+
+  <pre><span class="com"># app.py（v0.2 - 加 RAG）</span>
+<span class="kw">def</span> <span class="fn">ask_with_rag</span>(query):
+    <span class="com"># 1. 检索相关文档</span>
+    results = <span class="fn">search_docs</span>(query)
+    context = <span class="str">"\n\n---\n\n"</span>.<span class="fn">join</span>(
+        <span class="str">f"[{doc.name}]\n{text[:500]}"</span>
+        <span class="kw">for</span> _, doc, text <span class="kw">in</span> results
+    )
+    <span class="com"># 2. 带 context 调 LLM</span>
+    <span class="kw">return</span> <span class="fn">ask_llm</span>(query, context)</pre>
+
+  <div class="callout gold">
+    <div class="callout-title">⚠️ 关键原则：先用"土办法"跑通</div>
+    <p>v0.2 用<strong>关键词匹配</strong>而不是向量检索。向量检索（Pinecone / Milvus）需要：API key、初始化、embedding、索引——多 10 倍的工作量。</p>
+    <p>先用最简单的方法跑通，<strong>再优化</strong>。如果你能搜到 80% 想要的内容，关键词就够用了。</p>
+  </div>
+
+  <h3>9.4 第 4 天：加工具调用（L1 工具层）+ 可观测性（L5）</h3>
+  <p>LLM 只能"说话"，要让它"干活"，必须接工具（搜索、查 DB、调 API）。</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <div class="step-title">加 1-2 个工具（半天）</div>
+      <div class="step-desc">先加"读文件"和"搜网络"两个工具。够用就好，别加 10 个</div>
+    </div>
+  </div>
+  <pre><span class="com"># tools.py（v0.3）</span>
+<span class="kw">def</span> <span class="fn">read_file</span>(path: <span class="kw">str</span>) -> <span class="kw">str</span>:
+    <span class="str">"""读取指定路径的文件内容"""</span>
+    <span class="kw">return</span> Path(path).<span class="fn">read_text</span>(encoding=<span class="str">"utf-8"</span>)
+
+<span class="kw">def</span> <span class="fn">web_search</span>(query: <span class="kw">str</span>) -> <span class="kw">str</span>:
+    <span class="str">"""搜索网络（用 ddgs 或 Tavily）"""</span>
+    <span class="kw">from</span> ddgs <span class="kw">import</span> DDGS
+    <span class="kw">with</span> <span class="fn">DDGS</span>() <span class="kw">as</span> ddgs:
+        results = ddgs.<span class="fn">text</span>(query, max_results=<span class="num">3</span>)
+        <span class="kw">return</span> <span class="str">"\n"</span>.<span class="fn">join</span>(<span class="str">f"- {r['title']}: {r['href']}"</span>
+                         <span class="kw">for</span> r <span class="kw">in</span> results)
+
+TOOLS = {
+    <span class="str">"read_file"</span>: read_file,
+    <span class="str">"web_search"</span>: web_search,
+}</pre>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <div class="step-title">加可观测性（半天）</div>
+      <div class="step-desc">最简单的 Trace：每次调用都写一行 JSONL 日志</div>
+    </div>
+  </div>
+  <pre><span class="com"># trace.py（v0.3）</span>
+<span class="kw">import</span> json
+<span class="kw">from</span> datetime <span class="kw">import</span> datetime
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+
+LOG_PATH = Path(<span class="str">"logs/trace.jsonl"</span>)
+LOG_PATH.parent.<span class="fn">mkdir</span>(exist_ok=<span class="kw">True</span>)
+
+<span class="kw">def</span> <span class="fn">trace</span>(event: <span class="kw">str</span>, **kwargs):
+    <span class="str">"""记录一次 Agent 行为"""</span>
+    entry = {
+        <span class="str">"timestamp"</span>: <span class="fn">datetime</span>.<span class="fn">now</span>().<span class="fn">isoformat</span>(),
+        <span class="str">"event"</span>: event,
+        **kwargs,
+    }
+    <span class="kw">with</span> LOG_PATH.<span class="fn">open</span>(<span class="str">"a"</span>, encoding=<span class="str">"utf-8"</span>) <span class="kw">as</span> f:
+        f.<span class="fn">write</span>(<span class="fn">json</span>.<span class="fn">dumps</span>(entry, ensure_ascii=<span class="kw">False</span>) + <span class="str">"\n"</span>)
+
+<span class="com"># 在 app.py 里调用</span>
+<span class="fn">trace</span>(<span class="str">"llm_call"</span>, model=<span class="str">"gpt-4o-mini"</span>, tokens=<span class="num">234</span>, query=query)
+<span class="fn">trace</span>(<span class="str">"tool_call"</span>, tool=<span class="str">"web_search"</span>, result_count=<span class="num">3</span>)
+<span class="fn">trace</span>(<span class="str">"user_query"</span>, query=query, response_length=<span class="fn">len</span>(response))</pre>
+
+  <h3>9.5 第 5 天：加评估层（L4）+ 护栏（L6）+ UI（L7）</h3>
+  <p>最后一天把剩下的 3 层加上，让 Agent 从"能跑"变成"能交付"。</p>
+
+  <div class="grid-3">
+    <div class="card blue">
+      <div class="card-title"><span class="ico">📊</span>评估（半天）</div>
+      <p>写 20 道真实问题，跑 Agent，看准确率。每改一次 Prompt 都跑一次。</p>
+    </div>
+    <div class="card pink">
+      <div class="card-title"><span class="ico">🛡️</span>护栏（半天）</div>
+      <p>加免责声明 + 用户复选框 + 审计日志（复用 v0.3 的 trace.py）。</p>
+    </div>
+    <div class="card teal">
+      <div class="card-title"><span class="ico">🖥️</span>UI（半天）</div>
+      <p>用 Streamlit 5 分钟搭个界面（不是必须，能 CLI 也行）。</p>
+    </div>
+  </div>
+
+  <pre><span class="com"># eval.py（v0.5）</span>
+TEST_CASES = [
+    {<span class="str">"query"</span>: <span class="str">"我 3 月写过 RAG 吗"</span>, <span class="str">"expected"</span>: <span class="str">"RAG"</span>},
+    {<span class="str">"query"</span>: <span class="str">"AI PM 是什么"</span>, <span class="str">"expected"</span>: <span class="str">"产品经理"</span>},
+    <span class="com"># ... 20 道真实问题</span>
+]
+
+<span class="kw">def</span> <span class="fn">run_eval</span>():
+    passed = <span class="num">0</span>
+    <span class="kw">for</span> case <span class="kw">in</span> TEST_CASES:
+        answer = <span class="fn">ask_with_rag</span>(case[<span class="str">"query"</span>])
+        ok = case[<span class="str">"expected"</span>] <span class="kw">in</span> answer
+        <span class="kw">print</span>(<span class="str">f"{'✅' if ok else '❌'} {case['query']}"</span>)
+        <span class="kw">if</span> ok: passed += <span class="num">1</span>
+    accuracy = passed / <span class="fn">len</span>(TEST_CASES)
+    <span class="kw">print</span>(<span class="str">f"\n准确率: {accuracy:.0%}"</span>)
+    <span class="com"># 写到 trace 里</span>
+    <span class="fn">trace</span>(<span class="str">"eval_run"</span>, accuracy=accuracy, cases=<span class="fn">len</span>(TEST_CASES))</pre>
+
+  <h3>9.6 完整 5 天路线图</h3>
+  <div class="phase-flow">
+    <div class="phase-row">
+      <div class="phase blue">
+        <div class="phase-num">DAY 1</div>
+        <div class="phase-name">v0.1 基线</div>
+        <div class="phase-task">LLM + Prompt</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="phase gold">
+        <div class="phase-num">DAY 2</div>
+        <div class="phase-name">v0.1 优化</div>
+        <div class="phase-task">Prompt 迭代</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="phase teal">
+        <div class="phase-num">DAY 3</div>
+        <div class="phase-name">v0.2 RAG</div>
+        <div class="phase-task">检索 + LLM</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="phase pink">
+        <div class="phase-num">DAY 4</div>
+        <div class="phase-name">v0.3 工具+Trace</div>
+        <div class="phase-task">可观测</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="phase green">
+        <div class="phase-num">DAY 5</div>
+        <div class="phase-name">v0.5 完整 Harness</div>
+        <div class="phase-task">评估+护栏+UI</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>9.7 把项目从"玩具"升级到"作品集"</h3>
+  <p>5 天跑通之后——这是<strong>区分"学习者"和"求职者"</strong>的分水岭。</p>
+
+  <table>
+    <thead><tr><th>维度</th><th>玩具版（v0.5）</th><th>作品集版（v1.0）</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Prompt</strong></td><td>1 个文件</td><td>多版本 + changelog + A/B</td></tr>
+      <tr><td><strong>评估</strong></td><td>20 道题</td><td>100+ 道题 + 自动化回归</td></tr>
+      <tr><td><strong>护栏</strong></td><td>免责声明 + 复选框</td><td>+ 审计日志 + 4 道护栏全套</td></tr>
+      <tr><td><strong>文档</strong></td><td>README 几句话</td><td>架构图 + 设计决策 + 复盘</td></tr>
+      <tr><td><strong>代码</strong></td><td>几个 .py</td><td>Provider 适配器 + 配置化</td></tr>
+      <tr><td><strong>部署</strong></td><td>本机跑</td><td>Docker + 公网 URL</td></tr>
+      <tr><td><strong>数据</strong></td><td>自己的 10 份文档</td><td>真实业务数据（脱敏后）</td></tr>
+      <tr><td><strong>STAR 故事</strong></td><td>"我做了个 Agent"</td><td>5 步 STAR + 量化指标 + 反思</td></tr>
+    </tbody>
+  </table>
+
+  <h3>9.8 求职场景：从"作品集"到"面试能讲"</h3>
+  <div class="callout teal">
+    <div class="callout-title">🎯 把 5 天项目变成"面试能讲的 5 分钟"</div>
+    <p>面试官最关心 3 件事：</p>
+    <ol>
+      <li><strong>你解决的真实问题是什么</strong>？（不是"我想学 AI"）</li>
+      <li><strong>你怎么做的</strong>？（具体技术选型 + 踩过的坑）</li>
+      <li><strong>效果怎么样</strong>？（量化数据）</li>
+    </ol>
+    <p style="margin-top: 14px;"><strong>STAR 模板</strong>（5 分钟讲完）：</p>
+    <ul>
+      <li><strong>背景</strong>：我做这个项目是因为 ____ 痛点（30 秒）</li>
+      <li><strong>任务</strong>：我用 5 天完成了 ____（30 秒）</li>
+      <li><strong>行动</strong>：我用了 ____ 架构 + 踩了 ____ 坑 + 解决了 ____（2 分钟）</li>
+      <li><strong>结果</strong>：准确率从 ____ 提升到 ____ / 节省 ____ 小时（1 分钟）</li>
+      <li><strong>反思</strong>：如果重来，我会先做 ____（1 分钟）</li>
+    </ul>
+  </div>
+
+  <h3>9.9 4 个真实项目模板（按需选）</h3>
+
+  <div class="card gold">
+    <div class="card-title">📋 模板 A：个人 RAG 知识库（5 天）</div>
+    <p><strong>适用</strong>：面试"AI PM 转型 / 个人知识管理"类岗位</p>
+    <p><strong>技术栈</strong>：Python + 关键词检索（v0.2）或 Embedding（v0.3） + OpenAI API</p>
+    <p><strong>真实数据</strong>：你过去 1 年的笔记 / 周报 / 学习资料（≥20 份）</p>
+    <p><strong>评估</strong>：20 道"我过去写过什么"类问题</p>
+    <p><strong>面试亮点</strong>："我把自己 1 年的学习笔记做成 RAG，问答准确率 85%，现在每天用它复盘"</p>
+  </div>
+
+  <div class="card blue">
+    <div class="card-title">📋 模板 B：行业资讯日报 Agent（7 天）</div>
+    <p><strong>适用</strong>：面试"内容运营 / 知识库 / AI 应用"类岗位</p>
+    <p><strong>技术栈</strong>：RSS 抓取 + LLM 摘要 + 微信推送（Server酱）</p>
+    <p><strong>真实数据</strong>：20 个 AI 行业 RSS / 公众号源</p>
+    <p><strong>评估</strong>：连续 7 天人工评估摘要质量</p>
+    <p><strong>面试亮点</strong>："我用 Agent 把 20 个 RSS 源做成每日 1 分钟 AI 简报，连续跑 30 天，每天节省 30 分钟阅读时间"</p>
+  </div>
+
+  <div class="card teal">
+    <div class="card-title">📋 模板 C：客户邮件回复助手（5 天）</div>
+    <p><strong>适用</strong>：面试"销售 / 客服 / CRM"类岗位</p>
+    <p><strong>技术栈</strong>：邮件解析 + Few-shot Prompt（学你语气） + 草稿生成</p>
+    <p><strong>真实数据</strong>：你过去 100 封回复邮件（脱敏）</p>
+    <p><strong>评估</strong>：20 封新邮件，生成 3 个草稿，人工打分</p>
+    <p><strong>面试亮点</strong>："我用 RAG + Few-shot 学我自己的回复风格，3 个草稿可选一个，每周节省 5 小时"</p>
+  </div>
+
+  <div class="card pink">
+    <div class="card-title">📋 模板 D：医疗 RAG 助手（10 天，复杂版）</div>
+    <p><strong>适用</strong>：面试"医疗 AI / 法规合规"类岗位（你的目标！）</p>
+    <p><strong>技术栈</strong>：PDF 解析 + 法规库（NMPA 20 部 + FDA） + Agent 团队 + 4 道护栏</p>
+    <p><strong>真实数据</strong>：NMPA 法规（已脱敏）+ 公开 FDA 21 CFR</p>
+    <p><strong>评估</strong>：50 道"这部法规适用什么场景"类问题</p>
+    <p><strong>面试亮点</strong>："我做了一支 4 个 Agent 的医疗法规团队（GMP/注册/临床/合规），带 4 道合规护栏，能回答 92% 的真实问题"</p>
+  </div>
+
+  <h3>9.10 3 个常见实操问题 & 答案</h3>
+
+  <h4>Q1：要不要一开始就上 LangGraph / LangChain？</h4>
+  <div class="callout blue">
+    <div class="callout-title">💡 答：不要</div>
+    <p>框架的好处是"开箱即用"，坏处是"出问题不知道在哪"。<strong>先用 stdlib（不用框架）写一遍 v0.1-v0.3</strong>，理解每个组件在做什么。然后再用 LangGraph 重构——这时候你才知道"框架帮我省了哪些事"和"框架在哪限制了我"。</p>
+    <p>这是 Harness 的<strong>核心思想</strong>：<strong>先理解，再封装</strong>。如果直接用框架，你就是个"调包侠"；如果自己写过，你才知道原理。</p>
+  </div>
+
+  <h4>Q2：评估数据集怎么写？</h4>
+  <div class="callout gold">
+    <div class="callout-title">📋 3 步写评估数据集</div>
+    <ol>
+      <li><strong>从真实用户问题里抽</strong>——翻你过去 1 个月的工作记录 / 聊天记录，找 20-50 个真实问过 / 被问过的问题</li>
+      <li><strong>手写 expected 答案</strong>——不要用 LLM 生成。LLM 生成的 expected 答案会有 LLM 自己的偏差，手写的才是"ground truth"</li>
+      <li><strong>标注难度</strong>：easy（直接答）/ medium（需要推理）/ hard（需要查文档）。这样你才知道 Agent 弱在哪</li>
+    </ol>
+  </div>
+
+  <h4>Q3：5 天项目做完之后呢？</h4>
+  <div class="callout teal">
+    <div class="callout-title">🚀 5 天项目 → 求职资产的 4 步</div>
+    <ol>
+      <li><strong>第 6 天</strong>：写 1 页 README + 1 张架构图（用 Excalidraw 5 分钟）</li>
+      <li><strong>第 7 天</strong>：部署到公网（GitHub Pages / cloudflared），拿到永久 URL</li>
+      <li><strong>第 8 天</strong>：写成 STAR 故事（背景/任务/行动/结果/反思 5 段）</li>
+      <li><strong>第 9 天</strong>：发 1 条小红书 + 1 条知乎 + 1 个 GitHub commit，建立存在感</li>
+    </ol>
+    <p style="margin-top: 14px;"><strong>5 天项目 + 4 天包装 = 9 天一个求职级作品集</strong>。比起"我学完了 100 节课"，一个能跑 + 能讲 + 有公网 URL 的项目，<strong>价值高 10 倍</strong>。</p>
+  </div>
+
+  <div class="quote">
+    "Harness Engineering 的真正考验不是'你懂多少层架构'，<br>
+    是'你能从 0 到 1 把一个真实项目跑通 5 天'——<br>
+    <strong>理论 100 分，实践 0 分，等于 0 分</strong>。"
+  </div>
+</section>
+
 </div><!-- /container -->
 
 <!-- ========== FOOTER ========== -->
@@ -1369,7 +1781,8 @@ docker service update --image agent:v1.<span class="num">1.0</span> agent_servic
       <a href="#s5">评估体系</a> ·
       <a href="#s6">合规护栏</a> ·
       <a href="#s7">CI/CD</a> ·
-      <a href="#s8">落地指南</a>
+      <a href="#s8">落地指南</a> ·
+      <a href="#s9">实操指南 🆕</a>
     </p>
     <p style="margin-top: 20px; font-size: 12px;">
       本文综合自：aitoearn-4-agent-loop.md · ai-agent-engineering.md · med-legal-agent-deep-dive.md · agent-team-compliance-guardrails.md · mcp-builder.md · claude-api.md 等 6 份核心资料
