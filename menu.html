@@ -430,6 +430,65 @@ mark.hl {
 }
 .history-clear:hover { color: var(--pink); background: var(--pink-soft); }
 
+/* ====== 键盘导航高亮 + 建议下拉 ====== */
+.history-item.kbd-active {
+  background: var(--blue-soft);
+  border-left: 3px solid var(--blue);
+  padding-left: 13px;
+  font-weight: 600;
+}
+.suggest-box {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0; right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(26,31,46,0.12);
+  z-index: 101;
+  padding: 8px 0;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.suggest-head {
+  font-size: 11px; font-weight: 700; color: var(--ink3);
+  padding: 6px 16px; letter-spacing: 1.5px;
+  border-bottom: 1px solid var(--line);
+}
+.suggest-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px; cursor: pointer;
+  font-size: 14px; color: var(--ink);
+  transition: background 0.15s;
+}
+.suggest-item:hover, .suggest-item.kbd-active {
+  background: var(--blue-soft);
+}
+.suggest-item .s-icon {
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px; font-size: 12px;
+  background: var(--blue-soft); color: var(--blue);
+  flex-shrink: 0;
+}
+.suggest-item .s-q {
+  flex: 1;
+  font-weight: 500;
+}
+.suggest-item .s-cat {
+  font-size: 11px; color: var(--ink3);
+  padding: 2px 8px; border-radius: 10px;
+  background: var(--line);
+}
+mark.hl {
+  background: linear-gradient(120deg, rgba(184,155,106,0.3), rgba(201,122,142,0.3));
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 3px;
+  font-weight: 700;
+}
+
 /* ====== 占位行（敬请期待） ====== */
 .course-item.placeholder {
   background: var(--bg);
@@ -1366,29 +1425,183 @@ footer a {
     }
   }
 
+  // ===== 搜索建议下拉（输入时实时推荐） =====
+  let suggestBox = null;
+  let suggestItems = [];   // 当前建议项的关键词数组
+  let activeSuggestIdx = -1;
+
+  function buildSuggestions(q) {
+    const ql = q.toLowerCase();
+    const hits = [];
+    Object.entries(SEARCH_INDEX).forEach(([href, idx]) => {
+      const all = [idx.title, idx.category, ...(idx.tags || []), ...(idx.concepts || [])];
+      all.forEach(kw => {
+        if (kw && kw.toLowerCase().includes(ql) && kw.length < 30) {
+          hits.push({ kw, cat: idx.category, href });
+        }
+      });
+    });
+    // 去重 + 限制
+    const seen = new Set();
+    const out = [];
+    for (const h of hits) {
+      const key = h.kw.toLowerCase();
+      if (!seen.has(key)) {
+        seen.add(key);
+        out.push(h);
+        if (out.length >= 8) break;
+      }
+    }
+    return out;
+  }
+
+  function showSuggest(q) {
+    const items = buildSuggestions(q);
+    if (items.length === 0) { hideSuggest(); return; }
+    if (!suggestBox) {
+      suggestBox = document.createElement('div');
+      suggestBox.className = 'suggest-box';
+      input.parentElement.appendChild(suggestBox);
+    }
+    suggestItems = items;
+    activeSuggestIdx = -1;
+    const iconMap = { 'AI Agent 实战': '🤖', 'RAG 知识库': '📚', '大模型原理': '🏛️', '索引 + 工具': '🗂️', '求职 + 商业化': '💼' };
+    suggestBox.innerHTML = `
+      <div class="suggest-head">✨ 推荐关键词</div>
+      ${items.map((it, i) => `
+        <div class="suggest-item" data-idx="${i}" data-q="${escapeHtml(it.kw)}" data-href="${it.href}">
+          <span class="s-icon">${iconMap[it.cat] || '🔍'}</span>
+          <span class="s-q">${highlightMatch(it.kw, q)}</span>
+          <span class="s-cat">${escapeHtml(it.cat)}</span>
+        </div>
+      `).join('')}
+    `;
+    suggestBox.style.display = 'block';
+    suggestBox.querySelectorAll('.suggest-item').forEach(el => {
+      el.addEventListener('mousedown', (e) => {
+        e.preventDefault();  // 防止 blur 抢先
+        input.value = el.dataset.q;
+        saveToHistory(input.value.trim());
+        doSearch();
+        hideSuggest();
+        input.blur();
+      });
+    });
+  }
+
+  function hideSuggest() {
+    if (suggestBox) suggestBox.style.display = 'none';
+    activeSuggestIdx = -1;
+  }
+
+  function updateSuggestActive() {
+    if (!suggestBox) return;
+    suggestBox.querySelectorAll('.suggest-item').forEach((el, i) => {
+      el.classList.toggle('kbd-active', i === activeSuggestIdx);
+      if (i === activeSuggestIdx) el.scrollIntoView({ block: 'nearest' });
+    });
+  }
+
+  function highlightMatch(text, q) {
+    if (!q) return escapeHtml(text);
+    const idx = text.toLowerCase().indexOf(q.toLowerCase());
+    if (idx < 0) return escapeHtml(text);
+    return escapeHtml(text.substring(0, idx))
+      + '<mark class="hl">' + escapeHtml(text.substring(idx, idx + q.length)) + '</mark>'
+      + escapeHtml(text.substring(idx + q.length));
+  }
+
+  // ===== 历史下拉键盘导航 =====
+  let activeHistoryIdx = -1;
+  function updateHistoryActive() {
+    if (!historyBox) return;
+    historyBox.querySelectorAll('.history-item').forEach((el, i) => {
+      el.classList.toggle('kbd-active', i === activeHistoryIdx);
+      if (i === activeHistoryIdx) el.scrollIntoView({ block: 'nearest' });
+    });
+  }
+  function resetHistoryActive() { activeHistoryIdx = -1; updateHistoryActive(); }
+
   // ===== 事件绑定 =====
   let timer;
   input.addEventListener('input', () => {
     clearTimeout(timer); timer = setTimeout(doSearch, 200);
-    if (!input.value.trim()) showHistory();
-    else hideHistory();
+    const q = input.value.trim();
+    if (q.length >= 1) {
+      showSuggest(q);
+      hideHistory();
+      resetHistoryActive();
+    } else {
+      hideSuggest();
+      if (getHistory().length > 0) showHistory();
+      resetHistoryActive();
+    }
   });
   input.addEventListener('focus', () => {
-    if (!input.value.trim()) showHistory();
+    const q = input.value.trim();
+    if (q.length >= 1) showSuggest(q);
+    else if (getHistory().length > 0) showHistory();
   });
   input.addEventListener('blur', () => {
-    setTimeout(hideHistory, 200);  // 延迟以允许点击
+    setTimeout(() => { hideHistory(); hideSuggest(); }, 200);
   });
   input.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { input.value = ''; doSearch(); showHistory(); }
+    // 方向键导航
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const inSuggest = suggestBox && suggestBox.style.display === 'block';
+      const inHistory = historyBox && historyBox.style.display === 'block';
+      if (inSuggest) {
+        const n = suggestItems.length;
+        activeSuggestIdx = e.key === 'ArrowDown'
+          ? (activeSuggestIdx + 1) % n
+          : (activeSuggestIdx - 1 + n) % n;
+        updateSuggestActive();
+      } else if (inHistory) {
+        const n = getHistory().length;
+        activeHistoryIdx = e.key === 'ArrowDown'
+          ? (activeHistoryIdx + 1) % n
+          : (activeHistoryIdx - 1 + n) % n;
+        updateHistoryActive();
+      }
+      return;
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      input.value = ''; doSearch(); hideSuggest();
+      if (getHistory().length > 0) showHistory();
+      return;
+    }
     if (e.key === 'Enter') {
-      saveToHistory(input.value.trim());
-      doSearch();
+      e.preventDefault();
+      // 优先使用键盘选中项
+      const inSuggest = suggestBox && suggestBox.style.display === 'block' && activeSuggestIdx >= 0;
+      const inHistory = historyBox && historyBox.style.display === 'block' && activeHistoryIdx >= 0;
+      if (inSuggest) {
+        const it = suggestItems[activeSuggestIdx];
+        input.value = it.kw;
+        saveToHistory(it.kw);
+        doSearch(); hideSuggest(); input.blur();
+        return;
+      }
+      if (inHistory) {
+        const h = getHistory()[activeHistoryIdx];
+        input.value = h;
+        doSearch(); hideHistory(); input.blur();
+        return;
+      }
+      // 默认：保存当前输入
+      const q = input.value.trim();
+      if (q) { saveToHistory(q); doSearch(); }
+      hideSuggest();
       input.blur();
+      return;
     }
   });
   clearBtn.addEventListener('click', () => {
-    input.value = ''; doSearch(); input.focus(); showHistory();
+    input.value = ''; doSearch(); input.focus();
+    hideSuggest();
+    if (getHistory().length > 0) showHistory();
   });
 })();
 </script>

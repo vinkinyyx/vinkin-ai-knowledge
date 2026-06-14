@@ -176,6 +176,64 @@ footer a { color: var(--gold); text-decoration: none; margin: 0 8px; }
   .cat-title { font-size: 18px; }
   .concept-grid { grid-template-columns: 1fr; }
 }
+
+/* ===== 索引页搜索 ===== */
+.search-wrap {
+  margin: 28px 0 0;
+  max-width: 720px;
+  position: relative;
+}
+.search-box {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(255,255,255,0.85);
+  border: 2px solid rgba(58,111,168,0.2);
+  border-radius: 14px;
+  padding: 14px 20px;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s;
+}
+.search-box:focus-within {
+  border-color: var(--blue);
+  box-shadow: 0 4px 20px rgba(58,111,168,0.15);
+}
+.search-icon {
+  width: 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--blue);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+#searchInput {
+  flex: 1;
+  border: none; outline: none; background: transparent;
+  font-size: 15px; color: var(--ink);
+  font-family: inherit;
+}
+#searchInput::placeholder { color: var(--ink3); }
+.search-clear {
+  width: 24px; height: 24px;
+  display: none; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: var(--line); color: var(--ink3);
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+.search-clear:hover { background: var(--pink-soft); color: var(--pink); }
+.search-result {
+  font-size: 13px; color: var(--ink2);
+  margin-top: 8px;
+  padding: 0 4px;
+  min-height: 20px;
+}
+mark.hl {
+  background: linear-gradient(120deg, rgba(184,155,106,0.3), rgba(201,122,142,0.3));
+  color: inherit;
+  padding: 0 2px;
+  border-radius: 3px;
+  font-weight: 700;
+}
 </style>
 </head>
 <body>
@@ -206,6 +264,14 @@ footer a { color: var(--gold); text-decoration: none; margin: 0 8px; }
         <div class="hero-stat-num pink">10</div>
         <div class="hero-stat-label">课程专题</div>
       </div>
+    </div>
+    <div class="search-wrap">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="搜索 82+ 概念（如：Embedding / Rerank / Tool Use / GDPR）">
+        <span class="search-clear" id="searchClear">✕</span>
+      </div>
+      <div class="search-result" id="searchResult"></div>
     </div>
   </div>
 </header>
@@ -404,6 +470,116 @@ footer a { color: var(--gold); text-decoration: none; margin: 0 8px; }
     <a href="#">📧 邮件</a>
   </p>
 </footer>
+
+<script>
+(function() {
+  const input = document.getElementById('searchInput');
+  const clearBtn = document.getElementById('searchClear');
+  const resultSpan = document.getElementById('searchResult');
+  const catCards = document.querySelectorAll('.cat-card');
+  const conceptItems = document.querySelectorAll('.concept-item');
+  const heroStats = document.querySelectorAll('.hero-stat-num');
+  const heroLabels = document.querySelectorAll('.hero-stat-label');
+  const originalHeroValues = Array.from(heroStats).map(el => el.textContent);
+
+  function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function highlightMatch(text, q) {
+    if (!q) return escapeHtml(text);
+    const idx = text.toLowerCase().indexOf(q.toLowerCase());
+    if (idx < 0) return escapeHtml(text);
+    return escapeHtml(text.substring(0, idx))
+      + '<mark class="hl">' + escapeHtml(text.substring(idx, idx + q.length)) + '</mark>'
+      + escapeHtml(text.substring(idx + q.length));
+  }
+
+  function resetHero() {
+    heroStats.forEach((el, i) => el.textContent = originalHeroValues[i]);
+  }
+
+  function updateHero(matchedCount, totalCount) {
+    if (matchedCount === 0) { resetHero(); return; }
+    heroStats[0].textContent = matchedCount;           // 核心知识点
+    heroStats[1].textContent = '🔍';                   // 主题大类
+    heroStats[2].textContent = totalCount;             // 实战案例（保留原意）
+    heroStats[3].textContent = '∞';                    // 课程专题
+  }
+
+  function doSearch() {
+    const q = input.value.trim();
+    const ql = q.toLowerCase();
+    clearBtn.style.display = q ? 'flex' : 'none';
+
+    if (!q) {
+      conceptItems.forEach(it => { it.style.display = ''; });
+      catCards.forEach(c => { c.style.display = ''; });
+      resultSpan.textContent = '';
+      resetHero();
+      return;
+    }
+
+    let matched = 0;
+    conceptItems.forEach(item => {
+      const name = item.querySelector('.concept-name')?.textContent || '';
+      const desc = item.querySelector('.concept-desc')?.textContent || '';
+      const isMatch = name.toLowerCase().includes(ql) || desc.toLowerCase().includes(ql);
+      if (isMatch) {
+        matched++;
+        item.style.display = '';
+        const nameEl = item.querySelector('.concept-name');
+        const descEl = item.querySelector('.concept-desc');
+        if (nameEl) nameEl.innerHTML = highlightMatch(name, q);
+        if (descEl) descEl.innerHTML = highlightMatch(desc, q);
+      } else {
+        item.style.display = 'none';
+      }
+    });
+
+    // 折叠无匹配的类别
+    let visibleCategories = 0;
+    catCards.forEach(card => {
+      const visible = card.querySelectorAll('.concept-item:not([style*="none"])');
+      if (visible.length > 0) {
+        card.style.display = '';
+        visibleCategories++;
+        // 更新该类别的 count
+        const countEl = card.querySelector('.cat-count');
+        if (countEl) {
+          const originalText = countEl.dataset.original || countEl.textContent;
+          if (!countEl.dataset.original) countEl.dataset.original = originalText;
+          countEl.innerHTML = `<strong style="color:var(--blue-deep)">${visible.length}</strong> / ${originalText.replace(/^\d+\s*/, '')}`;
+        }
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    updateHero(matched, visibleCategories);
+
+    if (matched === 0) {
+      resultSpan.innerHTML = `<span style="color:#C97A8E;">未找到匹配「${escapeHtml(q)}」的知识点</span>`;
+    } else {
+      resultSpan.innerHTML = `匹配 <strong style="color:#3A6FA8;">${matched}</strong> 个知识点 · 跨 <strong style="color:#B89B6A;">${visibleCategories}</strong> 个主题大类`;
+    }
+  }
+
+  // 事件绑定
+  let timer;
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(doSearch, 200);
+  });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') { input.value = ''; doSearch(); input.blur(); }
+  });
+  clearBtn.addEventListener('click', () => {
+    input.value = ''; doSearch(); input.focus();
+  });
+})();
+</script>
 
 </body>
 </html>
