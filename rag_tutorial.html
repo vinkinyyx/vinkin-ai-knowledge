@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAG 知识库制作全攻略 · 从 0 到 1 实操手册</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #F8F7F4;
+  --bg-card: #FFFFFF;
+  --ink: #1A1F2E;
+  --ink2: #4A5468;
+  --ink3: #8A93A6;
+  --line: #E8E5DE;
+  --blue: #3A6FA8;
+  --blue-deep: #2A5278;
+  --blue-soft: #E8F0F9;
+  --gold: #B89B6A;
+  --gold-deep: #8B6F3D;
+  --gold-soft: #F7F1E5;
+  --teal: #3D8B8B;
+  --teal-soft: #E5F0F0;
+  --pink: #C97A8E;
+  --pink-soft: #FBE4EA;
+  --green: #5A8C5A;
+  --green-soft: #E8F1E5;
+  --red: #C8553D;
+  --red-soft: #FCE8E4;
+  --orange: #D49A3D;
+  --orange-soft: #FCF1DC;
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.75;
+  font-size: 16px;
+}
+.hero {
+  background: linear-gradient(135deg, #1A1F2E 0%, #2A5278 40%, #3D8B8B 100%);
+  color: #fff;
+  padding: 80px 0 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: "📚";
+  position: absolute;
+  font-size: 500px;
+  opacity: 0.06;
+  top: -150px;
+  right: -100px;
+  transform: rotate(-15deg);
+}
+.hero-tag {
+  display: inline-block;
+  background: rgba(184,155,106,0.25);
+  color: var(--gold);
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  border: 1px solid rgba(184,155,106,0.4);
+  margin-bottom: 20px;
+}
+.hero h1 {
+  font-size: 52px;
+  font-weight: 900;
+  line-height: 1.2;
+  margin-bottom: 18px;
+  letter-spacing: -1px;
+}
+.hero h1 .accent { color: var(--gold); }
+.hero-sub {
+  font-size: 18px;
+  color: rgba(255,255,255,0.85);
+  max-width: 820px;
+  margin: 0 auto 30px;
+}
+.hero-stats {
+  display: inline-flex;
+  gap: 40px;
+  background: rgba(255,255,255,0.1);
+  padding: 20px 40px;
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.15);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.hero-stat { text-align: center; }
+.hero-stat-num {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--gold);
+  line-height: 1;
+}
+.hero-stat-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+  margin-top: 6px;
+  letter-spacing: 1px;
+}
+.container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+.toc {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 28px 36px;
+  margin: -36px auto 50px;
+  position: relative;
+  z-index: 10;
+  max-width: 1080px;
+  box-shadow: 0 8px 32px rgba(26,31,46,0.08);
+}
+.toc-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink3);
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+.toc-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px 24px;
+  list-style: none;
+}
+.toc-list a {
+  color: var(--ink2);
+  text-decoration: none;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+.toc-list a:hover { background: var(--blue-soft); color: var(--blue-deep); }
+.toc-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background: var(--gold-soft);
+  color: var(--gold-deep);
+  font-size: 11px;
+  font-weight: 800;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
+.preface {
+  background: var(--orange-soft);
+  border: 1px solid var(--orange);
+  border-radius: 14px;
+  padding: 24px 30px;
+  margin: 0 0 40px;
+}
+.preface h3 {
+  color: var(--orange);
+  font-size: 18px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.preface p { color: var(--ink2); font-size: 15px; line-height: 1.7; margin: 0; }
+.section {
+  margin-bottom: 60px;
+}
+.section-num {
+  display: inline-flex;
+  align-items: center;
+  background: var(--blue);
+  color: white;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 5px 14px;
+  border-radius: 18px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+.section h2 {
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.section h2 .icon { color: var(--blue); margin-right: 8px; }
+.section-sub {
+  font-size: 16px;
+  color: var(--ink2);
+  margin-bottom: 28px;
+  max-width: 800px;
+  line-height: 1.6;
+}
+h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 28px 0 12px;
+  padding-left: 12px;
+  border-left: 4px solid var(--gold);
+}
+h4 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--blue-deep);
+  margin: 18px 0 8px;
+}
+p { margin-bottom: 12px; color: var(--ink2); }
+p strong { color: var(--ink); font-weight: 700; }
+ul, ol { margin: 8px 0 16px 24px; color: var(--ink2); }
+ul li, ol li { margin-bottom: 5px; }
+code {
+  font-family: "JetBrains Mono", "SF Mono", Consolas, monospace;
+  font-size: 0.88em;
+  background: var(--blue-soft);
+  color: var(--blue-deep);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+pre {
+  background: #1A1F2E;
+  color: #E8E5DE;
+  padding: 18px 22px;
+  border-radius: 10px;
+  overflow-x: auto;
+  margin: 14px 0 20px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  border-left: 4px solid var(--gold);
+  position: relative;
+}
+pre .label {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  font-size: 11px;
+  color: var(--ink3);
+  background: rgba(255,255,255,0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+  font-weight: 400;
+}
+.kw { color: #C97A8E; font-weight: 600; }
+.str { color: #B89B6A; }
+.com { color: #6B7280; font-style: italic; }
+.fn { color: #7AA89C; }
+.num { color: #6B8CAE; }
+.step-box {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin-bottom: 18px;
+  box-shadow: 0 1px 4px rgba(26,31,46,0.04);
+  position: relative;
+  border-left: 5px solid var(--blue);
+}
+.step-box.s-gold { border-left-color: var(--gold); }
+.step-box.s-teal { border-left-color: var(--teal); }
+.step-box.s-pink { border-left-color: var(--pink); }
+.step-box.s-green { border-left-color: var(--green); }
+.step-box.s-red { border-left-color: var(--red); }
+.step-num-big {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--blue);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 10px rgba(58,111,168,0.3);
+}
+.step-box.s-gold .step-num-big { background: var(--gold); box-shadow: 0 4px 10px rgba(184,155,106,0.3); }
+.step-box.s-teal .step-num-big { background: var(--teal); box-shadow: 0 4px 10px rgba(61,139,139,0.3); }
+.step-box.s-pink .step-num-big { background: var(--pink); box-shadow: 0 4px 10px rgba(201,122,142,0.3); }
+.step-box.s-green .step-num-big { background: var(--green); box-shadow: 0 4px 10px rgba(90,140,90,0.3); }
+.step-box.s-red .step-num-big { background: var(--red); box-shadow: 0 4px 10px rgba(200,85,61,0.3); }
+.step-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ink);
+  margin: 4px 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.step-title::after {
+  content: attr(data-time);
+  background: var(--bg);
+  color: var(--ink3);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 10px;
+  margin-left: auto;
+}
+.step-box p:last-child { margin-bottom: 0; }
+.callout {
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  border-left: 4px solid;
+  font-size: 14.5px;
+  line-height: 1.65;
+}
+.callout.gold { background: var(--gold-soft); border-color: var(--gold); color: var(--gold-deep); }
+.callout.blue { background: var(--blue-soft); border-color: var(--blue); color: var(--blue-deep); }
+.callout.teal { background: var(--teal-soft); border-color: var(--teal); color: var(--teal); }
+.callout.pink { background: var(--pink-soft); border-color: var(--pink); color: var(--pink); }
+.callout.red { background: var(--red-soft); border-color: var(--red); color: var(--red); }
+.callout.green { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+.callout-title {
+  font-weight: 800;
+  font-size: 15px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.callout p { color: inherit; margin: 0; }
+.checklist {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 12px 0;
+}
+.checklist li {
+  list-style: none;
+  padding: 6px 0 6px 30px;
+  position: relative;
+  border-bottom: 1px dashed var(--line);
+}
+.checklist li:last-child { border-bottom: none; }
+.checklist li::before {
+  content: "☐";
+  position: absolute;
+  left: 8px;
+  top: 6px;
+  color: var(--blue);
+  font-size: 18px;
+  font-weight: 800;
+}
+.sub-steps {
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin: 10px 0;
+  border-left: 3px solid var(--ink3);
+  font-size: 14px;
+}
+.sub-steps ol { margin: 4px 0 4px 20px; }
+.sub-steps ol li { margin-bottom: 3px; }
+.file-tree {
+  background: #1A1F2E;
+  color: #E8E5DE;
+  padding: 18px 22px;
+  border-radius: 10px;
+  margin: 14px 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13.5px;
+  line-height: 1.7;
+  border-left: 4px solid var(--teal);
+}
+.file-tree .folder { color: #B89B6A; font-weight: 700; }
+.file-tree .file { color: #E8E5DE; }
+.file-tree .comment { color: #6B7280; }
+.danger-list { margin: 10px 0; }
+.danger-list li {
+  background: var(--red-soft);
+  border-left: 3px solid var(--red);
+  padding: 8px 14px;
+  margin: 6px 0;
+  border-radius: 0 6px 6px 0;
+  list-style: none;
+  color: var(--red);
+  font-size: 14px;
+}
+.cmd {
+  background: #1A1F2E;
+  color: #B5D9A0;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13.5px;
+  margin: 10px 0;
+  border-left: 4px solid var(--green);
+  position: relative;
+  overflow-x: auto;
+}
+.cmd::before {
+  content: "$ ";
+  color: var(--ink3);
+  font-weight: 800;
+}
+.cmd::after {
+  content: attr(data-tip);
+  position: absolute;
+  right: 8px;
+  top: 6px;
+  font-size: 10px;
+  color: var(--ink3);
+  background: rgba(255,255,255,0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0 20px;
+  font-size: 14px;
+  background: var(--bg-card);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(26,31,46,0.04);
+}
+th {
+  background: var(--blue-deep);
+  color: white;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 12px;
+}
+td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink2);
+}
+tr:last-child td { border-bottom: none; }
+.checkpoint {
+  background: var(--green-soft);
+  border: 2px solid var(--green);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 20px 0;
+  text-align: center;
+}
+.checkpoint-title {
+  color: var(--green);
+  font-weight: 800;
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+.checkpoint p { color: var(--green); margin: 0; }
+.quote {
+  font-style: italic;
+  font-size: 18px;
+  color: var(--blue-deep);
+  text-align: center;
+  padding: 24px 20px;
+  border-top: 2px solid var(--gold);
+  border-bottom: 2px solid var(--gold);
+  margin: 28px 0;
+  font-weight: 500;
+}
+.next-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 16px 0;
+}
+.next-step {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.next-step h5 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.next-step p { font-size: 13px; margin: 0; }
+footer {
+  background: #1A1F2E;
+  color: var(--ink3);
+  padding: 40px 0 24px;
+  text-align: center;
+  margin-top: 60px;
+}
+footer h3 { color: var(--gold); font-size: 17px; margin-bottom: 12px; }
+footer p { color: var(--ink3); font-size: 13px; margin: 6px 0; }
+footer a { color: var(--gold); text-decoration: none; margin: 0 6px; }
+@media (max-width: 768px) {
+  .toc-list { grid-template-columns: 1fr; }
+  .next-steps { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 36px; }
+  .hero-stats { gap: 24px; padding: 16px 24px; }
+  .section h2 { font-size: 26px; }
+  .step-title { font-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-tag">RAG · 实操手册</span>
+    <h1>RAG 知识库<br><span class="accent">制作全攻略</span></h1>
+    <p class="hero-sub">从 0 到 1，手把手教你做出一个能用的 RAG 知识库——<br>小白按步骤 5-7 天可完成，进阶者 1-2 天。</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num">9</div><div class="hero-stat-label">大阶段</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">50+</div><div class="hero-stat-label">详细步骤</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">5-7天</div><div class="hero-stat-label">小白用时</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">100%</div><div class="hero-stat-label">可复现</div></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="toc-title">📑 9 大阶段 · 50+ 详细步骤</div>
+  <ul class="toc-list">
+    <li><a href="#s0"><span class="toc-num">0</span>准备：5 件事 + 心理建设</a></li>
+    <li><a href="#s1"><span class="toc-num">1</span>环境搭建：Python + IDE</a></li>
+    <li><a href="#s2"><span class="toc-num">2</span>数据准备：3 类常见来源</a></li>
+    <li><a href="#s3"><span class="toc-num">3</span>文档清洗：5 步规范化</a></li>
+    <li><a href="#s4"><span class="toc-num">4</span>文档切片：3 大策略</a></li>
+    <li><a href="#s5"><span class="toc-num">5</span>Embedding：让机器"理解"文字</a></li>
+    <li><a href="#s6"><span class="toc-num">6</span>向量数据库：存 + 检索</a></li>
+    <li><a href="#s7"><span class="toc-num">7</span>组装 RAG：检索 + 生成</a></li>
+    <li><a href="#s8"><span class="toc-num">8</span>Web 界面：Streamlit 5 分钟</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+<!-- ====================== 准备 ====================== -->
+<section class="section" id="s0">
+  <span class="section-num">PHASE 0</span>
+  <h2><span class="icon">🎒</span>准备阶段：5 件事 + 心理建设</h2>
+  <p class="section-sub">在敲代码之前，先把"硬件 + 心理"都准备好。准备不充分，敲 100 行代码也跑不通。</p>
+
+  <h3>心理准备 1：RAG 没那么玄乎</h3>
+  <div class="callout blue">
+    <div class="callout-title">💡 RAG 一句话理解</div>
+    <p><strong>RAG = 检索 + 生成</strong>。你给 LLM 一份"开卷考试资料"（你公司的文档），LLM 根据资料回答问题。<br>
+    没有 RAG = LLM 凭记忆回答（容易胡编）。<br>
+    有 RAG = LLM 带着"参考资料"回答（有据可查）。</p>
+  </div>
+
+  <h3>心理准备 2：你会遇到的 3 类挫折</h3>
+  <table>
+    <thead><tr><th>阶段</th><th>常见问题</th><th>真实原因</th><th>破解方法</th></tr></thead>
+    <tbody>
+      <tr><td>环境搭建</td><td>pip install 失败</td><td>Python 版本 / 网络</td><td>用 conda 或换源</td></tr>
+      <tr><td>文档处理</td><td>PDF 读出来是乱码</td><td>扫描版 / 加密</td><td>换工具（pymupdf / marker）</td></tr>
+      <tr><td>检索效果</td><td>回答不相关</td><td>切片太大 / 关键词没命中</td><td>调小切片 + 加 BM25</td></tr>
+    </tbody>
+  </table>
+
+  <h3>硬件准备：5 件事清单</h3>
+  <ul class="checklist">
+    <li><strong>1 台电脑</strong>（Win / Mac / Linux 都能跑，本教程用 Win 截图）</li>
+    <li><strong>Python 3.10+</strong>（推荐 3.11）</li>
+    <li><strong>1 个 LLM API Key</strong>（DeepSeek 5 元起 / OpenAI / 智谱 GLM 任一）</li>
+    <li><strong>5-10 份文档</strong>（PDF / Word / Markdown / TXT）作为 RAG 的"资料"</li>
+    <li><strong>30 分钟不被打扰</strong>（后面会越来越快）</li>
+  </ul>
+
+  <div class="callout gold">
+    <div class="callout-title">💰 API Key 推荐（按性价比）</div>
+    <p><strong>首选：DeepSeek</strong>——1 元跑 100 万 token，RAG 完整跑通不到 1 元。<br>
+    <strong>备选：智谱 GLM-4-Flash</strong>——免费额度大（注册送 2000 万 token）。<br>
+    <strong>进阶：OpenAI gpt-4o-mini</strong>——质量最高，1 元跑 50 万 token。</p>
+  </div>
+
+  <h3>时间规划</h3>
+  <div class="next-steps">
+    <div class="next-step">
+      <h5>🟢 小白模式</h5>
+      <p>5-7 天，每天 1-2 小时，按部就班</p>
+    </div>
+    <div class="next-step">
+      <h5>🟡 进阶模式</h5>
+      <p>1-2 天，熟悉 Python + LLM API</p>
+    </div>
+    <div class="next-step">
+      <h5>🔵 极速模式</h5>
+      <p>3 小时，看代码 + 跑通 demo 即可</p>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== Phase 1 ====================== -->
+<section class="section" id="s1">
+  <span class="section-num">PHASE 1</span>
+  <h2><span class="icon">🛠️</span>环境搭建：Python + IDE（30 分钟）</h2>
+  <p class="section-sub">这是"0 代码 0 项目经验"的新手最容易栽跟头的阶段。按下面的步骤做，<strong>复制粘贴就行</strong>。</p>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">1</div>
+    <div class="step-title" data-time="5 分钟">安装 Python 3.11</div>
+    <p><strong>Windows 用户</strong>：</p>
+    <div class="sub-steps">
+      <ol>
+        <li>打开 https://www.python.org/downloads/release/python-3119/</li>
+        <li>下载 "Windows installer (64-bit)"</li>
+        <li>双击安装，<strong>勾选"Add Python to PATH"</strong>（最关键的一步）</li>
+        <li>点 "Install Now"</li>
+        <li>打开 cmd（Win+R 输入 cmd 回车），输入：<code>python --version</code></li>
+        <li>显示 <code>Python 3.11.9</code> 就算成功</li>
+      </ol>
+    </div>
+    <p><strong>Mac 用户</strong>：</p>
+    <div class="cmd" data-tip="终端命令">brew install python@3.11</div>
+    <p><strong>Linux 用户</strong>：</p>
+    <div class="cmd" data-tip="Ubuntu/Debian">sudo apt install python3.11 python3-pip</div>
+  </div>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">2</div>
+    <div class="step-title" data-time="3 分钟">安装 VS Code（推荐编辑器）</div>
+    <p>VS Code 是写 Python 最顺手的免费编辑器。</p>
+    <div class="sub-steps">
+      <ol>
+        <li>打开 https://code.visualstudio.com/</li>
+        <li>下载安装包，安装</li>
+        <li>打开 VS Code，点击左侧"扩展"图标（或按 <code>Ctrl+Shift+X</code>）</li>
+        <li>搜索 <strong>"Python"</strong>（Microsoft 出品，⭐ 5 万+）</li>
+        <li>点 Install</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">3</div>
+    <div class="step-title" data-time="2 分钟">创建项目文件夹</div>
+    <p>为 RAG 项目建一个专属文件夹，所有文件都放这里。</p>
+    <div class="sub-steps">
+      <ol>
+        <li>在 D 盘（或其他位置）建文件夹：<code>D:\my-rag-project\</code></li>
+        <li>在 VS Code 里 <code>File → Open Folder</code> 打开这个文件夹</li>
+      </ol>
+    </div>
+    <div class="file-tree">
+<span class="folder">my-rag-project/</span>           <span class="comment">← 你的项目根目录（空的）</span>
+</div>
+  </div>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">4</div>
+    <div class="step-title" data-time="3 分钟">创建虚拟环境</div>
+    <p><strong>为什么？</strong> 虚拟环境让每个项目的依赖包独立，不会污染系统 Python。</p>
+    <p>在 VS Code 里按 <code>Ctrl+`</code> 打开终端，输入：</p>
+    <div class="cmd" data-tip="创建虚拟环境">python -m venv venv</div>
+    <p>激活虚拟环境：</p>
+    <p><strong>Windows</strong>：</p>
+    <div class="cmd" data-tip="激活 venv">venv\Scripts\activate</div>
+    <p><strong>Mac/Linux</strong>：</p>
+    <div class="cmd" data-tip="激活 venv">source venv/bin/activate</div>
+    <p>激活成功后，终端前面会出现 <code>(venv)</code> 标识。</p>
+  </div>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">5</div>
+    <div class="step-title" data-time="3 分钟">安装依赖包</div>
+    <p>我们用最小依赖集（<strong>3 个包</strong>就能跑 RAG）：</p>
+    <div class="cmd" data-tip="安装 3 个核心包">pip install langchain langchain-community openai pypdf python-dotenv streamlit</div>
+    <p>看到 <code>Successfully installed ...</code> 就算成功。</p>
+    <div class="callout gold">
+      <div class="callout-title">⚠️ pip install 慢？换源</div>
+      <p>国内 pip 源可能慢。改用清华源：</p>
+      <div class="cmd" data-tip="临时换清华源">pip install -i https://pypi.tuna.tsinghua.edu.cn/simple langchain langchain-community openai pypdf python-dotenv streamlit</div>
+    </div>
+  </div>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">6</div>
+    <div class="step-title" data-time="2 分钟">配置 API Key</div>
+    <p>把 LLM API Key 存到 <code>.env</code> 文件里（<strong>不进 Git，不公开</strong>）。</p>
+    <p>在项目根目录新建文件 <code>.env</code>，内容：</p>
+    <pre><span class="com"># DeepSeek（推荐 - 便宜）</span>
+OPENAI_API_KEY=sk-你的deepseek-key
+OPENAI_API_BASE=https://api.deepseek.com
+OPENAI_MODEL=deepseek-chat
+
+<span class="com"># 或者 OpenAI 官方</span>
+<span class="com"># OPENAI_API_KEY=sk-你的openai-key</span>
+<span class="com"># OPENAI_API_BASE=https://api.openai.com/v1</span>
+<span class="com"># OPENAI_MODEL=gpt-4o-mini</span></pre>
+    <p>如何获取 DeepSeek Key：</p>
+    <div class="sub-steps">
+      <ol>
+        <li>打开 https://platform.deepseek.com/</li>
+        <li>注册 → 实名 → 充值 5 元（够跑 1000+ 次 RAG）</li>
+        <li>左侧菜单"API Keys" → "Create new secret key"</li>
+        <li>复制 <code>sk-xxx</code> 开头的那串，粘到 <code>.env</code></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="checkpoint">
+    <div class="checkpoint-title">✅ Phase 1 检查点</div>
+    <p>python --version 显示 3.11 / pip list 能看到 langchain / .env 里有 API Key</p>
+  </div>
+</section>
+
+<!-- ====================== Phase 2 ====================== -->
+<section class="section" id="s2">
+  <span class="section-num">PHASE 2</span>
+  <h2><span class="icon">📁</span>数据准备：3 类常见来源（30 分钟）</h2>
+  <p class="section-sub">RAG 的"资料"就是你的文档。这一阶段解决：用什么文档 / 放哪 / 怎么分类。</p>
+
+  <div class="step-box s-gold">
+    <div class="step-num-big">7</div>
+    <div class="step-title" data-time="10 分钟">建立"原始资料"文件夹</div>
+    <p>在项目根目录建 <code>raw_docs/</code>，把你准备好的文档放进去：</p>
+    <div class="file-tree">
+<span class="folder">my-rag-project/</span>
+├── <span class="folder">raw_docs/</span>               <span class="comment">← 把所有"资料"放这里</span>
+│   ├── 产品手册.pdf
+│   ├── SOP-001-标准操作流程.pdf
+│   ├── 培训资料-2024Q4.docx
+│   ├── 常见问题.md
+│   └── 客户案例汇总.txt
+├── <span class="folder">venv/</span>
+└── .env
+</div>
+  </div>
+
+  <div class="step-box s-gold">
+    <div class="step-num-big">8</div>
+    <div class="step-title" data-time="10 分钟">3 类常见来源 + 准备方法</div>
+
+    <h4>类型 A：PDF 文档（最常见）</h4>
+    <p><strong>适合</strong>：产品手册、SOP、报告、白皮书。</p>
+    <div class="sub-steps">
+      <ol>
+        <li>把你电脑里的 PDF 复制到 <code>raw_docs/</code></li>
+        <li><strong>注意</strong>：扫描版 PDF（图片）需要先 OCR，否则 LLM 读不到内容</li>
+        <li>检验方法：打开 PDF，<strong>能选中文字</strong> = 文字版，可以直接用；不能选中 = 扫描版，要 OCR</li>
+      </ol>
+    </div>
+    <div class="callout teal">
+      <div class="callout-title">📌 OCR 工具推荐</div>
+      <p><strong>免费在线</strong>：https://www.ilovepdf.com/ocr_pdf<br>
+      <strong>本地工具</strong>：Adobe Acrobat / 福昕 PDF 编辑器 / macOS 预览</p>
+    </div>
+
+    <h4>类型 B：Word 文档（.docx）</h4>
+    <p><strong>适合</strong>：培训资料、规章制度、内部通知。</p>
+    <div class="sub-steps">
+      <ol>
+        <li>直接复制到 <code>raw_docs/</code></li>
+        <li>命名规范：<code>类型-日期-标题.docx</code>，如 <code>培训-20240615-新员工入职.docx</code></li>
+      </ol>
+    </div>
+
+    <h4>类型 C：Markdown / TXT（最简单）</h4>
+    <p><strong>适合</strong>：FAQ、知识库、技术文档。</p>
+    <div class="sub-steps">
+      <ol>
+        <li>新建 <code>raw_docs/常见问题.md</code>，内容：</li>
+      </ol>
+    </div>
+    <pre><span class="com"># 常见问题</span>
+
+## Q1: 如何申请 API Key？
+1. 登录控制台
+2. 进入"密钥管理"
+3. 点击"创建密钥"
+4. 保存密钥（只显示一次）
+
+## Q2: 接口调用频率限制是多少？
+- 免费版：100 次/分钟
+- 付费版：1000 次/分钟
+
+## Q3: 如何处理超时？
+建议在代码中加 3 次重试，每次间隔 1 秒。
+</pre>
+  </div>
+
+  <div class="step-box s-gold">
+    <div class="step-num-big">9</div>
+    <div class="step-title" data-time="5 分钟">文档数量建议</div>
+    <div class="next-steps">
+      <div class="next-step">
+        <h5>🟢 起步</h5>
+        <p>5-10 份（够跑通流程）</p>
+      </div>
+      <div class="next-step">
+        <h5>🟡 实用</h5>
+        <p>30-50 份（覆盖 1 个领域）</p>
+      </div>
+      <div class="next-step">
+        <h5>🔵 专业</h5>
+        <p>100+ 份（生产级 RAG）</p>
+      </div>
+    </div>
+    <div class="callout pink">
+      <div class="callout-title">⚠️ 别贪多</div>
+      <p>先 <strong>5-10 份</strong> 跑通流程，再慢慢加。一次 100 份容易出问题（卡顿 / 失败难定位）。</p>
+    </div>
+  </div>
+
+  <div class="step-box s-gold">
+    <div class="step-num-big">10</div>
+    <div class="step-title" data-time="5 分钟">文件命名规范</div>
+    <p>好名字 = 半年后还能看懂。</p>
+    <p><strong>推荐格式</strong>：<code>YYYYMMDD_类型_标题.扩展名</code></p>
+    <div class="sub-steps">
+      <ol>
+        <li><code>20240615_产品手册_AI医疗_v2.pdf</code></li>
+        <li><code>20240620_SOP_客户投诉处理.docx</code></li>
+        <li><code>20240625_FAQ_常见问题.md</code></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="checkpoint">
+    <div class="checkpoint-title">✅ Phase 2 检查点</div>
+    <p>raw_docs/ 里有 5+ 份文档 / 命名规范 / PDF 都是文字版</p>
+  </div>
+</section>
+
+<!-- ====================== Phase 3 ====================== -->
+<section class="section" id="s3">
+  <span class="section-num">PHASE 3</span>
+  <h2><span class="icon">🧹</span>文档清洗：5 步规范化（1 小时）</h2>
+  <p class="section-sub">原始文档有很多"脏数据"——多余空行、页眉页脚、乱码。本阶段把它们清理干净，让 RAG 用得更顺。</p>
+
+  <div class="step-box s-teal">
+    <div class="step-num-big">11</div>
+    <div class="step-title" data-time="5 分钟">创建清洗脚本</div>
+    <p>在项目根目录新建 <code>step1_clean.py</code>：</p>
+    <pre><span class="kw">import</span> re
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+<span class="kw">from</span> langchain_community.document_loaders <span class="kw">import</span> (
+    PyPDFLoader,
+    Docx2txtLoader,
+    TextLoader,
+)
+<span class="kw">from</span> langchain_core.documents <span class="kw">import</span> Document
+
+RAW_DIR = Path(<span class="str">"raw_docs"</span>)
+CLEAN_DIR = Path(<span class="str">"clean_docs"</span>)
+CLEAN_DIR.<span class="fn">mkdir</span>(exist_ok=<span class="kw">True</span>)
+
+<span class="kw">def</span> <span class="fn">clean_text</span>(text: <span class="kw">str</span>) -> <span class="kw">str</span>:
+    <span class="str">"""5 步清洗：去空行/去页眉页脚/去乱码/合并空格/去URL"""</span>
+    <span class="com"># 1. 合并连续空行 → 1 个</span>
+    text = re.<span class="fn">sub</span>(<span class="str">r'\n\s*\n'</span>, <span class="str">'\n\n'</span>, text)
+    <span class="com"># 2. 去行首尾空格</span>
+    text = <span class="str">'\n'</span>.<span class="fn">join</span>(line.<span class="fn">strip</span>() <span class="kw">for</span> line <span class="kw">in</span> text.<span class="fn">split</span>(<span class="str">'\n'</span>))
+    <span class="com"># 3. 合并连续空格 → 1 个</span>
+    text = re.<span class="fn">sub</span>(<span class="str">r' +'</span>, <span class="str">' '</span>, text)
+    <span class="com"># 4. 去 URL</span>
+    text = re.<span class="fn">sub</span>(<span class="str">r'https?://\S+'</span>, <span class="str">''</span>, text)
+    <span class="com"># 5. 去 HTML 标签（如果有）</span>
+    text = re.<span class="fn">sub</span>(<span class="str">r'<[^>]+>'</span>, <span class="str">''</span>, text)
+    <span class="kw">return</span> text.<span class="fn">strip</span>()</pre>
+  </div>
+
+  <div class="step-box s-teal">
+    <div class="step-num-big">12</div>
+    <div class="step-title" data-time="5 分钟">加载不同格式文档</div>
+    <p>接上面的脚本，添加加载函数：</p>
+    <pre><span class="kw">def</span> <span class="fn">load_document</span>(file_path: Path) -> <span class="kw">str</span>:
+    <span class="str">"""根据后缀用不同的 loader"""</span>
+    suffix = file_path.suffix.<span class="fn">lower</span>()
+    <span class="kw">if</span> suffix == <span class="str">".pdf"</span>:
+        loader = <span class="fn">PyPDFLoader</span>(<span class="kw">str</span>(file_path))
+    <span class="kw">elif</span> suffix == <span class="str">".docx"</span>:
+        loader = <span class="fn">Docx2txtLoader</span>(<span class="kw">str</span>(file_path))
+    <span class="kw">elif</span> suffix <span class="kw">in</span> [<span class="str">".md"</span>, <span class="str">".txt"</span>]:
+        loader = <span class="fn">TextLoader</span>(<span class="kw">str</span>(file_path), encoding=<span class="str">"utf-8"</span>)
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="str">f"⚠️  不支持格式: {file_path.name}"</span>)
+        <span class="kw">return</span> <span class="str">""</span>
+    docs = loader.<span class="fn">load</span>()
+    <span class="kw">return</span> <span class="str">"\n\n"</span>.<span class="fn">join</span>([d.page_content <span class="kw">for</span> d <span class="kw">in</span> docs])</pre>
+  </div>
+
+  <div class="step-box s-teal">
+    <div class="step-num-big">13</div>
+    <div class="step-title" data-time="5 分钟">遍历所有文档 + 保存</div>
+    <pre><span class="kw">def</span> <span class="fn">main</span>():
+    files = <span class="kw">list</span>(RAW_DIR.<span class="fn">glob</span>(<span class="str">"**/*"</span>))
+    files = [f <span class="kw">for</span> f <span class="kw">in</span> files <span class="kw">if</span> f.is_file()]
+    <span class="fn">print</span>(<span class="str">f"📁 找到 {len(files)} 份文档\n"</span>)
+
+    <span class="kw">for</span> f <span class="kw">in</span> files:
+        <span class="fn">print</span>(<span class="str">f"⏳ 正在处理: {f.name}"</span>)
+        raw_text = <span class="fn">load_document</span>(f)
+        <span class="kw">if not</span> raw_text:
+            <span class="kw">continue</span>
+        clean_text = <span class="fn">clean_text</span>(raw_text)
+        <span class="com"># 存为 .txt（最通用）</span>
+        out_path = CLEAN_DIR / (f.stem + <span class="str">".txt"</span>)
+        out_path.<span class="fn">write_text</span>(clean_text, encoding=<span class="str">"utf-8"</span>)
+        <span class="fn">print</span>(<span class="str">f"  ✅ {f.name} → {out_path.name} ({len(clean_text)} 字)\n"</span>)
+
+    <span class="fn">print</span>(<span class="str">f"🎉 全部清洗完成！输出在 {CLEAN_DIR}/"</span>)
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    <span class="fn">main</span>()</pre>
+  </div>
+
+  <div class="step-box s-teal">
+    <div class="step-num-big">14</div>
+    <div class="step-title" data-time="2 分钟">运行清洗脚本</div>
+    <p>在终端运行：</p>
+    <div class="cmd" data-tip="运行清洗脚本">python step1_clean.py</div>
+    <p>看到类似输出就成功了：</p>
+    <pre><span class="com">📁 找到 5 份文档</span>
+⏳ 正在处理: 产品手册.pdf
+  ✅ 产品手册.pdf → 产品手册.txt (12,345 字)
+⏳ 正在处理: SOP-001-标准操作流程.pdf
+  ✅ SOP-001-标准操作流程.pdf → SOP-001-标准操作流程.txt (8,901 字)
+...
+🎉 全部清洗完成！</pre>
+  </div>
+
+  <div class="step-box s-teal">
+    <div class="step-num-big">15</div>
+    <div class="step-title" data-time="3 分钟">抽样检查清洗质量</div>
+    <p>打开 <code>clean_docs/</code> 里的任意一个 txt 文件，人眼检查：</p>
+    <ul class="checklist">
+      <li><strong>没有连续 3+ 个空行</strong></li>
+      <li><strong>没有页眉页脚残留</strong>（如"第 X 页 共 Y 页"）</li>
+      <li><strong>没有乱码</strong>（如 <code>?????</code> 或 <code>锟斤拷</code>）</li>
+      <li><strong>段落结构清晰</strong>（标题和正文能区分）</li>
+      <li><strong>专业术语完整</strong>（如"GMP"没有被改成"G M P"）</li>
+    </ul>
+    <div class="callout red">
+      <div class="callout-title">❌ 常见清洗错误</div>
+      <p>如果发现大量问题，回到 step 12，在 <code>clean_text()</code> 里加更多清洗规则。</p>
+      <ul class="danger-list">
+        <li>表格变成乱码？用 marker-pdf 替代 pypdf（更适合表格）</li>
+        <li>中英文标点混乱？加 <code>text = re.sub(r'[,;]', '，', text)</code></li>
+        <li>公式/图表丢失？这是 RAG 通病，跳过公式（用 GPT-4 Vision 单独处理）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="checkpoint">
+    <div class="checkpoint-title">✅ Phase 3 检查点</div>
+    <p>clean_docs/ 里有清洗后的 .txt 文件 / 抽样检查无乱码 / 字数合理</p>
+  </div>
+</section>
+
+<!-- ====================== Phase 4 ====================== -->
+<section class="section" id="s4">
+  <span class="section-num">PHASE 4</span>
+  <h2><span class="icon">✂️</span>文档切片：3 大策略（1 小时）</h2>
+  <p class="section-sub">LLM 有"上下文窗口限制"（DeepSeek 是 32K tokens ≈ 5 万字）。你的文档可能有 100 万字——必须切成"小块"。<br>切片的好坏直接决定 RAG 的回答质量。</p>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">16</div>
+    <div class="step-title" data-time="5 分钟">理解 3 大切片策略</div>
+    <div class="next-steps">
+      <div class="next-step">
+        <h5>📏 固定长度切片</h5>
+        <p>每 N 个字切一段。最简单，但可能切断完整句子。</p>
+      </div>
+      <div class="next-step">
+        <h5>📄 按段落/句子切</h5>
+        <p>按换行符或句号切。保留语义，但长短不一。</p>
+      </div>
+      <div class="next-step">
+        <h5>🧠 语义切片（推荐）</h5>
+        <p>按"意思变化"切。最智能，但需要 Embedding。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">17</div>
+    <div class="step-title" data-time="10 分钟">切片策略 A：按段落切（推荐新手）</div>
+    <p>新建 <code>step2_split.py</code>：</p>
+    <pre><span class="kw">from</span> pathlib <span class="kw">import</span> Path
+<span class="kw">from</span> langchain_text_splitters <span class="kw">import</span> RecursiveCharacterTextSplitter
+
+CLEAN_DIR = Path(<span class="str">"clean_docs"</span>)
+CHUNKS_FILE = Path(<span class="str">"chunks.jsonl"</span>)
+
+<span class="com"># 配置切片参数</span>
+<span class="com"># chunk_size: 每段最大字符数</span>
+<span class="com"># chunk_overlap: 段与段之间重叠多少字（保持上下文连贯）</span>
+splitter = <span class="fn">RecursiveCharacterTextSplitter</span>(
+    chunk_size=<span class="num">500</span>,       <span class="com"># 500 字/段（中文最佳实践）</span>
+    chunk_overlap=<span class="num">50</span>,      <span class="com"># 重叠 50 字（防止切断）</span>
+    separators=[<span class="str">"\n\n"</span>, <span class="str">"\n"</span>, <span class="str">"。"</span>, <span class="str">"，"</span>, <span class="str">" "</span>, <span class="str">""</span>],  <span class="com"># 优先按段落切</span>
+)
+
+<span class="kw">def</span> <span class="fn">split_documents</span>():
+    <span class="fn">print</span>(<span class="str">"✂️  开始切片...\n"</span>)
+    all_chunks = []
+    files = <span class="kw">list</span>(CLEAN_DIR.<span class="fn">glob</span>(<span class="str">"*.txt"</span>))
+
+    <span class="kw">for</span> f <span class="kw">in</span> files:
+        text = f.<span class="fn">read_text</span>(encoding=<span class="str">"utf-8"</span>)
+        chunks = splitter.<span class="fn">split_text</span>(text)
+        <span class="kw">for</span> i, chunk <span class="kw">in</span> <span class="fn">enumerate</span>(chunks):
+            all_chunks.<span class="fn">append</span>({
+                <span class="str">"id"</span>: <span class="str">f"{f.stem}_{i}"</span>,
+                <span class="str">"source"</span>: f.name,
+                <span class="str">"content"</span>: chunk,
+            })
+        <span class="fn">print</span>(<span class="str">f"  ✅ {f.name}: {len(chunks)} 段"</span>)
+
+    <span class="kw">import</span> json
+    <span class="kw">with</span> <span class="fn">open</span>(CHUNKS_FILE, <span class="str">"w"</span>, encoding=<span class="str">"utf-8"</span>) <span class="kw">as</span> fp:
+        <span class="kw">for</span> c <span class="kw">in</span> all_chunks:
+            fp.<span class="fn">write</span>(<span class="fn">json</span>.<span class="fn">dumps</span>(c, ensure_ascii=<span class="kw">False</span>) + <span class="str">"\n"</span>)
+
+    <span class="fn">print</span>(<span class="str">f"\n🎉 共 {len(all_chunks)} 段，存到 {CHUNKS_FILE}"</span>)
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    <span class="fn">split_documents</span>()</pre>
+  </div>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">18</div>
+    <div class="step-title" data-time="3 分钟">运行切片 + 验证</div>
+    <div class="cmd" data-tip="运行切片脚本">python step2_split.py</div>
+    <p>验证：</p>
+    <div class="cmd" data-tip="看前 3 段">head -3 chunks.jsonl</div>
+    <p>看到类似输出：</p>
+    <pre><span class="str">{"id": "产品手册_0", "source": "产品手册.txt", "content": "第一章 产品概述\n本产品是..."</span>
+<span class="str">{"id": "产品手册_1", "source": "产品手册.txt", "content": "...（下一段）"</span>
+...</pre>
+  </div>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">19</div>
+    <div class="step-title" data-time="5 分钟">切片参数调优</div>
+    <p>默认参数 <code>500/50</code> 适合大多数场景，但你可以根据文档调：</p>
+    <table>
+      <thead><tr><th>场景</th><th>chunk_size</th><th>chunk_overlap</th><th>理由</th></tr></thead>
+      <tbody>
+        <tr><td>技术文档（API / 代码）</td><td>300-400</td><td>30-50</td><td>小切片，定位精确</td></tr>
+        <tr><td>业务文档（SOP / 手册）</td><td>500-800</td><td>50-100</td><td>中等，兼顾上下文</td></tr>
+        <tr><td>长篇报告 / 论文</td><td>800-1500</td><td>100-200</td><td>大切片，保留论证</td></tr>
+        <tr><td>FAQ / 短答案</td><td>200-300</td><td>20-30</td><td>很短，1 段 1 答案</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout red">
+    <div class="callout-title">❌ 切片常见错误</div>
+    <ul class="danger-list">
+      <li><strong>切片太大</strong>（2000+ 字）→ 检索不准，LLM 容易跑偏</li>
+      <li><strong>切片太小</strong>（< 100 字）→ 上下文丢失，答案不完整</li>
+      <li><strong>没有 overlap</strong> → 关键句子被切断在两段里</li>
+    </ul>
+  </div>
+
+  <div class="checkpoint">
+    <div class="checkpoint-title">✅ Phase 4 检查点</div>
+    <p>chunks.jsonl 文件存在 / 段数合理（10 份文档 ≈ 100-500 段）/ 抽样看 1 段内容完整</p>
+  </div>
+</section>
+
+<!-- ====================== Phase 5 ====================== -->
+<section class="section" id="s5">
+  <span class="section-num">PHASE 5</span>
+  <h2><span class="icon">🧬</span>Embedding：让机器"理解"文字（30 分钟）</h2>
+  <p class="section-sub">Embedding = 把一段文字变成一组数字（向量）。<strong>意思相近的文字，向量也相近</strong>。这是 RAG 检索的"魔法"。</p>
+
+  <div class="step-box s-green">
+    <div class="step-num-big">20</div>
+    <div class="step-title" data-time="3 分钟">理解 Embedding 是什么</div>
+    <div class="callout blue">
+      <div class="callout-title">💡 1 句话理解</div>
+      <p>Embedding = 把每个字/词/句变成一个<strong>高维数字数组</strong>（如 1536 维）。</p>
+      <ul style="margin: 8px 0 0;">
+        <li>"我喜欢吃苹果" → <code>[0.12, -0.34, 0.78, ...]</code>（1536 个数字）</li>
+        <li>"我爱水果" → <code>[0.15, -0.32, 0.81, ...]</code>（非常接近！）</li>
+        <li>"今天天气不错" → <code>[-0.55, 0.22, -0.13, ...]</code>（差很远）</li>
+      </ul>
+      <p style="margin-top: 8px;">"距离近 = 意思像"——这就是 RAG 检索的数学基础。</p>
+    </div>
+  </div>
+
+  <div class="step-box s-green">
+    <div class="step-num-big">21</div>
+    <div class="step-title" data-time="5 分钟">选一个 Embedding 模型</div>
+    <table>
+      <thead><tr><th>模型</th><th>维度</th><th>价格</th><th>中文效果</th><th>推荐度</th></tr></thead>
+      <tbody>
+        <tr><td>OpenAI text-embedding-3-small</td><td>1536</td><td>$0.02/百万 token</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td></tr>
+        <tr><td>智谱 embedding-2</td><td>1024</td><td>免费额度</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐⭐⭐⭐</td></tr>
+        <tr><td>BGE 中文 (开源)</td><td>768</td><td>本地运行免费</td><td>⭐⭐⭐⭐</td><td>⭐⭐⭐</td></tr>
+      </tbody>
+    </table>
+    <p><strong>本教程用 OpenAI 兼容的 API</strong>（DeepSeek 也支持，1 元跑全流程）。</p>
+  </div>
+
+  <div class="step-box s-green">
+    <div class="step-num-big">22</div>
+    <div class="step-title" data-time="10 分钟">测试 Embedding</div>
+    <p>新建 <code>test_embedding.py</code>，先测试 1 个句子：</p>
+    <pre><span class="kw">import</span> os
+<span class="kw">from</span> dotenv <span class="kw">import</span> load_dotenv
+<span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+
+load_dotenv()  <span class="com"># 读 .env</span>
+
+client = <span class="fn">OpenAI</span>(
+    api_key=os.environ[<span class="str">"OPENAI_API_KEY"</span>],
+    base_url=os.environ[<span class="str">"OPENAI_API_BASE"</span>],
+)
+
+<span class="com"># 测试 1：单个句子</span>
+text = <span class="str">"我喜欢吃苹果"</span>
+resp = client.embeddings.<span class="fn">create</span>(
+    model=<span class="str">"text-embedding-3-small"</span>,  <span class="com"># DeepSeek 也支持这个 model 名</span>
+    input=text,
+)
+vector = resp.data[<span class="num">0</span>].embedding
+<span class="fn">print</span>(<span class="str">f"✅ 文本: {text}"</span>)
+<span class="fn">print</span>(<span class="str">f"✅ 向量维度: {len(vector)}"</span>)
+<span class="fn">print</span>(<span class="str">f"✅ 前 5 个数字: {vector[:5]}"</span>)
+
+<span class="com"># 测试 2：比较两个相似句子的距离</span>
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+text1 = <span class="str">"我喜欢吃苹果"</span>
+text2 = <span class="str">"我爱水果"</span>
+text3 = <span class="str">"今天天气很好"</span>
+
+vecs = client.embeddings.<span class="fn">create</span>(
+    model=<span class="str">"text-embedding-3-small"</span>,
+    input=[text1, text2, text3],
+)
+v1, v2, v3 = [v.embedding <span class="kw">for</span> v <span class="kw">in</span> vecs.data]
+
+<span class="kw">def</span> <span class="fn">cosine_sim</span>(a, b):
+    <span class="kw">return</span> np.<span class="fn">dot</span>(a, b) / (np.<span class="fn">linalg</span>.<span class="fn">norm</span>(a) * np.<span class="fn">linalg</span>.<span class="fn">norm</span>(b))
+
+<span class="fn">print</span>(<span class="str">f"\n📊 相似度对比（1=完全相同，0=无关）:"</span>)
+<span class="fn">print</span>(<span class="str">f"  '苹果' vs '水果': {cosine_sim(v1, v2):.3f}"</span>)  <span class="com"># 应该高</span>
+<span class="fn">print</span>(<span class="str">f"  '苹果' vs '天气': {cosine_sim(v1, v3):.3f}"</span>)  <span class="com"># 应该低</span></pre>
+    <p>运行：</p>
+    <div class="cmd" data-tip="测试 embedding">python test_embedding.py</div>
+    <p>看到类似输出：</p>
+    <pre><span class="com">✅ 文本: 我喜欢吃苹果</span>
+✅ 向量维度: 1536
+✅ 前 5 个数字: [0.012, -0.034, 0.078, 0.022, -0.061]
+
+📊 相似度对比（1=完全相同，0=无关）:
+  '苹果' vs '水果': <span class="num">0.823</span>     <span class="com">← 接近！</span>
+  '苹果' vs '天气': <span class="num">0.187</span>     <span class="com">← 很远</span>
+</pre>
+  </div>
+
+  <div class="step-box s-green">
+    <div class="step-num-big">23</div>
+    <div class="step-title" data-time="5 分钟">批量 Embedding 所有切片</div>
+    <p>新建 <code>step3_embed.py</code>：</p>
+    <pre><span class="kw">import</span> json
+<span class="kw">import</span> os
+<span class="kw">import</span> time
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+<span class="kw">from</span> dotenv <span class="kw">import</span> load_dotenv
+<span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+
+load_dotenv()
+client = <span class="fn">OpenAI</span>(
+    api_key=os.environ[<span class="str">"OPENAI_API_KEY"</span>],
+    base_url=os.environ[<span class="str">"OPENAI_API_BASE"</span>],
+)
+
+CHUNKS_FILE = Path(<span class="str">"chunks.jsonl"</span>)
+EMBEDDINGS_FILE = Path(<span class="str">"embeddings.jsonl"</span>)
+
+<span class="kw">def</span> <span class="fn">load_chunks</span>():
+    chunks = []
+    <span class="kw">with</span> <span class="fn">open</span>(CHUNKS_FILE, <span class="str">"r"</span>, encoding=<span class="str">"utf-8"</span>) <span class="kw">as</span> f:
+        <span class="kw">for</span> line <span class="kw">in</span> f:
+            chunks.<span class="fn">append</span>(<span class="fn">json</span>.<span class="fn">loads</span>(line))
+    <span class="kw">return</span> chunks
+
+<span class="kw">def</span> <span class="fn">embed_batch</span>(texts, batch_size=<span class="num">50</span>):
+    <span class="str">"""批量调用 Embedding API（一次最多 50 条）"""</span>
+    all_vectors = []
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="num">0</span>, <span class="fn">len</span>(texts), batch_size):
+        batch = texts[i:i+batch_size]
+        <span class="fn">print</span>(<span class="str">f"  ⏳ 处理 {i+1}-{i+len(batch)}..."</span>)
+        resp = client.embeddings.<span class="fn">create</span>(
+            model=<span class="str">"text-embedding-3-small"</span>,
+            input=batch,
+        )
+        all_vectors.<span class="fn">extend</span>([v.embedding <span class="kw">for</span> v <span class="kw">in</span> resp.data])
+        time.<span class="fn">sleep</span>(<span class="num">0.5</span>)  <span class="com"># 避免频率限制</span>
+    <span class="kw">return</span> all_vectors
+
+<span class="kw">def</span> <span class="fn">main</span>():
+    chunks = <span class="fn">load_chunks</span>()
+    <span class="fn">print</span>(<span class="str">f"📊 共 {len(chunks)} 段，开始 Embedding...\n"</span>)
+
+    texts = [c[<span class="str">"content"</span>] <span class="kw">for</span> c <span class="kw">in</span> chunks]
+    vectors = <span class="fn">embed_batch</span>(texts)
+
+    <span class="com"># 存为 jsonl（每行一段：id + source + content + vector）</span>
+    <span class="kw">with</span> <span class="fn">open</span>(EMBEDDINGS_FILE, <span class="str">"w"</span>, encoding=<span class="str">"utf-8"</span>) <span class="kw">as</span> f:
+        <span class="kw">for</span> chunk, vec <span class="kw">in</span> <span class="fn">zip</span>(chunks, vectors):
+            f.<span class="fn">write</span>(<span class="fn">json</span>.<span class="fn">dumps</span>({
+                <span class="str">"id"</span>: chunk[<span class="str">"id"</span>],
+                <span class="str">"source"</span>: chunk[<span class="str">"source"</span>],
+                <span class="str">"content"</span>: chunk[<span class="str">"content"</span>],
+                <span class="str">"vector"</span>: vec,
+            }, ensure_ascii=<span class="kw">False</span>) + <span class="str">"\n"</span>)
+
+    <span class="fn">print</span>(<span class="str">f"\n🎉 Embedding 完成！存到 {EMBEDDINGS_FILE}"</span>)
+    <span class="fn">print</span>(<span class="str">f"📦 文件大小: {EMBEDDINGS_FILE.stat().st_size / 1024 / 1024:.1f} MB"</span>)
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    <span class="fn">main</span>()</pre>
+    <p>运行：</p>
+    <div class="cmd" data-tip="运行 embedding">python step3_embed.py</div>
+  </div>
+
+  <div class="step-box s-green">
+    <div class="step-num-big">24</div>
+    <div class="step-title" data-time="3 分钟">检查成本</div>
+    <p>DeepSeek 的 embedding 极便宜。1000 段大约 <strong>0.01 元</strong>。1 万段大约 <strong>0.1 元</strong>。</p>
+    <p>OpenAI text-embedding-3-small 也很便宜：1 美元能跑 5000 万 tokens。</p>
+  </div>
+
+  <div class="checkpoint">
+    <div class="checkpoint-title">✅ Phase 5 检查点</div>
+    <p>embeddings.jsonl 文件存在 / 每行有 vector 字段 / 测试相似度返回合理值</p>
+  </div>
+</section>
+
+<!-- ====================== Phase 6 ====================== -->
+<section class="section" id="s6">
+  <span class="section-num">PHASE 6</span>
+  <h2><span class="icon">🗄️</span>向量数据库：存 + 检索（1 小时）</h2>
+  <p class="section-sub">把上一步的"向量"存起来，并实现"输入问题 → 找最像的 N 段"。</p>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">25</div>
+    <div class="step-title" data-time="5 分钟">选一个向量数据库</div>
+    <table>
+      <thead><tr><th>类型</th><th>例子</th><th>适用</th><th>本教程</th></tr></thead>
+      <tbody>
+        <tr><td>本地文件</td><td>FAISS / Chroma</td><td>< 10 万段，本地运行</td><td><strong>✅ 推荐新手</strong></td></tr>
+        <tr><td>云服务</td><td>Pinecone / Zilliz</td><td>> 10 万段，多机共享</td><td>备选</td></tr>
+        <tr><td>混合</td><td>Qdrant / Weaviate</td><td>中等规模，需要权限控制</td><td>备选</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">26</div>
+    <div class="step-title" data-time="5 分钟">安装 FAISS（本地向量库）</div>
+    <div class="cmd" data-tip="安装 FAISS CPU 版">pip install faiss-cpu</div>
+    <p>Mac M1/M2 用户：</p>
+    <div class="cmd" data-tip="Mac M1 专用">pip install faiss-cpu --no-cache-dir</div>
+  </div>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">27</div>
+    <div class="step-title" data-time="15 分钟">建索引 + 存向量</div>
+    <p>新建 <code>step4_index.py</code>：</p>
+    <pre><span class="kw">import</span> json
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> faiss
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+
+EMBEDDINGS_FILE = Path(<span class="str">"embeddings.jsonl"</span>)
+INDEX_FILE = Path(<span class="str">"faiss.index"</span>)
+META_FILE = Path(<span class="str">"metadata.jsonl"</span>)
+
+<span class="kw">def</span> <span class="fn">load_embeddings</span>():
+    chunks, vectors = [], []
+    <span class="kw">with</span> <span class="fn">open</span>(EMBEDDINGS_FILE, <span class="str">"r"</span>, encoding=<span class="str">"utf-8"</span>) <span class="kw">as</span> f:
+        <span class="kw">for</span> line <span class="kw">in</span> f:
+            d = <span class="fn">json</span>.<span class="fn">loads</span>(line)
+            chunks.<span class="fn">append</span>({<span class="str">"id"</span>: d[<span class="str">"id"</span>], <span class="str">"source"</span>: d[<span class="str">"source"</span>], <span class="str">"content"</span>: d[<span class="str">"content"</span>]})
+            vectors.<span class="fn">append</span>(d[<span class="str">"vector"</span>])
+    <span class="kw">return</span> chunks, np.<span class="fn">array</span>(vectors, dtype=<span class="str">"float32"</span>)
+
+<span class="kw">def</span> <span class="fn">main</span>():
+    chunks, vectors = <span class="fn">load_embeddings</span>()
+    <span class="fn">print</span>(<span class="str">f"📊 加载 {len(chunks)} 段，向量维度 {vectors.shape[1]}"</span>)
+
+    <span class="com"># 建索引（用最简单的 IndexFlatL2）</span>
+    dim = vectors.shape[<span class="num">1</span>]
+    index = faiss.<span class="fn">IndexFlatL2</span>(dim)
+    index.<span class="fn">add</span>(vectors)
+
+    <span class="fn">print</span>(<span class="str">f"✅ 索引建立，共 {index.ntotal} 个向量"</span>)
+
+    <span class="com"># 存索引 + 元数据</span>
+    faiss.<span class="fn">write_index</span>(index, <span class="kw">str</span>(INDEX_FILE))
+    <span class="kw">with</span> <span class="fn">open</span>(META_FILE, <span class="str">"w"</span>, encoding=<span class="str">"utf-8"</span>) <span class="kw">as</span> f:
+        <span class="kw">for</span> c <span class="kw">in</span> chunks:
+            f.<span class="fn">write</span>(<span class="fn">json</span>.<span class="fn">dumps</span>(c, ensure_ascii=<span class="kw">False</span>) + <span class="str">"\n"</span>)
+
+    <span class="fn">print</span>(<span class="str">f"💾 索引: {INDEX_FILE} ({INDEX_FILE.stat().st_size/1024/1024:.1f} MB)"</span>)
+    <span class="fn">print</span>(<span class="str">f"💾 元数据: {META_FILE}"</span>)
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    <span class="fn">main</span>()</pre>
+    <p>运行：</p>
+    <div class="cmd" data-tip="建索引">python step4_index.py</div>
+  </div>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">28</div>
+    <div class="step-title" data-time="10 分钟">实现检索功能</div>
+    <p>新建 <code>step5_search.py</code>，写一个能用的"问答函数"：</p>
+    <pre><span class="kw">import</span> json
+<span class="kw">import</span> os
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> faiss
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+<span class="kw">from</span> dotenv <span class="kw">import</span> load_dotenv
+<span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+
+load_dotenv()
+client = <span class="fn">OpenAI</span>(
+    api_key=os.environ[<span class="str">"OPENAI_API_KEY"</span>],
+    base_url=os.environ[<span class="str">"OPENAI_API_BASE"</span>],
+)
+
+<span class="com"># 加载索引</span>
+index = faiss.<span class="fn">read_index</span>(<span class="kw">str</span>(Path(<span class="str">"faiss.index"</span>)))
+chunks = []
+<span class="kw">with</span> <span class="fn">open</span>(Path(<span class="str">"metadata.jsonl"</span>), <span class="str">"r"</span>, encoding=<span class="str">"utf-8"</span>) <span class="kw">as</span> f:
+    <span class="kw">for</span> line <span class="kw">in</span> f:
+        chunks.<span class="fn">append</span>(<span class="fn">json</span>.<span class="fn">loads</span>(line))
+
+<span class="kw">def</span> <span class="fn">search</span>(query: <span class="kw">str</span>, top_k: <span class="kw">int</span> = <span class="num">3</span>):
+    <span class="str">"""根据 query 找最相关的 top_k 段"""</span>
+    <span class="com"># 1. 把 query 也变成向量</span>
+    resp = client.embeddings.<span class="fn">create</span>(
+        model=<span class="str">"text-embedding-3-small"</span>,
+        input=query,
+    )
+    q_vec = np.<span class="fn">array</span>([resp.data[<span class="num">0</span>].embedding], dtype=<span class="str">"float32"</span>)
+
+    <span class="com"># 2. 在索引里搜最像的 3 段</span>
+    distances, indices = index.<span class="fn">search</span>(q_vec, top_k)
+
+    <span class="com"># 3. 整理结果</span>
+    results = []
+    <span class="kw">for</span> i, idx <span class="kw">in</span> <span class="fn">enumerate</span>(indices[<span class="num">0</span>]):
+        results.<span class="fn">append</span>({
+            <span class="str">"rank"</span>: i+<span class="num">1</span>,
+            <span class="str">"distance"</span>: <span class="fn">float</span>(distances[<span class="num">0</span>][i]),
+            <span class="str">"content"</span>: chunks[idx][<span class="str">"content"</span>],
+            <span class="str">"source"</span>: chunks[idx][<span class="str">"source"</span>],
+        })
+    <span class="kw">return</span> results
+
+<span class="com"># 测试</span>
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    query = <span class="fn">input</span>(<span class="str">"🔍 请输入问题: "</span>)
+    <span class="fn">print</span>(<span class="str">f"\n🔎 正在检索: {query}\n"</span>)
+    results = <span class="fn">search</span>(query)
+    <span class="kw">for</span> r <span class="kw">in</span> results:
+        <span class="fn">print</span>(<span class="str">f"【第 {r['rank']} 名】距离: {r['distance']:.3f}"</span>)
+        <span class="fn">print</span>(<span class="str">f"📄 来源: {r['source']}"</span>)
+        <span class="fn">print</span>(<span class="str">f"📝 内容: {r['content'][:200]}...\n"</span>)</pre>
+  </div>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">29</div>
+    <div class="step-title" data-time="5 分钟">测试检索</div>
+    <div class="cmd" data-tip="测试检索">python step5_search.py</div>
+    <p>输入几个测试问题：</p>
+    <ul class="checklist">
+      <li>输入一个<strong>文档里有的问题</strong>，看能不能找到相关内容</li>
+      <li>输入一个<strong>文档里没有的问题</strong>，看返回结果是不是合理的"不相关"</li>
+      <li>观察距离值：<strong>越小越相关</strong></li>
+    </ul>
+  </div>
+
+  <div class="checkpoint">
+    <div class="checkpoint-title">✅ Phase 6 检查点</div>
+    <p>faiss.index 文件存在 / 测试检索能找到相关段落 / 距离值合理</p>
+  </div>
+</section>
+
+<!-- ====================== Phase 7 ====================== -->
+<section class="section" id="s7">
+  <span class="section-num">PHASE 7</span>
+  <h2><span class="icon">🤖</span>组装 RAG：检索 + 生成（1 小时）</h2>
+  <p class="section-sub">把"检索"和"LLM 生成"连起来——这就是真正的 RAG！</p>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">30</div>
+    <div class="step-title" data-time="5 分钟">理解 RAG 流程</div>
+    <div class="callout blue">
+      <div class="callout-title">💡 RAG 三步走</div>
+      <ol>
+        <li><strong>用户提问</strong> → 拿问题</li>
+        <li><strong>检索资料</strong> → 用问题去向量库找最相关的 3-5 段</li>
+        <li><strong>LLM 生成</strong> → 把"问题 + 资料"一起给 LLM，让它基于资料回答</li>
+      </ol>
+      <p style="margin-top: 8px;">核心 Prompt：<em>"请基于以下资料回答问题。如果资料里没有，请说'我不知道'。"</em></p>
+    </div>
+  </div>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">31</div>
+    <div class="step-title" data-time="15 分钟">写 RAG 主程序</div>
+    <p>新建 <code>rag.py</code>（这是核心）：</p>
+    <pre><span class="kw">import</span> json
+<span class="kw">import</span> os
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> faiss
+<span class="kw">from</span> pathlib <span class="kw">import</span> Path
+<span class="kw">from</span> dotenv <span class="kw">import</span> load_dotenv
+<span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+
+load_dotenv()
+client = <span class="fn">OpenAI</span>(
+    api_key=os.environ[<span class="str">"OPENAI_API_KEY"</span>],
+    base_url=os.environ[<span class="str">"OPENAI_API_BASE"</span>],
+)
+
+<span class="com"># 加载索引</span>
+index = faiss.<span class="fn">read_index</span>(<span class="str">"faiss.index"</span>)
+chunks = []
+<span class="kw">with</span> <span class="fn">open</span>(<span class="str">"metadata.jsonl"</span>, encoding=<span class="str">"utf-8"</span>) <span class="kw">as</span> f:
+    <span class="kw">for</span> line <span class="kw">in</span> f:
+        chunks.<span class="fn">append</span>(<span class="fn">json</span>.<span class="fn">loads</span>(line))
+
+<span class="kw">def</span> <span class="fn">embed_query</span>(query: <span class="kw">str</span>):
+    resp = client.embeddings.<span class="fn">create</span>(
+        model=<span class="str">"text-embedding-3-small"</span>,
+        input=query,
+    )
+    <span class="kw">return</span> np.<span class="fn">array</span>([resp.data[<span class="num">0</span>].embedding], dtype=<span class="str">"float32"</span>)
+
+<span class="kw">def</span> <span class="fn">retrieve</span>(query: <span class="kw">str</span>, top_k: <span class="kw">int</span> = <span class="num">3</span>):
+    q_vec = <span class="fn">embed_query</span>(query)
+    distances, indices = index.<span class="fn">search</span>(q_vec, top_k)
+    results = []
+    <span class="kw">for</span> i, idx <span class="kw">in</span> <span class="fn">enumerate</span>(indices[<span class="num">0</span>]):
+        results.<span class="fn">append</span>({
+            <span class="str">"rank"</span>: i+<span class="num">1</span>,
+            <span class="str">"distance"</span>: <span class="fn">float</span>(distances[<span class="num">0</span>][i]),
+            <span class="str">"content"</span>: chunks[idx][<span class="str">"content"</span>],
+            <span class="str">"source"</span>: chunks[idx][<span class="str">"source"</span>],
+        })
+    <span class="kw">return</span> results
+
+<span class="com"># 核心 Prompt 模板（这是 RAG 的灵魂）</span>
+RAG_PROMPT = <span class="str">"""你是企业内部知识库助手。请严格基于【参考资料】回答用户问题。
+
+【参考资料】
+{context}
+
+【用户问题】
+{question}
+
+【回答要求】
+1. 只使用参考资料中的信息回答
+2. 如果参考资料没有相关信息，请明确说"我在知识库中没有找到相关信息"
+3. 回答末尾标注信息来源（如"来源：产品手册.pdf 第3章"）
+4. 简洁清晰，3-5 句话
+"""</span>
+
+<span class="kw">def</span> <span class="fn">rag_query</span>(question: <span class="kw">str</span>, top_k: <span class="kw">int</span> = <span class="num">3</span>):
+    <span class="com"># 1. 检索</span>
+    refs = <span class="fn">retrieve</span>(question, top_k)
+
+    <span class="com"># 2. 拼装 context</span>
+    context = <span class="str">"\n\n---\n\n"</span>.<span class="fn">join</span>(
+        <span class="str">f"[来源 {r['rank']}: {r['source']}]\n{r['content']}"</span>
+        <span class="kw">for</span> r <span class="kw">in</span> refs
+    )
+
+    <span class="com"># 3. 调 LLM</span>
+    prompt = RAG_PROMPT.<span class="fn">format</span>(context=context, question=question)
+    resp = client.chat.completions.<span class="fn">create</span>(
+        model=os.environ.<span class="fn">get</span>(<span class="str">"OPENAI_MODEL"</span>, <span class="str">"deepseek-chat"</span>),
+        messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: prompt}],
+        temperature=<span class="num">0.3</span>,  <span class="com"># 低温度 = 更准</span>
+    )
+    answer = resp.choices[<span class="num">0</span>].message.content
+
+    <span class="kw">return</span> {
+        <span class="str">"answer"</span>: answer,
+        <span class="str">"references"</span>: refs,
+    }
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    <span class="fn">print</span>(<span class="str">"🤖 RAG 知识库助手已启动！\n"</span>)
+    <span class="kw">while</span> <span class="kw">True</span>:
+        q = <span class="fn">input</span>(<span class="str">"\n💬 你的问题 (q 退出): "</span>).<span class="fn">strip</span>()
+        <span class="kw">if</span> q.lower() <span class="kw">in</span> (<span class="str">"q"</span>, <span class="str">"quit"</span>, <span class="str">"exit"</span>, <span class="str">""</span>):
+            <span class="kw">break</span>
+        result = <span class="fn">rag_query</span>(q)
+        <span class="fn">print</span>(<span class="str">f"\n📖 回答:\n{result['answer']}"</span>)
+        <span class="fn">print</span>(<span class="str">f"\n📚 参考资料 (前 3 段):"</span>)
+        <span class="kw">for</span> r <span class="kw">in</span> result[<span class="str">"references"</span>]:
+            <span class="fn">print</span>(<span class="str">f"  {r['rank']}. {r['source']} (距离: {r['distance']:.3f})"</span>)</pre>
+  </div>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">32</div>
+    <div class="step-title" data-time="10 分钟">运行 RAG + 测试 5 个问题</div>
+    <div class="cmd" data-tip="启动 RAG 问答">python rag.py</div>
+    <p>测试这 5 类问题（<strong>这是评估 RAG 质量的标准做法</strong>）：</p>
+    <ul class="checklist">
+      <li><strong>Q1 简单事实</strong>：XXX 是什么？</li>
+      <li><strong>Q2 多步推理</strong>：A 和 B 的区别是什么？</li>
+      <li><strong>Q3 文档内没的</strong>：文档没提到的问题（应该回答"没找到"）</li>
+      <li><strong>Q4 模糊问题</strong>：口语化 / 缩写 / 错别字</li>
+      <li><strong>Q5 长问题</strong>：包含多段描述的复杂问题</li>
+    </ul>
+  </div>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">33</div>
+    <div class="step-title" data-time="10 分钟">调优：3 个常见问题</h3>
+
+    <h4>问题 1：回答跑题（不基于资料）</h4>
+    <p><strong>症状</strong>：LLM 用自己的知识回答，不用你的资料。</p>
+    <p><strong>解法</strong>：强化 Prompt，加约束：</p>
+    <pre><span class="com"># 把"只使用参考资料"改成"必须只用"</span>
+RAG_PROMPT = RAG_PROMPT.<span class="fn">replace</span>(<span class="str">"只使用参考资料"</span>, <span class="str">"必须严格只用参考资料，不得添加任何外部信息"</span>)</pre>
+
+    <h4>问题 2：检索不准（找到不相关的段）</h4>
+    <p><strong>解法</strong>：</p>
+    <div class="sub-steps">
+      <ol>
+        <li>调小 <code>top_k</code> 从 3 调到 2（少而精）</li>
+        <li>在 Prompt 里加距离阈值：距离 > 0.5 的不参考</li>
+        <li>回 Phase 4 调切片参数</li>
+      </ol>
+    </div>
+
+    <h4>问题 3：答案太长 / 啰嗦</h4>
+    <p><strong>解法</strong>：在 Prompt 里加"简洁"指令：</p>
+    <pre><span class="str">回答要求：
+1. 简洁，3 句话以内
+2. 直接给答案，不要客套
+3. 如有编号步骤，用 1./2./3. 列出</span></pre>
+  </div>
+
+  <div class="checkpoint">
+    <div class="checkpoint-title">✅ Phase 7 检查点</div>
+    <p>python rag.py 能跑 / 5 类测试问题有合理答案 / 答案末尾有"来源：xxx"</p>
+  </div>
+</section>
+
+<!-- ====================== Phase 8 ====================== -->
+<section class="section" id="s8">
+  <span class="section-num">PHASE 8</span>
+  <h2><span class="icon">🖥️</span>Web 界面：Streamlit 5 分钟（30 分钟）</h2>
+  <p class="section-sub">命令行能用，但团队成员更喜欢浏览器。新手最快出界面 = Streamlit。</p>
+
+  <div class="step-box s-green">
+    <div class="step-num-big">34</div>
+    <div class="step-title" data-time="3 分钟">安装 Streamlit</div>
+    <div class="cmd" data-tip="应该已装">pip install streamlit</div>
+  </div>
+
+  <div class="step-box s-green">
+    <div class="step-num-big">35</div>
+    <div class="step-title" data-time="15 分钟">写 Web 界面</div>
+    <p>新建 <code>app.py</code>：</p>
+    <pre><span class="kw">import</span> streamlit <span class="kw">as</span> st
+<span class="kw">from</span> rag <span class="kw">import</span> rag_query
+
+st.<span class="fn">set_page_config</span>(
+    page_title=<span class="str">"我的 RAG 知识库"</span>,
+    page_icon=<span class="str">"📚"</span>,
+    layout=<span class="str">"wide"</span>,
+)
+
+st.<span class="fn">title</span>(<span class="str">"📚 我的 RAG 知识库"</span>)
+st.<span class="fn">markdown</span>(<span class="str">"输入问题，AI 会基于你的资料回答。"</span>)
+
+<span class="com"># 侧边栏</span>
+<span class="kw">with</span> st.<span class="fn">sidebar</span>():
+    st.<span class="fn">header</span>(<span class="str">"⚙️ 设置"</span>)
+    top_k = st.<span class="fn">slider</span>(<span class="str">"检索段落数"</span>, <span class="num">1</span>, <span class="num">10</span>, <span class="num">3</span>)
+    show_refs = st.<span class="fn">checkbox</span>(<span class="str">"显示参考资料"</span>, value=<span class="kw">True</span>)
+
+<span class="com"># 主界面</span>
+question = st.<span class="fn">text_input</span>(<span class="str">"💬 你的问题："</span>, placeholder=<span class="str">"比如：产品的核心功能是什么？"</span>)
+
+<span class="kw">if</span> st.<span class="fn">button</span>(<span class="str">"🚀 提问"</span>) <span class="kw">and</span> question:
+    <span class="kw">with</span> st.<span class="fn">spinner</span>(<span class="str">"🔎 正在检索 + 生成..."</span>):
+        result = <span class="fn">rag_query</span>(question, top_k=top_k)
+
+    st.<span class="fn">markdown</span>(<span class="str">"### 📖 回答"</span>)
+    st.<span class="fn">markdown</span>(result[<span class="str">"answer"</span>])
+
+    <span class="kw">if</span> show_refs:
+        st.<span class="fn">markdown</span>(<span class="str">"### 📚 参考资料"</span>)
+        <span class="kw">for</span> r <span class="kw">in</span> result[<span class="str">"references"</span>]:
+            <span class="kw">with</span> st.<span class="fn">expander</span>(<span class="str">f"📄 {r['source']} (距离: {r['distance']:.3f})"</span>):
+                st.<span class="fn">markdown</span>(r[<span class="str">"content"</span>])</pre>
+  </div>
+
+  <div class="step-box s-green">
+    <div class="step-num-big">36</div>
+    <div class="step-title" data-time="2 分钟">启动 Web 界面</div>
+    <div class="cmd" data-tip="启动 Web UI">streamlit run app.py</div>
+    <p>看到：</p>
+    <pre><span class="com">You can now view your Streamlit app in your browser.</span>
+  Local URL: http://localhost:8501
+  Network URL: http://192.168.x.x:8501
+</pre>
+    <p><strong>打开浏览器</strong>访问 <code>http://localhost:8501</code>。🎉 你的 RAG 知识库上线了！</p>
+  </div>
+
+  <div class="step-box s-green">
+    <div class="step-num-big">37</div>
+    <div class="step-title" data-time="3 分钟">加 4 个"显得专业"的小细节</div>
+    <p>在 <code>app.py</code> 顶部加：</p>
+    <pre><span class="com"># 1. 自定义 CSS</span>
+st.<span class="fn">markdown</span>(<span class="str">"""
+&lt;style>
+    .stApp { background-color: #f8f7f4; }
+    .main-header { color: #3A6FA8; }
+&lt;/style>
+"""</span>, unsafe_allow_html=<span class="kw">True</span>)
+
+<span class="com"># 2. 历史记录（用 session_state）</span>
+<span class="kw">if</span> <span class="str">"history"</span> <span class="kw">not in</span> st.session_state:
+    st.session_state.history = []
+
+<span class="com"># 3. 提问后保存到历史</span>
+<span class="kw">if</span> st.<span class="fn">button</span>(<span class="str">"🚀 提问"</span>) <span class="kw">and</span> question:
+    <span class="com"># ... 上面已有代码 ...</span>
+    st.session_state.history.<span class="fn">append</span>((question, result))
+
+<span class="com"># 4. 显示历史</span>
+<span class="kw">if</span> st.session_state.history:
+    st.<span class="fn">markdown</span>(<span class="str">"### 🕐 历史记录"</span>)
+    <span class="kw">for</span> i, (q, r) <span class="kw">in</span> <span class="fn">enumerate</span>(<span class="fn">reversed</span>(st.session_state.history[-<span class="num">5</span>:]), <span class="num">1</span>):
+        <span class="kw">with</span> st.<span class="fn">expander</span>(<span class="str">f"#{i}: {q}"</span>):
+            st.<span class="fn">markdown</span>(r[<span class="str">"answer"</span>])</pre>
+  </div>
+
+  <div class="checkpoint">
+    <div class="checkpoint-title">✅ Phase 8 检查点</div>
+    <p>浏览器能打开 http://localhost:8501 / 提问能返回答案 / 显示参考资料</p>
+  </div>
+</section>
+
+<div class="quote">
+  "到这里，你的 RAG 知识库已经跑通！<br>
+  下一步：上传更多文档、调参优化、或者部署到公网。"
+</div>
+
+<!-- ====================== 进阶 ====================== -->
+<section class="section" id="s9">
+  <span class="section-num">PHASE 9</span>
+  <h2><span class="icon">🚀</span>进阶方向：从"能跑"到"好用"（1-7 天）</h2>
+  <p class="section-sub">上面的 8 个阶段，5-7 天搞定。<strong>下面的进阶内容，按需选做</strong>。</p>
+
+  <div class="next-steps">
+    <div class="next-step">
+      <h5>📅 当天可做</h5>
+      <p>换更好的 Embedding（智谱 BGE）<br>调切片参数到最优<br>写 10 道测试题评估</p>
+    </div>
+    <div class="next-step">
+      <h5>📅 1-3 天</h5>
+      <p>加 BM25 混合检索<br>加 ReRank 精排<br>加多轮对话记忆</p>
+    </div>
+    <div class="next-step">
+      <h5>📅 1 周+</h5>
+      <p>部署到公网<br>做 100 道题评估集<br>做权限 / 审计 / 护栏</p>
+    </div>
+  </div>
+
+  <h3>进阶 1：加 BM25 混合检索（提升 30%+）</h3>
+  <div class="callout gold">
+    <div class="callout-title">💡 为什么需要 BM25？</div>
+    <p>纯向量检索<strong>擅长语义相似</strong>（"苹果" ≈ "水果"），但<strong>不擅长精确匹配</strong>（"GMP 第 5.2.3 条" 这种）。<br>
+    BM25 是传统<strong>关键词检索</strong>，两者混合效果最好。</p>
+  </div>
+  <pre><span class="cmd" data-tip="安装 BM25">pip install rank_bm25</span></pre>
+  <p>在 <code>rag.py</code> 里加 BM25 检索：</p>
+  <pre><span class="kw">from</span> rank_bm25 <span class="kw">import</span> BM25Okapi
+<span class="kw">import</span> jieba  <span class="com"># 中文分词</span>
+
+<span class="com"># 准备 BM25 索引</span>
+tokenized_corpus = [list(jieba.<span class="fn">cut</span>(c[<span class="str">"content"</span>])) <span class="kw">for</span> c <span class="kw">in</span> chunks]
+bm25 = <span class="fn">BM25Okapi</span>(tokenized_corpus)
+
+<span class="kw">def</span> <span class="fn">hybrid_retrieve</span>(query, top_k=<span class="num">3</span>):
+    <span class="com"># 1. 向量检索</span>
+    vec_results = <span class="fn">retrieve</span>(query, top_k=top_k*<span class="num">2</span>)
+
+    <span class="com"># 2. BM25 检索</span>
+    tokenized_query = list(jieba.<span class="fn">cut</span>(query))
+    bm25_scores = bm25.<span class="fn">get_scores</span>(tokenized_query)
+    top_bm25_idx = np.<span class="fn">argsort</span>(bm25_scores)[::-<span class="num">1</span>][:top_k*<span class="num">2</span>]
+
+    <span class="com"># 3. 合并去重</span>
+    combined = {}  <span class="com"># id -> score</span>
+    <span class="kw">for</span> r <span class="kw">in</span> vec_results:
+        combined[r[<span class="str">"id"</span>]] = combined.<span class="fn">get</span>(r[<span class="str">"id"</span>], <span class="num">0</span>) + (<span class="num">1</span> / (r[<span class="str">"rank"</span>] + <span class="num">1</span>))
+    <span class="kw">for</span> rank, idx <span class="kw">in</span> <span class="fn">enumerate</span>(top_bm25_idx):
+        combined[chunks[idx][<span class="str">"id"</span>]] = combined.<span class="fn">get</span>(chunks[idx][<span class="str">"id"</span>], <span class="num">0</span>) + (<span class="num">1</span> / (rank + <span class="num">1</span>))
+
+    <span class="com"># 4. 排序取 top_k</span>
+    sorted_ids = <span class="fn">sorted</span>(combined.<span class="fn">items</span>(), key=<span class="kw">lambda</span> x: -x[<span class="num">1</span>])[:top_k]
+    <span class="com"># ... 整理成 results</span></pre>
+
+  <h3>进阶 2：写 10 道评估题</h3>
+  <pre><span class="com"># eval_questions.json</span>
+[
+  {
+    <span class="str">"question"</span>: <span class="str">"产品的核心功能是什么？"</span>,
+    <span class="str">"expected_keywords"</span>: [<span class="str">"功能A"</span>, <span class="str">"功能B"</span>],
+    <span class="str">"expected_source"</span>: <span class="str">"产品手册.pdf"</span>
+  },
+  <span class="com"># ... 9 道</span>
+]</pre>
+
+  <h3>进阶 3：部署到公网</h3>
+  <p>本地能用，但别人用不了。3 种部署方式：</p>
+  <table>
+    <thead><tr><th>方式</th><th>难度</th><th>费用</th><th>适用</th></tr></thead>
+    <tbody>
+      <tr><td>Streamlit Cloud</td><td>⭐</td><td>免费</td><td>个人 demo / 作品集</td></tr>
+      <tr><td>云服务器（阿里云 / AWS）</td><td>⭐⭐⭐</td><td>50-500 元/月</td><td>生产环境</td></tr>
+      <tr><td>Docker 容器</td><td>⭐⭐</td><td>看云</td><td>企业级</td></tr>
+    </tbody>
+  </table>
+  <p><strong>推荐</strong>：先试 Streamlit Cloud（<a href="https://streamlit.io/cloud" style="color: var(--blue-deep);">streamlit.io/cloud</a>），免费 + 5 分钟部署。</p>
+</section>
+
+<!-- ====================== 常见问题 ====================== -->
+<section class="section">
+  <span class="section-num">FAQ</span>
+  <h2><span class="icon">❓</span>10 个最常见问题</h2>
+
+  <h3>Q1: pip install 一直失败？</h3>
+  <div class="callout teal">
+    <p>3 个解法：</p>
+    <ol>
+      <li>换源：<code>pip install -i https://pypi.tuna.tsinghua.edu.cn/simple xxx</code></li>
+      <li>用 conda：<code>conda install xxx</code></li>
+      <li>升级 pip：<code>python -m pip install --upgrade pip</code></li>
+    </ol>
+  </div>
+
+  <h3>Q2: 怎么知道 RAG 的质量？</h3>
+  <div class="callout gold">
+    <p>写 10-20 道<strong>真实业务问题</strong>，让另一个人看回答打分：</p>
+    <ul>
+      <li><strong>准确性</strong>（1-5）：回答是否正确</li>
+      <li><strong>有据可查</strong>（1-5）：是否引用了资料</li>
+      <li><strong>用户体验</strong>（1-5）：是否通顺</li>
+    </ul>
+    <p>目标：3 项平均 ≥ 4 分。</p>
+  </div>
+
+  <h3>Q3: 我的资料是图片 / 扫描版 PDF 怎么办？</h3>
+  <div class="callout blue">
+    <p>2 个工具：</p>
+    <ol>
+      <li><strong>marker-pdf</strong>（推荐）：<code>pip install marker-pdf</code></li>
+      <li><strong>GPT-4 Vision</strong>：直接用 GPT-4 看图提取文字</li>
+    </ol>
+  </div>
+
+  <h3>Q4: 回答中文不准确？</h3>
+  <div class="callout teal">
+    <p>3 个方向：</p>
+    <ol>
+      <li>换<strong>中文专用 Embedding</strong>：BGE 中文 / 智谱 embedding</li>
+      <li>加 <strong>BM25 混合检索</strong>（中文场景必备）</li>
+      <li>Prompt 里强调"用中文回答"</li>
+    </ol>
+  </div>
+
+  <h3>Q5: 怎么让回答更准？</h3>
+  <div class="callout pink">
+    <p>按影响力排序：</p>
+    <ol>
+      <li>清洗文档（去噪、去重）</li>
+      <li>调切片参数（chunk_size 300-800 都试试）</li>
+      <li>加 BM25 混合检索</li>
+      <li>加 ReRank 精排</li>
+      <li>优化 Prompt（让 LLM 严格基于资料）</li>
+    </ol>
+  </div>
+
+  <h3>Q6: API Key 怎么保密？</h3>
+  <p>用 <code>.env</code> 文件 + <code>python-dotenv</code> 读取（上面步骤已经做）。</p>
+  <p><strong>绝对不要</strong>把 .env 提交到 Git。在项目根目录建 <code>.gitignore</code>：</p>
+  <pre><span class="com"># .gitignore</span>
+.env
+venv/
+__pycache__/
+*.pyc
+</pre>
+
+  <h3>Q7: RAG 和微调（Fine-tuning）怎么选？</h3>
+  <table>
+    <thead><tr><th>维度</th><th>RAG</th><th>微调</th></tr></thead>
+    <tbody>
+      <tr><td>适合</td><td>需要查具体资料</td><td>需要改 LLM 行为 / 风格</td></tr>
+      <tr><td>成本</td><td>低（每次查询几厘）</td><td>高（训练几千元起）</td></tr>
+      <tr><td>数据更新</td><td>实时（重新建索引）</td><td>需重新训练</td></tr>
+      <tr><td>新手友好</td><td>⭐⭐⭐⭐⭐</td><td>⭐⭐</td></tr>
+    </tbody>
+  </table>
+  <p><strong>建议</strong>：99% 场景先用 RAG，不行再考虑微调。</p>
+
+  <h3>Q8: 资料会泄露吗？</h3>
+  <div class="callout red">
+    <p>看 LLM 服务的<strong>隐私政策</strong>。</p>
+    <ul>
+      <li><strong>DeepSeek / OpenAI</strong>：默认<strong>不会</strong>用你的数据训练（opt-in 才用）</li>
+      <li><strong>敏感数据</strong>（医疗/法律/财务）：用<strong>本地模型</strong>（Ollama + Qwen）</li>
+    </ul>
+  </div>
+
+  <h3>Q9: 一次能处理多少资料？</h3>
+  <div class="callout blue">
+    <p>取决于 Embedding API 的限制：</p>
+    <ul>
+      <li>OpenAI text-embedding-3-small：<strong>一次 2048 条</strong>，总长度无上限</li>
+      <li>DeepSeek：一次 <strong>2048 条</strong></li>
+    </ul>
+    <p>本教程的 <code>embed_batch()</code> 函数已经按 50 条/批处理，<strong>1 万段 ≈ 5 分钟</strong>。</p>
+  </div>
+
+  <h3>Q10: RAG 跟 LangChain / LlamaIndex 什么关系？</h3>
+  <div class="callout gold">
+    <p>LangChain / LlamaIndex 是<strong>框架</strong>，帮你快速搭 RAG；本教程是<strong>从零手写</strong>。</p>
+    <p><strong>建议</strong>：</p>
+    <ol>
+      <li><strong>先用手写</strong>（本教程）—— 理解每个步骤</li>
+      <li>再用<strong>框架加速</strong>（LangChain）—— 5 行代码搞定</li>
+    </ol>
+    <p>如果直接用框架，<strong>出问题时你不知道在哪</strong>。</p>
+  </div>
+</section>
+
+<!-- ====================== 总结 ====================== -->
+<section class="section">
+  <h2><span class="icon">🎉</span>总结：你做出了什么？</h2>
+
+  <div class="next-steps">
+    <div class="next-step">
+      <h5>📚 完整文件结构</h5>
+      <p>my-rag-project/<br>├── raw_docs/<br>├── clean_docs/<br>├── chunks.jsonl<br>├── embeddings.jsonl<br>├── faiss.index<br>├── metadata.jsonl<br>├── .env<br>├── app.py ← Web 界面<br>└── rag.py ← 核心</p>
+    </div>
+    <div class="next-step">
+      <h5>💰 总成本</h5>
+      <p>Embedding: <strong>~0.1 元</strong><br>LLM 调用: <strong>~1 元</strong><br>合计: <strong>≈ 1.2 元</strong></p>
+    </div>
+    <div class="next-step">
+      <h5>⏱️ 总耗时</h5>
+      <p>小白: 5-7 天<br>熟手: 1-2 天<br>专家: 3 小时</p>
+    </div>
+  </div>
+
+  <div class="callout teal" style="margin: 30px 0;">
+    <div class="callout-title">🚀 7 天后你能做什么？</div>
+    <ul>
+      <li>给团队做<strong>内部知识库</strong>（SOP / 产品手册 / 培训资料）</li>
+      <li>做<strong>个人第二大脑</strong>（笔记 / 公众号 / 学习资料）</li>
+      <li>做<strong>求职作品集</strong>（简历上写"独立完成 RAG 知识库，准确率 80%"）</li>
+      <li>做<strong>客户 demo</strong>（给甲方看 30 分钟）</li>
+    </ul>
+  </div>
+
+  <div class="quote">
+    "RAG 不是银弹，但它能让 AI 从'会说话'变成'会回答你公司的问题'。<br>
+    <strong>5-7 天的投入，换未来 5 年的复用。</strong>"
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<footer>
+  <div class="container">
+    <h3>📚 RAG 知识库制作全攻略</h3>
+    <p>9 大阶段 · 50+ 详细步骤 · 小白 5-7 天可完成</p>
+    <p style="margin-top: 16px;">
+      <a href="#s0">准备</a> ·
+      <a href="#s1">环境</a> ·
+      <a href="#s2">数据</a> ·
+      <a href="#s3">清洗</a> ·
+      <a href="#s4">切片</a> ·
+      <a href="#s5">Embedding</a> ·
+      <a href="#s6">向量库</a> ·
+      <a href="#s7">组装 RAG</a> ·
+      <a href="#s8">Web</a>
+    </p>
+    <p style="margin-top: 16px; font-size: 12px;">
+      代码基于 LangChain + FAISS + Streamlit + DeepSeek · 可直接复制运行
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
