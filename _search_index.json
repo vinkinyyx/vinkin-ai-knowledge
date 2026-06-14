@@ -1,0 +1,324 @@
+{
+  "ai_agent.html": {
+    "title": "AI Agent 企业工程化",
+    "category": "AI Agent 实战",
+    "emoji": "🤖",
+    "tags": [
+      "10 大问题",
+      "5 案例",
+      "PM 视角"
+    ],
+    "concepts": [
+      "幻觉",
+      "权限",
+      "死循环",
+      "评估",
+      "可观测性",
+      "冷启动",
+      "商业化",
+      "Agent",
+      "MCP",
+      "Multi-Agent",
+      "Salesforce",
+      "Copilot",
+      "Anthropic"
+    ],
+    "short": "10 大企业 Agent 翻车场景 + 解决方案"
+  },
+  "harness_engineering.html": {
+    "title": "Harness Engineering",
+    "category": "AI Agent 实战",
+    "emoji": "🏗️",
+    "tags": [
+      "9 PART",
+      "5 天实操",
+      "工程师手册"
+    ],
+    "concepts": [
+      "Harness",
+      "7 层架构",
+      "4 道护栏",
+      "3 层评估",
+      "5 天路线图",
+      "CI/CD",
+      "Tool-Use",
+      "Memory",
+      "Multi-Agent",
+      "评估体系",
+      "可观测性"
+    ],
+    "short": "AI Agent 工程师的 Harness 完整手册"
+  },
+  "mcp_story.html": {
+    "title": "MCP 模型上下文协议",
+    "category": "AI Agent 实战",
+    "emoji": "🧙",
+    "tags": [
+      "12 页",
+      "寓言版",
+      "5 步"
+    ],
+    "concepts": [
+      "MCP",
+      "Discover",
+      "Connect",
+      "Call",
+      "Response",
+      "Guard",
+      "Agent",
+      "工具调用",
+      "协议",
+      "造物王国",
+      "大法师"
+    ],
+    "short": "MCP 工具调用标准的寓言故事"
+  },
+  "rag_story.html": {
+    "title": "RAG 寓言版",
+    "category": "RAG 知识库",
+    "emoji": "📖",
+    "tags": [
+      "12 页",
+      "故事",
+      "博学老人"
+    ],
+    "concepts": [
+      "RAG",
+      "博学老人",
+      "索引女巫",
+      "检索",
+      "生成",
+      "国王",
+      "典籍",
+      "寓言"
+    ],
+    "short": "用 12 页绘本讲清 RAG 本质"
+  },
+  "rag_full.html": {
+    "title": "RAG 全维度解析",
+    "category": "RAG 知识库",
+    "emoji": "🎯",
+    "tags": [
+      "6 场景",
+      "5 案例",
+      "深度"
+    ],
+    "concepts": [
+      "RAG",
+      "6 大场景",
+      "5 案例",
+      "客服",
+      "知识库",
+      "合规",
+      "合同",
+      "培训",
+      "营销",
+      "Glean",
+      "Harvey",
+      "Salesforce",
+      "NotebookLM",
+      "三甲医院",
+      "多模态",
+      "Agentic",
+      "GraphRAG"
+    ],
+    "short": "6 大应用场景 + 5 个真实案例 + 数据指标"
+  },
+  "rag_9concepts.html": {
+    "title": "RAG 9 大概念",
+    "category": "RAG 知识库",
+    "emoji": "🧩",
+    "tags": [
+      "通俗版",
+      "代码",
+      "9 概念"
+    ],
+    "concepts": [
+      "RAG",
+      "Embedding",
+      "向量数据库",
+      "Chroma",
+      "FAISS",
+      "文档切片",
+      "Chunking",
+      "Rerank",
+      "Query 改写",
+      "元数据",
+      "混合检索",
+      "BM25",
+      "Prompt 组装",
+      "评估",
+      "RAGAS",
+      "三甲医院",
+      "Notion AI",
+      "Glean",
+      "Cohere"
+    ],
+    "short": "Embedding / 向量库 / 切片 / Rerank / 改写 / 过滤 / 混合检索 / Prompt 组装 / 评估"
+  },
+  "rag_tutorial.html": {
+    "title": "RAG 制作全攻略",
+    "category": "RAG 知识库",
+    "emoji": "🛠️",
+    "tags": [
+      "13 PHASE",
+      "100+ 步骤",
+      "实操",
+      "企业部署"
+    ],
+    "concepts": [
+      "RAG",
+      "PHASE 9",
+      "PHASE 10",
+      "PHASE 11",
+      "PHASE 12",
+      "PHASE 13",
+      "Docker",
+      "Dockerfile",
+      "docker-compose",
+      "Nginx",
+      "HTTPS",
+      "限流",
+      "API Key",
+      "GDPR",
+      "等保",
+      "Streamlit",
+      "成本控制",
+      "监控告警",
+      "日志",
+      "备份",
+      "合规",
+      "医疗",
+      "金融",
+      "政务",
+      "数据清洗",
+      "5 步规范化",
+      "FastAPI",
+      "Harvey",
+      "简历",
+      "接私活",
+      "STAR",
+      "创业"
+    ],
+    "short": "13 PHASE · 100+ 步骤 · 部署/上线/避坑/合规/求职"
+  },
+  "transformer_story.html": {
+    "title": "Transformer 变形之术",
+    "category": "大模型原理",
+    "emoji": "🏛️",
+    "tags": [
+      "12 页",
+      "寓言",
+      "5 步"
+    ],
+    "concepts": [
+      "Transformer",
+      "Self-Attention",
+      "全场互联",
+      "K₈",
+      "QK",
+      "Softmax",
+      "Value",
+      "多头注意力",
+      "议事王国",
+      "8 大臣",
+      "切片",
+      "全互联",
+      "打分",
+      "加权",
+      "汇总"
+    ],
+    "short": "议事王国 + 8 大臣讲清 Self-Attention"
+  },
+  "concepts_index.html": {
+    "title": "82+ 核心知识点索引",
+    "category": "索引 + 工具",
+    "emoji": "🗂️",
+    "tags": [
+      "5 大类",
+      "95 概念",
+      "索引"
+    ],
+    "concepts": [
+      "知识点",
+      "索引",
+      "全景",
+      "5 大类",
+      "Agent",
+      "RAG",
+      "Harness",
+      "MCP",
+      "Transformer",
+      "Codex",
+      "Embedding",
+      "限流",
+      "GDPR",
+      "Docker"
+    ],
+    "short": "10 门课程 82+ 知识点全景索引"
+  },
+  "codex-docs.html": {
+    "title": "Codex 中文翻译",
+    "category": "索引 + 工具",
+    "emoji": "📘",
+    "tags": [
+      "24 章节",
+      "PM 注解",
+      "翻译"
+    ],
+    "concepts": [
+      "Codex",
+      "编码智能体",
+      "Quickstart",
+      "CLI",
+      "Rules",
+      "Hooks",
+      "MCP",
+      "Subagents",
+      "Sandbox",
+      "Approval",
+      "Web",
+      "VSCode",
+      "JetBrains",
+      "性能优化",
+      "故障排查",
+      "计费",
+      "团队协作",
+      "私有化",
+      "OpenAI",
+      "GPT-5"
+    ],
+    "short": "OpenAI 编码智能体完整学习手册"
+  },
+  "ai_pm_github_projects.html": {
+    "title": "GitHub 高 star AI 商业化",
+    "category": "求职 + 商业化",
+    "emoji": "💼",
+    "tags": [
+      "200+ 项目",
+      "求职案例",
+      "商业化"
+    ],
+    "concepts": [
+      "GitHub",
+      "高 star",
+      "Dify",
+      "LangChain",
+      "LlamaIndex",
+      "CrewAI",
+      "Browser-Use",
+      "Tabby",
+      "商业化",
+      "客户",
+      "BMW",
+      "PwC",
+      "Klarna",
+      "广发",
+      "平安",
+      "案例",
+      "PM 启示",
+      "求职"
+    ],
+    "short": "200+ 项目筛选 · star 数 + 商业模式 + 真实客户"
+  }
+}
