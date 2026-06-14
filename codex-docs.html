@@ -239,7 +239,7 @@ a:hover { text-decoration: underline; }
     <div class="sidebar-title">📑 章节导航</div>
     <ul>
 <li><a href="#sec-1" class="nav-item"><span class="nav-num">1</span><span class="nav-title">Overview</span></a></li>
-      <li><a href="#sec-2" class="nav-item"><span class="nav-num">2</span><span class="nav-title">Quickstart</span></a></li>
+<a id="quickstart"></a>      <li><a href="#sec-2" class="nav-item"><span class="nav-num">2</span><span class="nav-title">Quickstart</span></a></li>
       <li><a href="#sec-3" class="nav-item"><span class="nav-num">3</span><span class="nav-title">Use Cases（使用场景）</span></a></li>
       <li><a href="#sec-4" class="nav-item"><span class="nav-num">4</span><span class="nav-title">Migrate（迁移指南）</span></a></li>
       <li><a href="#sec-5" class="nav-item"><span class="nav-num">5</span><span class="nav-title">Pricing（定价）</span></a></li>
@@ -279,9 +279,9 @@ a:hover { text-decoration: underline; }
 </ul>
 <h3>Codex 能做什么</h3>
 <p>1. <strong>构建新功能</strong>：描述你想构建的内容，Codex 生成与你的意图匹配的代码，并适配你已有的项目结构和规范</p>
-<p>2. <strong>理解复杂代码</strong>：Codex 可以阅读和解释复杂或遗留代码，帮助你掌握团队系统的组织方式</p>
+<a id="team"></a><p>2. <strong>理解复杂代码</strong>：Codex 可以阅读和解释复杂或遗留代码，帮助你掌握团队系统的组织方式</p>
 <p>3. <strong>代码审查</strong>：Codex 分析代码以识别潜在 bug、逻辑错误和未处理的边缘情况</p>
-<p>4. <strong>故障排查</strong>：当程序出问题时，Codex 帮助追踪失败、诊断根本原因并提出有针对性的修复方案</p>
+<a id="trouble"></a><p>4. <strong>故障排查</strong>：当程序出问题时，Codex 帮助追踪失败、诊断根本原因并提出有针对性的修复方案</p>
 <p>5. <strong>自动化重复工作</strong>：Codex 可以运行重复性工作流，如重构（refactoring）、测试、迁移和设置任务，让你专注于更高层次的工程工作</p>
 <h3>📌 PM 视角注解</h3>
 <blockquote>
@@ -305,7 +305,7 @@ a:hover { text-decoration: underline; }
 <tr><td><strong>CLI（命令行）</strong></td><td>在你的终端中使用 Codex</td><td>高级</td></tr>
 <tr><td><strong>Cloud（云端）</strong></td><td>在你的浏览器中使用 Codex</td><td>临时使用</td></tr>
 </table></div>
-<h3>CLI 安装方式（最常用）</h3>
+<a id="cli"></a><h3>CLI 安装方式（最常用）</h3>
 <pre class="code-block"><code class="lang-bash">
 # macOS / Linux 一键安装
 npm i -g @openai/codex
@@ -412,7 +412,7 @@ codex
 </table></div>
 <h3>用 OpenAI API 付费</h3>
 <ul>
-<li>按 token 使用量计费</li>
+<a id="billing"></a><li>按 token 使用量计费</li>
 <li>与 Chat Completions / Responses API 同价</li>
 <li>模型：GPT-5、GPT-5-Codex</li>
 </ul>
@@ -555,13 +555,13 @@ codex --sandbox read-only
 </blockquote>
 <h3>权限模型</h3>
 <p>Codex 的权限基于 <strong>3 层防御</strong>：</p>
-<p>1. <strong>沙箱层</strong>（Sandbox）</p>
+<a id="sandbox"></a><p>1. <strong>沙箱层</strong>（Sandbox）</p>
 <ul>
 <li>文件系统隔离</li>
 <li>网络隔离</li>
 <li>进程隔离</li>
 </ul>
-<p>2. <strong>审批层</strong>（Approval）</p>
+<a id="approval"></a><p>2. <strong>审批层</strong>（Approval）</p>
 <ul>
 <li>高风险操作需确认</li>
 <li>命令白名单/黑名单</li>
@@ -636,7 +636,7 @@ bash = ["git", "npm test", "pytest"]
 <blockquote>
 <p><strong>原文</strong>：https://developers.openai.com/codex/rules</p>
 </blockquote>
-<h3>什么是 Rules</h3>
+<a id="rules"></a><h3>什么是 Rules</h3>
 <p><strong>Rules 是项目级 / 用户级的约束规范</strong>，告诉 Codex "在这个项目中应该怎么写代码"。</p>
 <h3>3 个层级</h3>
 <div class="table-wrap"><table>
@@ -675,7 +675,7 @@ coverage_threshold = 80
 <blockquote>
 <p><strong>原文</strong>：https://developers.openai.com/codex/hooks</p>
 </blockquote>
-<h3>什么是 Hooks</h3>
+<a id="hooks"></a><h3>什么是 Hooks</h3>
 <p><strong>Hooks 允许你在 Codex 执行特定事件时插入自定义脚本</strong>——这是"扩展 Codex 行为"的标准机制。</p>
 <h3>支持的事件类型</h3>
 <div class="table-wrap"><table>
@@ -709,7 +709,7 @@ script = "~/.codex/hooks/check-dangerous-commands.sh"
 <blockquote>
 <p><strong>原文</strong>：https://developers.openai.com/codex/mcp</p>
 </blockquote>
-<h3>什么是 MCP</h3>
+<a id="mcp"></a><h3>什么是 MCP</h3>
 <p><strong>MCP（Model Context Protocol）是 Anthropic 主导的开放协议</strong>，用于让 LLM（Large Language Model，大语言模型）安全地连接外部数据源和工具。</p>
 <h3>Codex 与 MCP 的关系</h3>
 <ul>
@@ -807,7 +807,7 @@ description: 自动审查 Git 仓库的 pull request
 <blockquote>
 <p><strong>原文</strong>：https://developers.openai.com/codex/subagents</p>
 </blockquote>
-<h3>什么是 Subagents</h3>
+<a id="subagents"></a><h3>什么是 Subagents</h3>
 <p><strong>Subagents 是 Codex 的"任务委派"机制</strong>——主 Codex 可以委派子任务给专门的子代理。</p>
 <h3>三种角色</h3>
 <div class="table-wrap"><table>
@@ -969,7 +969,7 @@ choco install codex
 <p><strong>原文</strong>：https://developers.openai.com/codex/app-server</p>
 </blockquote>
 <h3>什么是 App Server</h3>
-<p><strong>App Server 是 Codex 的"程序化 API"</strong>——通过 HTTP/WebSocket 让外部程序调用 Codex。</p>
+<a id="web"></a><p><strong>App Server 是 Codex 的"程序化 API"</strong>——通过 HTTP/WebSocket 让外部程序调用 Codex。</p>
 <h3>两种协议</h3>
 <div class="table-wrap"><table>
 <tr><th>协议</th><th>用途</th></tr>
