@@ -506,7 +506,7 @@ footer a { color: var(--gold); text-decoration: none; margin: 0 8px; }
     <div class="hero-stats">
       <div class="hero-stat">
         <div class="hero-stat-num">6</div>
-        <div class="hero-stat-label">生命周期阶段</div>
+        <a id="lifecycle"></a><div class="hero-stat-label">生命周期阶段</div>
       </div>
       <div class="hero-stat">
         <div class="hero-stat-num">7</div>
@@ -528,10 +528,10 @@ footer a { color: var(--gold); text-decoration: none; margin: 0 8px; }
 <nav class="toc">
   <div class="toc-title">📑 内容目录</div>
   <ul class="toc-list">
-    <li><a href="#s1"><span class="toc-num">1</span>底层逻辑：什么是 Harness？</a></li>
-    <li><a href="#s2"><span class="toc-num">2</span>核心组件：Harness 七层架构</a></li>
+<a id="what"></a>    <li><a href="#s1"><span class="toc-num">1</span>底层逻辑：什么是 Harness？</a></li>
+<a id="arch"></a>    <li><a href="#s2"><span class="toc-num">2</span>核心组件：Harness 七层架构</a></li>
     <li><a href="#s3"><span class="toc-num">3</span>生命周期：6 阶段全流程</a></li>
-    <li><a href="#s4"><span class="toc-num">4</span>关键模式：4 大设计模式</a></li>
+<a id="patterns"></a>    <li><a href="#s4"><span class="toc-num">4</span>关键模式：4 大设计模式</a></li>
     <li><a href="#s5"><span class="toc-num">5</span>评估体系：3 层评估</a></li>
     <li><a href="#s6"><span class="toc-num">6</span>合规护栏：4 道防火墙</a></li>
     <li><a href="#s7"><span class="toc-num">7</span>CI/CD 与生产部署</a></li>
@@ -756,7 +756,7 @@ mcp = <span class="fn">FastMCP</span>(<span class="str">"my-tools"</span>)
     <li><strong>Business Metrics</strong>：业务指标——成功率、用户满意度、任务完成时间</li>
   </ul>
 
-  <h3>2.6 L6 · 合规护栏层（决定能否上线）</h3>
+  <a id="guard"></a><h3>2.6 L6 · 合规护栏层（决定能否上线）</h3>
   <p>这是 Harness 中<strong>法律层面</strong>必做的一层。详见 <a href="#s6">PART 06</a>。核心 4 道防火墙：免责声明 / 用户复选框 / 审计日志 / 人工介入点。</p>
 
   <h3>2.7 L7 · UI / 接入层（决定用户体验）</h3>
@@ -823,7 +823,7 @@ mcp = <span class="fn">FastMCP</span>(<span class="str">"my-tools"</span>)
       </ul>
     </div>
     <div class="card red">
-      <div class="card-title">⚠️ 4 大避坑</div>
+      <a id="pitfalls"></a><div class="card-title">⚠️ 4 大避坑</div>
       <ul>
         <li>需求模糊——没有"成功标准"</li>
         <li>跳过测试——直接上大模型</li>
@@ -890,7 +890,7 @@ mcp = <span class="fn">FastMCP</span>(<span class="str">"my-tools"</span>)
     </ul>
   </div>
 
-  <h3>Phase 5 · CI/CD + 生产部署（5 环节）</h3>
+  <a id="cicd"></a><h3>Phase 5 · CI/CD + 生产部署（5 环节）</h3>
   <ol>
     <li><strong>Prompt 版本管理</strong>——Prompt 跟代码一起进 Git，每次改动有 commit</li>
     <li><strong>自动化测试</strong>——每次 PR 触发评估数据集回归</li>
@@ -1020,7 +1020,7 @@ STAGE_PROMPTS = {
     </ul>
   </div>
 
-  <h3>5.2 3 层评估体系</h3>
+  <a id="eval"></a><h3>5.2 3 层评估体系</h3>
 
   <h4>第 1 层 · 基准测试（Benchmark）</h4>
   <p>构造 100-500 个真实业务问题，评估 Agent 准确率。这是"底线"。</p>
@@ -1623,31 +1623,31 @@ TEST_CASES = [
   <div class="phase-flow">
     <div class="phase-row">
       <div class="phase blue">
-        <div class="phase-num">DAY 1</div>
+        <a id="day1"></a><div class="phase-num">DAY 1</div>
         <div class="phase-name">v0.1 基线</div>
         <div class="phase-task">LLM + Prompt</div>
       </div>
       <div class="arrow">→</div>
       <div class="phase gold">
-        <div class="phase-num">DAY 2</div>
+        <a id="day2"></a><div class="phase-num">DAY 2</div>
         <div class="phase-name">v0.1 优化</div>
         <div class="phase-task">Prompt 迭代</div>
       </div>
       <div class="arrow">→</div>
       <div class="phase teal">
-        <div class="phase-num">DAY 3</div>
+        <a id="day3"></a><div class="phase-num">DAY 3</div>
         <div class="phase-name">v0.2 RAG</div>
         <div class="phase-task">检索 + LLM</div>
       </div>
       <div class="arrow">→</div>
       <div class="phase pink">
-        <div class="phase-num">DAY 4</div>
+        <a id="day4"></a><div class="phase-num">DAY 4</div>
         <div class="phase-name">v0.3 工具+Trace</div>
         <div class="phase-task">可观测</div>
       </div>
       <div class="arrow">→</div>
       <div class="phase green">
-        <div class="phase-num">DAY 5</div>
+        <a id="day5"></a><div class="phase-num">DAY 5</div>
         <div class="phase-name">v0.5 完整 Harness</div>
         <div class="phase-task">评估+护栏+UI</div>
       </div>

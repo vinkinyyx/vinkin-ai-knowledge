@@ -304,7 +304,7 @@ th { background: var(--blue-soft); color: var(--blue-deep); font-weight: 600; }
   </table>
 
   <!-- ========== 1. Embedding ========== -->
-  <h2>1️⃣ Embedding（嵌入）—— 把文字变成"坐标"</h2>
+  <a id="embedding"></a><h2>1️⃣ Embedding（嵌入）—— 把文字变成"坐标"</h2>
   <p class="lead">Embedding 是 RAG 的第一步，也是最基础的一步：让电脑能"算"文字之间的相似度。</p>
 
   <div class="concept-card">
@@ -376,7 +376,7 @@ print(<span class="string">f"前 5 个值：{vector[:5]}"</span>)</code></pre>
   </div>
 
   <!-- ========== 2. 向量数据库 ========== -->
-  <h2>2️⃣ 向量数据库 —— 专门存"坐标"的高速仓库</h2>
+  <a id="vector-db"></a><h2>2️⃣ 向量数据库 —— 专门存"坐标"的高速仓库</h2>
   <p class="lead">普通数据库用 B 树查"等于"，向量数据库用 ANN 算法查"最像"，完全是两套逻辑。</p>
 
   <div class="concept-card">
@@ -448,7 +448,7 @@ results = collection.query(
   </div>
 
   <!-- ========== 3. 文档切片 ========== -->
-  <h2>3️⃣ 文档切片（Chunking）—— 把长面包切成面包片</h2>
+  <a id="chunking"></a><h2>3️⃣ 文档切片（Chunking）—— 把长面包切成面包片</h2>
   <p class="lead">Embedding 模型有"一次性吃不下"的问题（8K token 上限），所以必须把长文档切成 200-800 字的小段。</p>
 
   <div class="concept-card">
@@ -599,7 +599,7 @@ print(<span class="string">f"猫 vs 股票: {cosine_similarity(v1, v3):.3f}"</sp
   </div>
 
   <!-- ========== 5. Rerank ========== -->
-  <h2>5️⃣ Rerank（重排序）—— 粗排后的"精挑细选"</h2>
+  <a id="rerank"></a><h2>5️⃣ Rerank（重排序）—— 粗排后的"精挑细选"</h2>
   <p class="lead">向量检索速度快但"粗"。用 Rerank 再精排一次，准确率大幅提升。</p>
 
   <div class="concept-card">
@@ -681,7 +681,7 @@ results = co.rerank(
   </div>
 
   <!-- ========== 6. Query 改写 ========== -->
-  <h2>6️⃣ Query 改写 —— 把"含糊问题"变清晰</h2>
+  <a id="query-rewrite"></a><h2>6️⃣ Query 改写 —— 把"含糊问题"变清晰</h2>
   <p class="lead">用户的问题往往含糊、错字、省略。Query 改写让 AI 先"重述"问题再检索。</p>
 
   <div class="concept-card">
@@ -740,7 +740,7 @@ question = <span class="string">"腰疼怎么办"</span>
   </div>
 
   <!-- ========== 7. Metadata 过滤 ========== -->
-  <h2>7️⃣ Metadata 过滤 —— 按时间/部门/作者"标签"筛选</h2>
+  <a id="metadata"></a><h2>7️⃣ Metadata 过滤 —— 按时间/部门/作者"标签"筛选</h2>
   <p class="lead">相似度检索只能找"像"的，Metadata 过滤能找"对"的（按业务条件精准筛）。</p>
 
   <div class="concept-card">
@@ -797,7 +797,7 @@ question = <span class="string">"腰疼怎么办"</span>
   </div>
 
   <!-- ========== 8. 混合检索 ========== -->
-  <h2>8️⃣ 混合检索 —— 关键词 + 向量双管齐下</h2>
+  <a id="hybrid"></a><h2>8️⃣ 混合检索 —— 关键词 + 向量双管齐下</h2>
   <p class="lead">关键词检索找"完全匹配"的，向量检索找"意思相似"的。混着用效果最好。</p>
 
   <div class="concept-card">
@@ -852,7 +852,7 @@ results = client.search(
   </div>
 
   <!-- ========== 9. Prompt 组装 ========== -->
-  <h2>9️⃣ Prompt 组装 —— 把"资料 + 问题"打包给 LLM</h2>
+  <a id="prompt"></a><h2>9️⃣ Prompt 组装 —— 把"资料 + 问题"打包给 LLM</h2>
   <p class="lead">最后一步：把检索到的段落 + 用户问题 + 角色设定 + 格式要求拼成完整 Prompt 喂给 LLM。</p>
 
   <div class="concept-card">
@@ -977,7 +977,7 @@ response = llm.invoke(prompt)</code></pre>
       <li><strong>P0（立刻做）：</strong>用 Chroma + OpenAI Embedding 搭一个最简单的 RAG，10 分钟上手</li>
       <li><strong>P1（1 周内）：</strong>接入 Rerank，看准确率能涨多少（一般 +20-30%）</li>
       <li><strong>P2（持续优化）：</strong>做 Query 改写 + Metadata 过滤，处理复杂查询</li>
-      <li><strong>P3（生产化）：</strong>建评估集（100 个真实问题 + 标准答案），量化追踪效果</li>
+<a id="eval"></a>      <li><strong>P3（生产化）：</strong>建评估集（100 个真实问题 + 标准答案），量化追踪效果</li>
     </ol>
   </div>
 

@@ -540,7 +540,7 @@ footer a { color: var(--gold); text-decoration: none; margin: 0 6px; }
   <ul class="toc-list">
     <li><a href="#s0"><span class="toc-num">0</span>准备：5 件事 + 心理建设</a></li>
     <li><a href="#s1"><span class="toc-num">1</span>环境搭建：Python + IDE</a></li>
-    <li><a href="#s2"><span class="toc-num">2</span>数据准备：3 类常见来源</a></li>
+<a id="datasource"></a>    <li><a href="#s2"><span class="toc-num">2</span>数据准备：3 类常见来源</a></li>
     <li><a href="#s3"><span class="toc-num">3</span>文档清洗：5 步规范化</a></li>
     <li><a href="#s4"><span class="toc-num">4</span>文档切片：3 大策略</a></li>
     <li><a href="#s5"><span class="toc-num">5</span>Embedding：让机器"理解"文字</a></li>
@@ -683,7 +683,7 @@ footer a { color: var(--gold); text-decoration: none; margin: 0 6px; }
     <div class="step-num-big">5</div>
     <div class="step-title" data-time="3 分钟">安装依赖包</div>
     <p>我们用最小依赖集（<strong>3 个包</strong>就能跑 RAG）：</p>
-    <div class="cmd" data-tip="安装 3 个核心包">pip install langchain langchain-community openai pypdf python-dotenv streamlit</div>
+    <a id="streamlit"></a><div class="cmd" data-tip="安装 3 个核心包">pip install langchain langchain-community openai pypdf python-dotenv streamlit</div>
     <p>看到 <code>Successfully installed ...</code> 就算成功。</p>
     <div class="callout gold">
       <div class="callout-title">⚠️ pip install 慢？换源</div>
@@ -828,7 +828,7 @@ OPENAI_MODEL=deepseek-chat
     <p><strong>推荐格式</strong>：<code>YYYYMMDD_类型_标题.扩展名</code></p>
     <div class="sub-steps">
       <ol>
-        <li><code>20240615_产品手册_AI医疗_v2.pdf</code></li>
+<a id="medical"></a>        <li><code>20240615_产品手册_AI医疗_v2.pdf</code></li>
         <li><code>20240620_SOP_客户投诉处理.docx</code></li>
         <li><code>20240625_FAQ_常见问题.md</code></li>
       </ol>
@@ -849,7 +849,7 @@ OPENAI_MODEL=deepseek-chat
 
   <div class="step-box s-teal">
     <div class="step-num-big">11</div>
-    <div class="step-title" data-time="5 分钟">创建清洗脚本</div>
+    <a id="clean"></a><div class="step-title" data-time="5 分钟">创建清洗脚本</div>
     <p>在项目根目录新建 <code>step1_clean.py</code>：</p>
     <pre><span class="kw">import</span> re
 <span class="kw">from</span> pathlib <span class="kw">import</span> Path
@@ -1740,14 +1740,14 @@ bm25 = <span class="fn">BM25Okapi</span>(tokenized_corpus)
   <span class="com"># ... 9 道</span>
 ]</pre>
 
-  <h3>进阶 3：部署到公网</h3>
+  <a id="deploy"></a><h3>进阶 3：部署到公网</h3>
   <p>本地能用，但别人用不了。3 种部署方式：</p>
   <table>
     <thead><tr><th>方式</th><th>难度</th><th>费用</th><th>适用</th></tr></thead>
     <tbody>
       <tr><td>Streamlit Cloud</td><td>⭐</td><td>免费</td><td>个人 demo / 作品集</td></tr>
       <tr><td>云服务器（阿里云 / AWS）</td><td>⭐⭐⭐</td><td>50-500 元/月</td><td>生产环境</td></tr>
-      <tr><td>Docker 容器</td><td>⭐⭐</td><td>看云</td><td>企业级</td></tr>
+<a id="docker"></a>      <tr><td>Docker 容器</td><td>⭐⭐</td><td>看云</td><td>企业级</td></tr>
     </tbody>
   </table>
   <p><strong>推荐</strong>：先试 Streamlit Cloud（<a href="https://streamlit.io/cloud" style="color: var(--blue-deep);">streamlit.io/cloud</a>），免费 + 5 分钟部署。</p>
@@ -1887,7 +1887,7 @@ __pycache__/
     <ul>
       <li>给团队做<strong>内部知识库</strong>（SOP / 产品手册 / 培训资料）</li>
       <li>做<strong>个人第二大脑</strong>（笔记 / 公众号 / 学习资料）</li>
-      <li>做<strong>求职作品集</strong>（简历上写"独立完成 RAG 知识库，准确率 80%"）</li>
+<a id="resume"></a>      <li>做<strong>求职作品集</strong>（简历上写"独立完成 RAG 知识库，准确率 80%"）</li>
       <li>做<strong>客户 demo</strong>（给甲方看 30 分钟）</li>
     </ul>
   </div>
