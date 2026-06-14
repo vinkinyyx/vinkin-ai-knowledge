@@ -1315,7 +1315,12 @@ footer a {
       catBlocks.forEach(b => { b.style.display = ''; });
       resultSpan.textContent = '';
       updateHero([]);  // 恢复 Hero
-      hideHistory();
+      // 如果有搜索历史且输入框有焦点，显示历史下拉
+      if (getHistory().length > 0 && document.activeElement === input) {
+        showHistory();
+      } else {
+        hideHistory();
+      }
       return;
     }
 
