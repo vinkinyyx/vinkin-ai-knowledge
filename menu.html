@@ -1375,7 +1375,7 @@ footer a {
     setTimeout(hideHistory, 200);  // 延迟以允许点击
   });
   input.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { input.value = ''; doSearch(); hideHistory(); }
+    if (e.key === 'Escape') { input.value = ''; doSearch(); showHistory(); }
     if (e.key === 'Enter') {
       saveToHistory(input.value.trim());
       doSearch();
