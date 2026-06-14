@@ -203,7 +203,23 @@
         .toc a:hover {
             text-decoration: underline;
         }
-    </style>
+    <style>
+.video-visual-supplement { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: #2c3e50; padding: 0 0.5rem; }
+.video-visual-supplement h2 { font-size: 1.6rem; border-left: 5px solid #3A6FA8; padding-left: 1rem; margin: 2rem 0 1rem; color: #1a2a3a; }
+.video-visual-supplement h3 { font-size: 1.25rem; color: #3A6FA8; margin: 1.5rem 0 0.8rem; border-bottom: 2px solid #e8edf2; padding-bottom: 0.3rem; }
+.video-visual-supplement h3 .badge { display: inline-block; background: #3A6FA8; color: #fff; font-size: 0.75rem; padding: 0.15rem 0.6rem; border-radius: 12px; margin-right: 0.5rem; vertical-align: middle; }
+.video-visual-supplement .highlight-box { background: #f7f9fc; border-left: 4px solid #B89B6A; padding: 0.8rem 1.2rem; margin: 1rem 0; border-radius: 4px; }
+.video-visual-supplement .highlight-box strong { color: #B89B6A; }
+.video-visual-supplement .key-data { background: #fef6f3; border-left: 4px solid #C97A8E; padding: 0.6rem 1rem; margin: 0.8rem 0; border-radius: 4px; font-size: 0.95rem; }
+.video-visual-supplement .key-data strong { color: #C97A8E; }
+.video-visual-supplement ul { padding-left: 1.2rem; }
+.video-visual-supplement ul li { margin: 0.4rem 0; }
+.video-visual-supplement .arch-layer { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0; }
+.video-visual-supplement .arch-layer span { background: #eef2f7; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.85rem; color: #3A6FA8; border: 1px solid #d0dbe8; }
+.video-visual-supplement .callout { background: #fff8e1; border: 1px solid #f0d78c; padding: 0.6rem 1rem; border-radius: 6px; margin: 0.8rem 0; font-size: 0.95rem; }
+.video-visual-supplement .callout strong { color: #8a6d2b; }
+</style>
+</style>
 </head>
 <body>
 <div class="container">
@@ -221,7 +237,8 @@
         <a href="#ch5">5. 重排</a> · 
         <a href="#ch6">6. 答案生成</a> · 
         <a href="#ch7">7. 评估与正确率提升</a> · 
-        <a href="#ch8">8. 常见坑汇总</a>
+        <a href="#ch8">8. 常见坑汇总</a> ·
+        <a href="#ch9">9. 视频画面补充</a>
     </div>
 
     <!-- ========== 1. 数据接入与解析 ========== -->
@@ -402,6 +419,94 @@
         │  ④ Agent层  │ SearchPDF + ReadPage 工具     │
         └─────────────────────────────────────────────┘
     </div>
+
+
+    <hr>
+    <h2 id="ch9">📺 视频画面补充（OCR + Vision 解析）</h2>
+    <section class="video-visual-supplement">
+
+
+<p style="background: #f0f4f8; padding: 1rem 1.2rem; border-radius: 6px; border-left: 4px solid #3A6FA8; margin: 0 0 1.5rem;">
+<strong>📌 关于本补充章节：</strong> 此前版本仅基于音频转写，遗漏了大量 PPT 画面中的结构化信息。本次通过 OCR + Vision 分析，补全了讲师在演示文稿中展示的<strong>架构图、层级命名、关键数据阈值、面试官考点</strong>等“视觉独占”内容。以下按视频逐一呈现画面独有的工程细节。
+</p>
+
+<!-- ==================== 视频1 ==================== -->
+<h3><span class="badge">视频 1</span> 工业级 RAG 向量数据库构建全链路</h3>
+
+<p><strong>画面定位：</strong> 讲师在白板/PPT 上绘制了一条完整的四步链路图，从文本分块到最终检索重排。音频主要讨论了每一步的原理，而<strong>画面独家提供了各步骤的“难点标签”和“面试官核心总结”</strong>——这是讲师设计好的知识交付闭环。</p>
+
+<div class="highlight-box">
+<strong>🎯 画面独有信息 1：四步链路图的“难点标注”</strong><br>
+在第二步「高级文本分块策略 (Chunking)」下方，PPT 用红色标注了<strong>“专家级难点方案：语义截断与指代不明”</strong>。音频仅提及了“语义切分”，但画面明确指出了两个具体痛点——跨句语义截断（如“他”指代前文实体）和指代消解失败。这是面试中常被追问的细节。
+</div>
+
+<div class="key-data">
+<strong>🔑 画面独有信息 2：「面试官想听到的核心总结」</strong><br>
+整段视频的最后一帧（244s）是一个独立章节，标题为<strong>“面试官问你怎么构建”</strong>，下方列出了 3 条 bullet points（音频未逐条念出）：<br>
+① 先做<strong>业务场景分析</strong>，确定 Chunk 粒度（如代码 vs 论文）<br>
+② 领域 Embedding 必须<strong>微调</strong>，不能只用通用模型<br>
+③ 生产环境必须上<strong>混合检索 + Reranker</strong>，单路向量召回不够<br>
+这是讲师专门为面试准备的“考点清单”，音频中仅含糊带过，画面是唯一完整呈现的载体。
+</div>
+
+<p><strong>其他画面补充：</strong> 第三步「向量化表示与特征提取」下方有两条并行路径——「基础特征提取：调用通用 Embedding 把 Chunk 转浮点数组」和「专有名词与术语：微调领域 Embedding 模型」。第四步「存储设计与索引」画面中出现了 <strong>HNSW / IVF 索引类型</strong>的示意图（音频未提及具体算法名）。</p>
+
+<!-- ==================== 视频2 ==================== -->
+<h3><span class="badge">视频 2</span> 生产级 RAG 处理 PDF 的四层核心架构</h3>
+
+<p><strong>画面定位：</strong> 视频围绕一张四层金字塔架构图展开。音频重点讲了“解析 PDF 的难点”，但<strong>画面独家给出了每一层的正式命名、层级之间的数据流、以及元数据注入的具体字段</strong>——这些是工程落地的关键设计。</p>
+
+<div class="highlight-box">
+<strong>🎯 画面独有信息 1：Layer 1-4 的正式命名与职责边界</strong><br>
+PPT 左侧列出了四层结构的英文命名（音频未逐层念出）：<br>
+<div class="arch-layer">
+<span>Layer 1: 智能多分流解析 (Intelligent Multi-Route Parsing)</span>
+<span>Layer 2: 树状层级与表格重建 (Hierarchical & Table Reconstruction)</span>
+<span>Layer 3: 语义元数据索引与上下文回溯 (Semantic Metadata Indexing)</span>
+<span>Layer 4: Agentic PDF 双轨检索工具 (Agentic Dual-Track Retrieval)</span>
+</div>
+其中 Layer 2 的画面中特别画出了<strong>“表格重建”</strong>的流程图——将 PDF 中的表格先识别为二维矩阵，再转为 Markdown 或 JSON 结构。音频仅提到“表格处理”，未展示这一具体重建路径。
+</div>
+
+<div class="key-data">
+<strong>🔑 画面独有信息 2：元数据注入的具体字段清单</strong><br>
+在 Layer 3 的右侧，PPT 展示了一个<strong>元数据注入 (Metadata Injection)</strong> 的字段列表（音频只说了“注入元数据”，未列举字段）：<br>
+• <strong>文档名</strong>（Document Name）<br>
+• <strong>页码</strong>（Page Number）<br>
+• <strong>父级标题</strong>（Parent Heading）<br>
+• <strong>上下文概要</strong>（Context Summary）—— 由 LLM 自动生成的段落摘要<br>
+这些字段在后续检索中用于<strong>精准溯源</strong>（Citations），音频完全未提及“上下文概要”这一字段。
+</div>
+
+<p><strong>其他画面补充：</strong> 最后一帧（260s）展示了「工程落地的最后一公里」——左侧是<strong>可点击的精准源头追溯 (Citations)</strong> 的 UI 截图（蓝色高亮标注了引用来源），右侧是<strong>多维评测闭环机制 (RAGAS)</strong> 的指标雷达图，包含 faithfulness、answer_relevancy、context_precision 等维度。音频仅概括性提到“需要评测”，画面给出了具体工具名和指标名称。</p>
+
+<!-- ==================== 视频3 ==================== -->
+<h3><span class="badge">视频 3</span> RAG 正确率提升四步法</h3>
+
+<p><strong>画面定位：</strong> 本视频是三部曲中最“干货”的一集，画面包含大量<strong>对比表格、数学公式、阈值数字</strong>。音频讲解节奏较快，许多关键数字和警告性提示仅出现在 PPT 上。</p>
+
+<div class="highlight-box">
+<strong>🎯 画面独有信息 1：「不能简单相加！0-1 vs 0-∞」——分数融合的核心警告</strong><br>
+在第三步「混合检索与重排」的卡片 2 中，PPT 用<strong>红色大号字体</strong>标注了这句话（音频未以同样力度强调）：<br>
+<em>“向量检索得分范围 0-1（余弦相似度），BM25 得分范围 0-∞（词频累计），量纲不同！直接相加会导致 BM25 主导结果，向量检索失效。”</em><br>
+画面下方给出了解决方案：<strong>LambdaMART 统一维度打分</strong>（一种 LTR 学习排序算法），通过训练一个排序模型将不同检索器的分数映射到同一量纲。音频仅提到“需要归一化”，未提及 LambdaMART 这个具体算法名。
+</div>
+
+<div class="key-data">
+<strong>🔑 画面独有信息 2：策略路由的 Top 30→Top 3 阈值与延迟控制</strong><br>
+在第三步的卡片 3「策略路由（重排优化）」中，PPT 画了一个<strong>决策流程图</strong>（音频未详细描述）：<br>
+• <strong>简单问题</strong>（如“什么是 RAG？”）：直接取向量检索的 <strong>Top 3</strong>，跳过重排<br>
+• <strong>复杂问题</strong>（如“对比 LangChain 与 LlamaIndex 的差异”）：先取向量检索 <strong>Top 30</strong>，再送入重排模型 (Reranker) 精排为 <strong>Top 3</strong><br>
+• 画面底部用黄色高亮标注了<strong>“重排延迟阈值：100ms 触发”</strong>——当重排模型推理时间超过 100ms 时，系统自动降级为仅使用向量检索结果。这个数字是音频中完全没有出现的工程参数。
+</div>
+
+<p><strong>其他画面补充：</strong> 第一步「NLP 动态切分」的画面中，左侧是「传统做法：硬切分（按 512 token 截断）」的示意图（红色叉号），右侧是「优化方案：NLP 动态切分」——使用 <strong>spaCy 或 Stanza</strong> 的句子边界检测 + 段落边界检测，切分点落在自然语义边界上。第二步「Query Rewrite」画面中展示了<strong>语义校验</strong>的流程图：Rewrite → 与原 Query 计算余弦相似度 → 若低于 0.7 则报警并回退原 Query。音频未提及 0.7 这个阈值。</p>
+
+<div class="callout">
+<strong>💡 编辑总结：</strong> 三个视频的画面信息共同构成了一个完整的 RAG 工程知识图谱——从向量库构建（视频1）到 PDF 处理（视频2）再到正确率优化（视频3）。画面中出现的<strong>面试考点、元数据字段、LambdaMART 算法、100ms 延迟阈值</strong>等内容，是音频版本完全缺失的“硬核细节”。建议读者在阅读本章后，结合截图重新梳理这些视觉独占信息，它们往往是面试或工程落地中的关键得分点。
+</div>
+
+</section>
 
     <!-- ========== 原始转写稿（可折叠） ========== -->
     <details>
