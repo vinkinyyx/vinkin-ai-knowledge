@@ -1897,6 +1897,428 @@ __pycache__/
     <strong>5-7 天的投入，换未来 5 年的复用。</strong>"
   </div>
 </section>
+<!-- ====================== PHASE 9：企业部署 ====================== -->
+<section class="section" id="s10">
+  <span class="section-num">PHASE 9</span>
+  <h2><span class="icon">🚀</span>企业部署实战：4 种模式 + 完整流程（1.5-2.5 天）</h2>
+  <p class="section-sub">个人 demo 跑通 ≠ 能在公司用。这一节讲 4 种部署模式选哪种 + Docker 化 + 上云 + 多用户 + 监控告警。</p>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">38</div>
+    <div class="step-title" data-time="10 分钟">4 种部署模式全景对比</div>
+    <p>企业部署有 4 种主流模式，按规模选：</p>
+    <ul>
+      <li><strong>模式 A：本地运行</strong>（个人/小团队）：你的电脑上跑，最简单，但只有你能用</li>
+      <li><strong>模式 B：Docker 单机</strong>（10-50 人团队）：打包成镜像扔到服务器，装好 Docker 就能跑</li>
+      <li><strong>模式 C：云端部署</strong>（公司全员）：阿里云 / 腾讯云 ECS，配域名 + HTTPS</li>
+      <li><strong>模式 D：私有化</strong>（金融/医疗/政企）：公司机房内网，API 走内部 LLM</li>
+    </ul>
+    <div class="callout gold"><strong>💡 选型决策：</strong>10 人以下选 B（最性价比）/ 50 人以上选 C / 金融医疗选 D</div>
+  </div>
+
+  <div class="step-box s-green">
+    <div class="step-num-big">39</div>
+    <div class="step-title" data-time="15 分钟">写 Dockerfile（Docker 化核心）</div>
+    <p>在项目根目录新建 <code>Dockerfile</code>：</p>
+    <pre><span class="kw">FROM</span> python:3.11-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8501
+CMD [<span class="str">"streamlit"</span>, <span class="str">"run"</span>, <span class="str">"app.py"</span>, <span class="str">"--server.port=8501"</span>, <span class="str">"--server.address=0.0.0.0"</span>]</pre>
+    <div class="callout blue"><strong>💡 关键点：</strong>--server.address=0.0.0.0 让外部能访问；EXPOSE 8501 是 Streamlit 默认端口</div>
+  </div>
+
+  <div class="step-box s-green">
+    <div class="step-num-big">40</div>
+    <div class="step-title" data-time="5 分钟">构建 Docker 镜像</div>
+    <div class="cmd" data-tip="首次构建要 2-5 分钟，下载依赖">docker build -t my-rag:v1.0 .</div>
+    <div class="callout teal"><strong>✅ 验证：</strong>运行 <code>docker images | grep my-rag</code> 看到 v1.0 标签就成功了</div>
+  </div>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">41</div>
+    <div class="step-title" data-time="3 分钟">启动容器</div>
+    <div class="cmd" data-tip="--env-file 传 API Key，-d 后台运行">docker run -d -p 8501:8501 --env-file .env --name rag-app my-rag:v1.0</div>
+    <p>浏览器访问 <code>http://服务器IP:8501</code>，看到 Streamlit 界面 = 部署成功</p>
+  </div>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">42</div>
+    <div class="step-title" data-time="10 分钟">docker-compose 一键编排</div>
+    <p>新建 <code>docker-compose.yml</code>（同时启动 RAG + Chroma DB）：</p>
+    <pre><span class="kw">version</span>: <span class="str">'3.8'</span>
+<span class="kw">services</span>:
+  rag:
+    build: .
+    ports: [<span class="str">"8501:8501"</span>]
+    env_file: .env
+    depends_on: [chroma]
+  chroma:
+    image: chromadb/chroma:latest
+    ports: [<span class="str">"8000:8000"</span>]
+    volumes: [<span class="str">"./chroma_data:/chroma/chroma"</span>]</pre>
+    <div class="cmd" data-tip="一键启动 + 互联 + 持久化">docker-compose up -d</div>
+  </div>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">43</div>
+    <div class="step-title" data-time="20 分钟">上云：阿里云 ECS + 域名 + HTTPS</div>
+    <ol>
+      <li>买阿里云 ECS（2核4G 约 ¥200/月，选 CentOS 7+）</li>
+      <li>装 Docker：<code>yum install docker -y && systemctl start docker</code></li>
+      <li>把代码 scp 上去 → <code>docker-compose up -d</code></li>
+      <li>买域名 → 备案（约 7 天）→ DNS 解析到 ECS 公网 IP</li>
+      <li>用 <code>certbot</code> 一键申请 Let's Encrypt 免费 HTTPS 证书</li>
+    </ol>
+    <div class="callout red"><strong>⚠️ 关键：</strong>阿里云 ECS 端口需要在"安全组"里手动放行 8501 / 80 / 443</div>
+  </div>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">44</div>
+    <div class="step-title" data-time="15 分钟">多用户 + Nginx 反向代理</div>
+    <p>50 人以上不能直接 8501 端口，要走 Nginx 80 端口分发：</p>
+    <pre><span class="kw">server</span> {
+  <span class="kw">listen</span> 80;
+  <span class="kw">server_name</span> rag.yourcompany.com;
+
+  <span class="kw">location</span> / {
+    <span class="kw">proxy_pass</span> http://127.0.0.1:8501;
+    <span class="kw">proxy_set_header</span> Host $host;
+  }
+}</pre>
+    <div class="callout teal"><strong>✅ 收益：</strong>域名统一 + HTTPS 集中 + 未来加 SSO 容易</div>
+  </div>
+
+  <div class="step-box s-red">
+    <div class="step-num-big">45</div>
+    <div class="step-title" data-time="10 分钟">健康检查 + 自动重启</div>
+    <p>防止服务挂掉没人知道，加健康检查：</p>
+    <div class="cmd" data-tip="每 30 秒检查一次，挂了就重启">docker run -d --restart=always --health-cmd="curl -f http://localhost:8501/_stcore/health || exit 1" --health-interval=30s my-rag:v1.0</div>
+  </div>
+
+  <div class="step-box s-red">
+    <div class="step-num-big">46</div>
+    <div class="step-title" data-time="15 分钟">监控告警 + 日志管理</div>
+    <p>生产必备 3 件套：</p>
+    <ul>
+      <li><strong>日志：</strong> <code>docker logs rag-app &gt;&gt; /var/log/rag.log 2&gt;&amp;1</code></li>
+      <li><strong>监控：</strong> Prometheus + Grafana 看板（CPU/内存/响应时间）</li>
+      <li><strong>告警：</strong> 钉钉/飞书机器人 Webhook，异常时推送</li>
+    </ul>
+    <div class="callout gold"><strong>💡 极简方案：</strong>前 3 个月用 <code>UptimeRobot</code>（免费）监控 + 钉钉告警就够</div>
+  </div>
+
+  <div class="step-box s-red">
+    <div class="step-num-big">47</div>
+    <div class="step-title" data-time="5 分钟">备份与恢复</div>
+    <p><strong>必须备份 3 样东西：</strong></p>
+    <ol>
+      <li>向量数据库（<code>chroma_data/</code> 目录）→ 定时 <code>tar</code> 打包</li>
+      <li>原始文档（<code>data/</code> 目录）→ Git 仓库管理</li>
+      <li>配置文件（<code>.env</code>）→ 单独加密备份（绝对不能进 Git）</li>
+    </ol>
+    <div class="cmd" data-tip="crontab 每天凌晨 3 点打包">0 3 * * * tar -czf /backup/rag-$(date +%F).tar.gz chroma_data/</div>
+  </div>
+</section>
+
+<!-- ====================== PHASE 10：上线注意 ====================== -->
+<section class="section" id="s11">
+  <span class="section-num">PHASE 10</span>
+  <h2><span class="icon">⚠️</span>上线前 5 大注意事项（必看，1 小时）</h2>
+  <p class="section-sub">demo 跑通 ≠ 可以上线。这 5 件事不做，分分钟被刷爆 API 或泄露数据。</p>
+
+  <div class="step-box s-red">
+    <div class="step-num-big">48</div>
+    <div class="step-title" data-time="5 分钟">API Key 安全管理（最严重）</div>
+    <p><strong>❌ 错误做法：</strong>API Key 写死在 <code>app.py</code> 里，代码 push 到 GitHub = 公开泄露</p>
+    <p><strong>✅ 正确做法 4 步：</strong></p>
+    <ol>
+      <li>用 <code>.env</code> 文件存 Key，<strong>加入 .gitignore</strong></li>
+      <li>代码里用 <code>os.environ.get("DEEPSEEK_API_KEY")</code> 读</li>
+      <li>服务器部署时单独配环境变量，<strong>不进任何代码仓库</strong></li>
+      <li>定期（90 天）轮转 Key，旧的立即废弃</li>
+    </ol>
+    <div class="callout red"><strong>⚠️ 真实教训：</strong>2024 年某公司因 Key 写进代码被矿，1 天刷掉 ¥3 万</div>
+  </div>
+
+  <div class="step-box s-red">
+    <div class="step-num-big">49</div>
+    <div class="step-title" data-time="15 分钟">限流保护（防刷 + 防 DDoS）</div>
+    <p>没限流的后果：1 个用户脚本循环调用，1 小时刷光月度预算。</p>
+    <p><strong>3 层限流策略：</strong></p>
+    <pre><span class="com"># 1. IP 限流（防单 IP 刷）</span>
+<span class="com"># 2. 用户限流（防单账号刷，需先登录）</span>
+<span class="com"># 3. 全局限流（防整体超预算）</span>
+
+<span class="kw">from</span> slowapi <span class="kw">import</span> Limiter
+limiter = <span class="fn">Limiter</span>(key_func=get_remote_address)
+app.state.limiter = limiter
+
+<span class="dec">@app.post</span>(<span class="str">"/query"</span>)
+<span class="dec">@limiter.limit</span>(<span class="str">"10/minute"</span>)  <span class="com"># 每分钟最多 10 次</span>
+<span class="kw">async def</span> <span class="fn">query</span>(request: Request, q: str):
+    ...</pre>
+    <div class="callout gold"><strong>💡 推荐：</strong>个人用户 10 次/分钟 / 付费用户 60 次/分钟</div>
+  </div>
+
+  <div class="step-box s-red">
+    <div class="step-num-big">50</div>
+    <div class="step-title" data-time="10 分钟">输入校验 + 长度限制</div>
+    <p>不校验 = 漏洞：</p>
+    <ul>
+      <li>用户输入 10 万字 = 烧光 Token</li>
+      <li>输入特殊字符 = SQL 注入</li>
+      <li>输入"忽略之前的指令..." = Prompt 注入</li>
+    </ul>
+    <p><strong>3 个必做校验：</strong></p>
+    <ol>
+      <li>问题长度限制：<code>if len(q) &gt; 500: return error</code></li>
+      <li>特殊字符过滤：去掉   / 控制字符</li>
+      <li>Prompt 注入检测：关键词黑名单（"忽略之前"/"system"/"###"）</li>
+    </ol>
+  </div>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">51</div>
+    <div class="step-title" data-time="10 分钟">日志审计（合规 + 排错）</div>
+    <p><strong>必须记录 4 样：</strong></p>
+    <ul>
+      <li>用户 ID（脱敏后）</li>
+      <li>提问原文</li>
+      <li>AI 回答</li>
+      <li>消耗 Token 数 + 响应时间</li>
+    </ul>
+    <div class="callout blue"><strong>💡 工具：</strong>简单用 Python <code>logging</code>，规模大用 ELK / Loki</div>
+  </div>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">52</div>
+    <div class="step-title" data-time="5 分钟">成本控制（设硬性上限）</div>
+    <p><strong>3 道防线：</strong></p>
+    <ol>
+      <li>API 后台设月度预算告警（DeepSeek/通义都有）</li>
+      <li>代码里加 daily 计数器，超额自动停服</li>
+      <li>按用户配额（普通 100 次/天，VIP 不限）</li>
+    </ol>
+    <div class="callout red"><strong>⚠️ 真实案例：</strong>某 SaaS 创业公司没设上限，1 晚被刷 ¥8000</div>
+  </div>
+</section>
+
+<!-- ====================== PHASE 11：避坑指南 ====================== -->
+<section class="section" id="s12">
+  <span class="section-num">PHASE 11</span>
+  <h2><span class="icon">🐛</span>上线后 7 大避坑指南（实战经验）</h2>
+  <p class="section-sub">出问题不可怕，可怕的是不知道怎么排查。这一节给你 7 个高频问题的诊断 + 解决方案。</p>
+
+  <div class="step-box s-red">
+    <div class="step-num-big">53</div>
+    <div class="step-title" data-time="10 分钟">问题 1：回答不准确 / 答非所问</div>
+    <p><strong>4 大常见原因 + 对应方案：</strong></p>
+    <table style="width:100%; border-collapse: collapse; margin: 12px 0;">
+      <tr style="background: #E8F0F9;"><th style="padding: 8px;">原因</th><th style="padding: 8px;">诊断方法</th><th style="padding: 8px;">解决方案</th></tr>
+      <tr><td>切片太大</td><td>看返回段落长度</td><td>改 chunk_size 1000→500</td></tr>
+      <tr><td>检索不准</td><td>人工看 Top-3 是否相关</td><td>换 Embedding 模型 / 加 Rerank</td></tr>
+      <tr><td>Prompt 模糊</td><td>看 LLM 输入</td><td>明确"只基于资料回答，不编造"</td></tr>
+      <tr><td>资料不全</td><td>问资料外的问题</td><td>增加资料 / 加拒绝回答逻辑</td></tr>
+    </table>
+  </div>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">54</div>
+    <div class="step-title" data-time="5 分钟">问题 2：响应太慢（&gt;10 秒）</div>
+    <p><strong>3 步优化：</strong></p>
+    <ol>
+      <li><strong>加 Redis 缓存：</strong>相同问题 24h 内直接返回缓存</li>
+      <li><strong>Embedding 量化：</strong>float32→int8，相似度损失 &lt;1%</li>
+      <li><strong>异步处理：</strong>FastAPI + async，避免阻塞</li>
+    </ol>
+    <div class="callout teal"><strong>✅ 效果：</strong>10s → 2s，提升 5 倍</div>
+  </div>
+
+  <div class="step-box s-red">
+    <div class="step-num-big">55</div>
+    <div class="step-title" data-time="5 分钟">问题 3：API 额度被刷爆</div>
+    <p><strong>急救 3 步（已发生）：</strong></p>
+    <ol>
+      <li>立即去 API 后台撤销当前 Key</li>
+      <li>生成新 Key，配到 .env</li>
+      <li>加限流（参考 PHASE 10 步骤 49）</li>
+    </ol>
+    <p><strong>预防：</strong>PHASE 10 的 5 道防线必须全做</p>
+  </div>
+
+  <div class="step-box s-red">
+    <div class="step-num-big">56</div>
+    <div class="step-title" data-time="10 分钟">问题 4：数据泄露风险</div>
+    <p><strong>3 类泄露 + 防御：</strong></p>
+    <ul>
+      <li><strong>文档泄露：</strong> 最小权限原则，员工只能搜自己部门</li>
+      <li><strong>API Key 泄露：</strong> 永远不写代码，参考 PHASE 10 步骤 48</li>
+      <li><strong>用户对话泄露：</strong> 日志脱敏，禁用明文存储</li>
+    </ul>
+  </div>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">57</div>
+    <div class="step-title" data-time="10 分钟">问题 5：多用户并发崩溃</div>
+    <p><strong>症状：</strong>10+ 人同时用，服务卡死 / OOM（内存爆掉）</p>
+    <p><strong>3 个根治方案：</strong></p>
+    <ol>
+      <li>Chroma 改用服务端模式（<code>chromadb.HttpClient</code>）</li>
+      <li>加 Gunicorn 多 worker：<code>gunicorn -w 4 app:app</code></li>
+      <li>Embedding 模型加载用单例（<code>@lru_cache</code>）</li>
+    </ol>
+  </div>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">58</div>
+    <div class="step-title" data-time="5 分钟">问题 6：RAG 答非所问</div>
+    <p><strong>高级技巧：Query 改写</strong></p>
+    <p>用户问"那个报表怎么生成"，LLM 不知道"那个"指什么。加一步 Query 改写：</p>
+    <pre><span class="com"># 用 LLM 把含糊问题改清晰</span>
+<span class="kw">def</span> <span class="fn">rewrite_query</span>(q):
+    prompt = <span class="fn">f</span><span class="str">"把以下含糊问题改写为清晰检索词：{q}"</span>
+    <span class="kw">return</span> <span class="fn">llm</span>(prompt)
+
+<span class="com"># 改写前："那个报表怎么生成"</span>
+<span class="com"># 改写后："销售月报自动生成方法"</span></pre>
+  </div>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">59</div>
+    <div class="step-title" data-time="5 分钟">问题 7：怎么持续优化？</div>
+    <p><strong>数据飞轮 4 步：</strong></p>
+    <ol>
+      <li>收集用户反馈：每次回答后加"👍 / 👎"按钮</li>
+      <li>每周导出"差评"问题，人工标注正确答案</li>
+      <li>把标注数据加进向量库（增量更新）</li>
+      <li>每月评估 Top-10 问题的准确率，目标 ≥85%</li>
+    </ol>
+    <div class="callout gold"><strong>💡 真理：</strong>RAG 准确率 = 数据质量 × 算法调优 × 持续运营</div>
+  </div>
+</section>
+
+<!-- ====================== PHASE 12：合规与安全 ====================== -->
+<section class="section" id="s13">
+  <span class="section-num">PHASE 12</span>
+  <h2><span class="icon">🛡️</span>合规与安全（企业级必读，4 步走）</h2>
+  <p class="section-sub">个人玩不需要，但企业部署必须过这 4 关：数据合规 / 行业法规 / 内部审批 / 法务审核。</p>
+
+  <div class="step-box s-red">
+    <div class="step-num-big">60</div>
+    <div class="step-title" data-time="15 分钟">数据合规清单（5 大类）</h2>
+    <p><strong>上传到 RAG 之前，先过这 5 个问题：</strong></p>
+    <ol>
+      <li><strong>个人信息：</strong> 含姓名/手机/身份证/地址？必须脱敏</li>
+      <li><strong>商业秘密：</strong> 含未公开财报/客户清单？问法务</li>
+      <li><strong>第三方数据：</strong> 客户/合作方提供的数据？有授权吗？</li>
+      <li><strong>跨境：</strong> 数据出境？走安全评估（GDPR / 数据出境安全评估办法）</li>
+      <li><strong>行业数据：</strong> 金融/医疗/政务有特殊法规（见下一步）</li>
+    </ol>
+    <div class="callout red"><strong>⚠️ 红线：</strong>未脱敏的个人信息 = 罚款最高 5000 万 或 上一年营收 5%</div>
+  </div>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">61</div>
+    <div class="step-title" data-time="10 分钟">GDPR / 个人信息保护法适配</div>
+    <p><strong>5 项必做：</strong></p>
+    <ul>
+      <li><strong>知情同意：</strong> 用户输入前告知"对话会被记录"</li>
+      <li><strong>删除权：</strong> 用户可申请删除所有对话记录</li>
+      <li><strong>数据最小化：</strong> 只存必要字段，不存 IP / 设备指纹</li>
+      <li><strong>保留期限：</strong> 日志 90 天 / 对话 30 天后自动删除</li>
+      <li><strong>第三方共享：</strong> LLM API 调用 = 共享给 API 方，要写进隐私政策</li>
+    </ul>
+  </div>
+
+  <div class="step-box s-pink">
+    <div class="step-num-big">62</div>
+    <div class="step-title" data-time="10 分钟">医疗 / 金融 / 政务 特殊合规</div>
+    <table style="width:100%; border-collapse: collapse; margin: 12px 0;">
+      <tr style="background: #E8F0F9;"><th style="padding: 8px;">行业</th><th style="padding: 8px;">法规</th><th style="padding: 8px;">必做</th></tr>
+      <tr><td>医疗</td><td>《数据安全法》/ HIPAA 等价</td><td>病历脱敏 / 卫健委备案 / 私有化部署</td></tr>
+      <tr><td>金融</td><td>《商业银行法》/ 等保三级</td><td>机房内网 / 等保测评 / 银保监报备</td></tr>
+      <tr><td>政务</td><td>《网络安全法》/ 等保四级</td><td>国产化 / 信创 / 密码法</td></tr>
+    </table>
+    <div class="callout red"><strong>⚠️ 核心：</strong>这些行业 = 必须私有化部署 + 用国产 LLM（如智谱/通义）</div>
+  </div>
+
+  <div class="step-box s-blue">
+    <div class="step-num-big">63</div>
+    <div class="step-title" data-time="5 分钟">内部审批流程（4 道关）</div>
+    <p><strong>企业部署 RAG 之前，按顺序过：</strong></p>
+    <ol>
+      <li><strong>业务部门：</strong> 出需求文档 + ROI 测算</li>
+      <li><strong>采购：</strong> 选 LLM 厂商 + 走采购流程</li>
+      <li><strong>法务：</strong> 审 API 协议 / 数据协议 / 隐私政策</li>
+      <li><strong>信息安全：</strong> 渗透测试 / 等保备案 / 数据分级</li>
+    </ol>
+    <div class="callout gold"><strong>💡 经验：</strong>大公司这套走完 2-3 个月，PM 要提前规划</div>
+  </div>
+</section>
+
+<!-- ====================== PHASE 13：职业包装 ====================== -->
+<section class="section" id="s14">
+  <span class="section-num">PHASE 13</span>
+  <h2><span class="icon">💼</span>职业包装与变现（求职 + 接单，4 步走）</h2>
+  <p class="section-sub">RAG 项目做完了，怎么写进简历、面试怎么讲、接私活怎么报价？这一节给你完整答案。</p>
+
+  <div class="step-box s-gold">
+    <div class="step-num-big">64</div>
+    <div class="step-title" data-time="10 分钟">求职简历包装（3 句直接抄）</div>
+    <p><strong>简历 1 句话亮点（任选 1）：</strong></p>
+    <ul>
+      <li>✅ "从 0 到 1 搭建企业级 RAG 知识库系统，覆盖文档清洗 / 向量检索 / LLM 生成完整链路"</li>
+      <li>✅ "用 Python + LangChain + Chroma 搭建 RAG 系统，文档问答准确率 92%"</li>
+      <li>✅ "主导 RAG 系统 Docker 化部署与上云，承接公司 200+ 员工日常知识检索需求"</li>
+    </ul>
+    <div class="callout gold"><strong>💡 关键：</strong>数字 + 技术栈 + 业务价值，3 样都不能少</div>
+  </div>
+
+  <div class="step-box s-gold">
+    <div class="step-num-big">65</div>
+    <div class="step-title" data-time="10 分钟">面试 STAR 故事（直接讲）</div>
+    <p><strong>S（情境）：</strong> 业务部门反馈"找文档要花 30 分钟"，效率低</p>
+    <p><strong>T（任务）：</strong> 主导搭建 RAG 知识库，目标 5 分钟内找到答案</p>
+    <p><strong>A（行动）：</strong></p>
+    <ol>
+      <li>调研 3 套方案：LangChain / Dify / 自建</li>
+      <li>选 Chroma + DeepSeek 组合（成本最低）</li>
+      <li>5 天完成 demo，第 7 天上线</li>
+      <li>用 PHASE 10 的 5 道安全防护确保生产可用</li>
+    </ol>
+    <p><strong>R（结果）：</strong> 文档查询时间从 30 分钟 → 3 分钟，准确率 92%，200+ 员工使用</p>
+  </div>
+
+  <div class="step-box s-gold">
+    <div class="step-num-big">66</div>
+    <div class="step-title" data-time="10 分钟">接私活报价（3 种模式）</div>
+    <table style="width:100%; border-collapse: collapse; margin: 12px 0;">
+      <tr style="background: #F7F1E5;"><th style="padding: 8px;">模式</th><th style="padding: 8px;">适合</th><th style="padding: 8px;">价格区间</th></tr>
+      <tr><td>按次交付</td><td>小公司 / 一次性需求</td><td>5000-30000 / 个</td></tr>
+      <tr><td>按月订阅</td><td>SaaS / 长期客户</td><td>3000-15000 / 月</td></tr>
+      <tr><td>按结果分成</td><td>创业项目 / 抽成模式</td><td>前期免费 + 5-15% 营收</td></tr>
+    </table>
+    <div class="callout gold"><strong>💡 接单渠道：</strong> 闲鱼 / 猪八戒 / 程序員客栈 / 朋友圈（最有效）</div>
+  </div>
+
+  <div class="step-box s-gold">
+    <div class="step-num-big">67</div>
+    <div class="step-title" data-time="5 分钟">创业 3 条路径</div>
+    <ol>
+      <li><strong>垂直行业 RAG：</strong> 法律 / 医疗 / 教育，1 个行业吃透</li>
+      <li><strong>RAG SaaS：</strong> 多租户 + 模板化，标准产品</li>
+      <li><strong>RAG + Agent：</strong> 不只查文档，还能操作（订会议室/查订单）</li>
+    </ol>
+    <div class="callout teal"><strong>✅ 真实案例：</strong>Harvey（法律 RAG）ARR 已破 $1 亿，2 年估值 $15 亿</div>
+  </div>
+</section>
+
 
 </div><!-- /container -->
 
