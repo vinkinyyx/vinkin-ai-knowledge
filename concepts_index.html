@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>小百的 AI 知识库 · 82+ 核心知识点全景</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #F8F7F4;
+  --bg-card: #FFFFFF;
+  --ink: #1A1F2E;
+  --ink2: #4A5468;
+  --ink3: #8A93A6;
+  --line: #E8E5DE;
+  --blue: #3A6FA8;
+  --blue-deep: #2A5278;
+  --blue-soft: #E8F0F9;
+  --gold: #B89B6A;
+  --gold-soft: #F7F1E5;
+  --teal: #3D8B8B;
+  --teal-soft: #E5F0F0;
+  --pink: #C97A8E;
+  --pink-soft: #FBE4EA;
+  --green: #5A8C5A;
+  --green-soft: #E8F1E5;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+/* ===== Hero ===== */
+.hero {
+  background: linear-gradient(135deg, #E8F0F9 0%, #F7F1E5 50%, #FBE4EA 100%);
+  padding: 60px 0 50px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: ""; position: absolute; top: -150px; right: -150px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(184,155,106,0.15) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.container {
+  max-width: 1100px; margin: 0 auto; padding: 0 32px;
+  position: relative; z-index: 1;
+}
+.hero-tag {
+  display: inline-block; font-size: 13px; letter-spacing: 2px;
+  color: var(--blue-deep); background: rgba(255,255,255,0.7);
+  padding: 6px 16px; border-radius: 20px; margin-bottom: 18px;
+  font-weight: 600; border: 1px solid rgba(255,255,255,0.6);
+}
+.hero h1 {
+  font-size: 44px; font-weight: 800; color: var(--ink);
+  line-height: 1.2; margin-bottom: 16px; letter-spacing: -1px;
+}
+.hero h1 span {
+  background: linear-gradient(90deg, var(--blue-deep) 0%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: 17px; color: var(--ink2);
+  max-width: 720px; margin-bottom: 28px; line-height: 1.6;
+}
+.hero-stats { display: flex; gap: 36px; flex-wrap: wrap; margin-top: 24px; }
+.hero-stat { display: flex; flex-direction: column; align-items: flex-start; }
+.hero-stat-num { font-size: 32px; font-weight: 800; color: var(--blue-deep); line-height: 1; }
+.hero-stat-num.gold { color: var(--gold); }
+.hero-stat-num.teal { color: var(--teal); }
+.hero-stat-num.pink { color: var(--pink); }
+.hero-stat-label { font-size: 13px; color: var(--ink2); margin-top: 4px; font-weight: 600; }
+
+/* ===== 章节 ===== */
+.section { padding: 50px 0; }
+.section-title-row { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+.section-num {
+  font-size: 13px; font-weight: 700; color: var(--blue-deep);
+  letter-spacing: 3px; background: var(--blue-soft);
+  padding: 5px 12px; border-radius: 14px;
+}
+.section-title { font-size: 26px; font-weight: 800; color: var(--ink); letter-spacing: -0.5px; }
+.section-subtitle { font-size: 14px; color: var(--ink2); margin-bottom: 24px; max-width: 720px; }
+
+/* ===== 大类色卡 ===== */
+.cat-card {
+  background: var(--bg-card); border: 1px solid var(--line);
+  border-radius: 16px; padding: 24px 28px; margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(26,31,46,0.04);
+}
+.cat-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 16px; padding-bottom: 14px;
+  border-bottom: 1px dashed var(--line);
+}
+.cat-emoji {
+  width: 48px; height: 48px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; color: #fff; font-weight: 800;
+}
+.cat-emoji.blue { background: linear-gradient(135deg, #3A6FA8 0%, #5A8FC8 100%); }
+.cat-emoji.gold { background: linear-gradient(135deg, #B89B6A 0%, #D4B58A 100%); }
+.cat-emoji.teal { background: linear-gradient(135deg, #3D8B8B 0%, #5DABAB 100%); }
+.cat-emoji.pink { background: linear-gradient(135deg, #C97A8E 0%, #E89AAA 100%); }
+.cat-emoji.green { background: linear-gradient(135deg, #5A8C5A 0%, #7AAC7A 100%); }
+.cat-emoji.dark { background: linear-gradient(135deg, #1A1F2E 0%, #3A6FA8 100%); }
+.cat-title { font-size: 20px; font-weight: 800; color: var(--ink); flex: 1; }
+.cat-count {
+  font-size: 13px; color: var(--ink3); font-weight: 600;
+  background: var(--bg); padding: 4px 12px; border-radius: 10px;
+}
+
+/* ===== 概念列表 ===== */
+.concept-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+}
+.concept-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 12px; background: var(--bg);
+  border-radius: 10px; font-size: 14px; color: var(--ink2);
+  transition: all 0.15s; border: 1px solid transparent;
+}
+.concept-item:hover { border-color: var(--blue); background: var(--blue-soft); }
+.concept-num {
+  flex-shrink: 0; width: 24px; height: 24px;
+  background: var(--blue-soft); color: var(--blue-deep);
+  border-radius: 50%; display: flex; align-items: center;
+  justify-content: center; font-size: 12px; font-weight: 800;
+  margin-top: 1px;
+}
+.concept-body { flex: 1; min-width: 0; }
+.concept-name { font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.concept-desc { font-size: 12px; color: var(--ink3); line-height: 1.5; }
+.concept-source {
+  display: inline-block; margin-top: 4px;
+  font-size: 11px; padding: 1px 8px; border-radius: 6px;
+  background: var(--gold-soft); color: var(--gold); font-weight: 600;
+}
+
+/* ===== 来源课程清单 ===== */
+.source-list {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px;
+}
+.source-chip {
+  background: var(--bg-card); border: 1px solid var(--line);
+  padding: 8px 14px; border-radius: 10px; font-size: 13px;
+  color: var(--ink2); font-weight: 600;
+}
+.source-chip strong { color: var(--blue-deep); margin-right: 4px; }
+
+/* ===== Footer ===== */
+footer {
+  background: #1A1F2E; color: #8A93A6; text-align: center;
+  padding: 24px; font-size: 13px;
+}
+footer a { color: var(--gold); text-decoration: none; margin: 0 8px; }
+
+/* ===== 移动端 ===== */
+@media (max-width: 768px) {
+  .container { padding: 0 20px; }
+  .hero { padding: 50px 0 40px; }
+  .hero h1 { font-size: 32px; }
+  .hero-sub { font-size: 16px; }
+  .hero-stats { gap: 24px; }
+  .hero-stat-num { font-size: 28px; }
+  .section { padding: 40px 0; }
+  .section-title { font-size: 22px; }
+  .cat-card { padding: 18px 20px; }
+  .cat-title { font-size: 18px; }
+  .concept-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="container">
+    <span class="hero-tag">📚 82+ 核心知识点 · 全景索引</span>
+    <h1>小百的 AI 知识库<br><span>82+ 核心知识点全景</span></h1>
+    <p class="hero-sub">
+      这是 <strong>小百的 AI 知识库</strong> 所有课程中涉及的全部核心知识点的全景索引。<br>
+      按主题分 5 大类、5 个工程阶段，共 <strong>82+ 个知识点 + 20+ 个实战案例</strong>，点击概念可跳转到对应课程。
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num">82+</div>
+        <div class="hero-stat-label">核心知识点</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num gold">5</div>
+        <div class="hero-stat-label">主题大类</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num teal">20+</div>
+        <div class="hero-stat-label">实战案例</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num pink">10</div>
+        <div class="hero-stat-label">课程专题</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== 5 大主题分类 ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-title-row">
+      <span class="section-num">INDEX 01</span>
+      <h2 class="section-title">🗂️ 5 大主题分类</h2>
+    </div>
+    <p class="section-subtitle">按 AI 产品经理的真实工作场景划分，每类下都列出全部知识点。</p>
+
+    <!-- 类别 1: AI Agent 工程化 -->
+    <div class="cat-card">
+      <div class="cat-header">
+        <div class="cat-emoji dark">🤖</div>
+        <div class="cat-title">AI Agent 工程化（10 大核心问题）</div>
+        <div class="cat-count">10 知识点 · 15 案例</div>
+      </div>
+      <div class="concept-grid">
+        <div class="concept-item"><div class="concept-num">1</div><div class="concept-body"><div class="concept-name">幻觉问题（Hallucination）</div><div class="concept-desc">AI 自信地说错，还不告诉你；必须先查知识库再让 Agent 组织语言</div><a class="concept-source" href="./ai_agent.html#hallucination">ai_agent</a></div></div>
+        <div class="concept-item"><div class="concept-num">2</div><div class="concept-body"><div class="concept-name">权限失控（Unauthorized Action）</div><div class="concept-desc">Agent 可能泄露工资、改订单、发错邮件；高危操作必须人工二次确认</div><a class="concept-source" href="./ai_agent.html#auth">ai_agent</a></div></div>
+        <div class="concept-item"><div class="concept-num">3</div><div class="concept-body"><div class="concept-name">死循环 / Token 烧光</div><div class="concept-desc">Agent 反复重试不解决问题；连续 3 步无进展必须停</div><a class="concept-source" href="./ai_agent.html#loop">ai_agent</a></div></div>
+        <div class="concept-item"><div class="concept-num">4</div><div class="concept-body"><div class="concept-name">评估体系（Evaluation）</div><div class="concept-desc">没有评估体系的团队是"闭眼开车"；三大类评估指标</div><a class="concept-source" href="./ai_agent.html#evaluation">ai_agent</a></div></div>
+        <div class="concept-item"><div class="concept-num">5</div><div class="concept-body"><div class="concept-name">成本失控</div><div class="concept-desc">一次复杂任务可烧 ¥15；分级模型 + 步数限制是标配</div><a class="concept-source" href="./ai_agent.html#cost">ai_agent</a></div></div>
+        <div class="concept-item"><div class="concept-num">6</div><div class="concept-body"><div class="concept-name">延迟用户体验</div><div class="concept-desc">用户对 Agent 的等待耐心 = 5 秒；超出必须给进度反馈</div><a class="concept-source" href="./ai_agent.html#latency">ai_agent</a></div></div>
+        <div class="concept-item"><div class="concept-num">7</div><div class="concept-body"><div class="concept-name">多 Agent 协作</div><div class="concept-desc">Multi-Agent 解决复杂问题；Anthropic Research 4-Agent 范式</div><a class="concept-source" href="./ai_agent.html#multi-agent">ai_agent</a></div></div>
+        <div class="concept-item"><div class="concept-num">8</div><div class="concept-body"><div class="concept-name">可观测性（Observability）</div><div class="concept-desc">每次对话必须留痕：输入/输出/Token/工具调用全记录</div><a class="concept-source" href="./ai_agent.html#observability">ai_agent</a></div></div>
+        <div class="concept-item"><div class="concept-num">9</div><div class="concept-body"><div class="concept-name">冷启动问题</div><div class="concept-desc">新 Agent 没人用没数据；种子用户 + 主动反馈设计</div><a class="concept-source" href="./ai_agent.html#cold-start">ai_agent</a></div></div>
+        <div class="concept-item"><div class="concept-num">10</div><div class="concept-body"><div class="concept-name">商业化定价</div><div class="concept-desc">按次 / 按订阅 / 按结果付费三种模式；B 端 80% 选按结果</div><a class="concept-source" href="./ai_agent.html#pricing">ai_agent</a></div></div>
+      </div>
+    </div>
+
+    <!-- 类别 2: RAG 检索增强生成 -->
+    <div class="cat-card">
+      <div class="cat-header">
+        <div class="cat-emoji blue">📚</div>
+        <div class="cat-title">RAG 检索增强生成（5 大模块 / 9 大概念 / 13 PHASE）</div>
+        <div class="cat-count">27 知识点 · 8 案例</div>
+      </div>
+      <div class="concept-grid">
+        <div class="concept-item"><div class="concept-num">1</div><div class="concept-body"><div class="concept-name">Embedding（向量化）</div><div class="concept-desc">文本→向量；语义相似度计算基础；常用 bge-large / OpenAI text-embedding-3</div><a class="concept-source" href="./rag_9concepts.html#embedding">rag_9concepts</a></div></div>
+        <div class="concept-item"><div class="concept-num">2</div><div class="concept-body"><div class="concept-name">向量数据库（Vector DB）</div><div class="concept-desc">Chroma（轻量）/ FAISS（本地）/ Milvus（生产）/ pgvector（已有 PG）</div><a class="concept-source" href="./rag_9concepts.html#vector-db">rag_9concepts</a></div></div>
+        <div class="concept-item"><div class="concept-num">3</div><div class="concept-body"><div class="concept-name">文档切片（Chunking）</div><div class="concept-desc">固定窗口/语义切片/层次切片；3 大策略对比</div><a class="concept-source" href="./rag_9concepts.html#chunking">rag_9concepts</a></div></div>
+        <div class="concept-item"><div class="concept-num">4</div><div class="concept-body"><div class="concept-name">Rerank（重排序）</div><div class="concept-desc">用 Cross-Encoder 对 Top-K 重新打分；显著提升准确率</div><a class="concept-source" href="./rag_9concepts.html#rerank">rag_9concepts</a></div></div>
+        <div class="concept-item"><div class="concept-num">5</div><div class="concept-body"><div class="concept-name">Query 改写</div><div class="concept-desc">把"那个东西坏了"改成"XX 型号 Y 故障"；HyDE 多假设扩展</div><a class="concept-source" href="./rag_9concepts.html#query-rewrite">rag_9concepts</a></div></div>
+        <div class="concept-item"><div class="concept-num">6</div><div class="concept-body"><div class="concept-name">元数据过滤</div><div class="concept-desc">按时间/部门/文档类型先过滤再检索；精准度提升 30%</div><a class="concept-source" href="./rag_9concepts.html#metadata">rag_9concepts</a></div></div>
+        <div class="concept-item"><div class="concept-num">7</div><div class="concept-body"><div class="concept-name">混合检索（BM25 + 向量）</div><div class="concept-desc">关键词 + 语义并行检索；解决专业术语漏召回</div><a class="concept-source" href="./rag_9concepts.html#hybrid">rag_9concepts</a></div></div>
+        <div class="concept-item"><div class="concept-num">8</div><div class="concept-body"><div class="concept-name">Prompt 组装</div><div class="concept-desc">系统提示 + 上下文 + 用户问题 + 引用格式要求</div><a class="concept-source" href="./rag_9concepts.html#prompt">rag_9concepts</a></div></div>
+        <div class="concept-item"><div class="concept-num">9</div><div class="concept-body"><div class="concept-name">评估指标</div><div class="concept-desc">Context Precision/Recall/Answer Relevancy；RAGAS 框架</div><a class="concept-source" href="./rag_9concepts.html#eval">rag_9concepts</a></div></div>
+        <div class="concept-item"><div class="concept-num">10</div><div class="concept-body"><div class="concept-name">多模态 RAG</div><div class="concept-desc">PDF 图文混排 + CLIP 图向量；GPT-4V 解读</div><a class="concept-source" href="./rag_full.html#multimodal">rag_full</a></div></div>
+        <div class="concept-item"><div class="concept-num">11</div><div class="concept-body"><div class="concept-name">Agentic RAG</div><div class="concept-desc">Agent 自主决定"什么时候检索"+"检索什么"+"重试几次"</div><a class="concept-source" href="./rag_full.html#agentic">rag_full</a></div></div>
+        <div class="concept-item"><div class="concept-num">12</div><div class="concept-body"><div class="concept-name">GraphRAG（图增强）</div><div class="concept-desc">Microsoft GraphRAG；实体关系抽取→知识图谱→全局答案</div><a class="concept-source" href="./rag_full.html#graph">rag_full</a></div></div>
+        <div class="concept-item"><div class="concept-num">13</div><div class="concept-body"><div class="concept-name">企业部署 4 种模式</div><div class="concept-desc">个人/Docker/云端/私有化；选型决策树</div><a class="concept-source" href="./rag_tutorial.html#deploy">rag_tutorial</a></div></div>
+        <div class="concept-item"><div class="concept-num">14</div><div class="concept-body"><div class="concept-name">Docker 化打包</div><div class="concept-desc">Dockerfile + docker-compose + 镜像瘦身</div><a class="concept-source" href="./rag_tutorial.html#docker">rag_tutorial</a></div></div>
+        <div class="concept-item"><div class="concept-num">15</div><div class="concept-body"><div class="concept-name">API Key 安全管理</div><div class="concept-desc">环境变量 + .env + 密钥轮转；绝不能写死在代码里</div><a class="concept-source" href="./rag_tutorial.html#security">rag_tutorial</a></div></div>
+        <div class="concept-item"><div class="concept-num">16</div><div class="concept-body"><div class="concept-name">限流保护（Rate Limit）</div><div class="concept-desc">防刷 + 防 DDoS + 用户配额；Redis 计数器</div><a class="concept-source" href="./rag_tutorial.html#ratelimit">rag_tutorial</a></div></div>
+        <div class="concept-item"><div class="concept-num">17</div><div class="concept-body"><div class="concept-name">性能优化 3 步</div><div class="concept-desc">Redis 缓存 / 模型量化 / 异步批处理</div><a class="concept-source" href="./rag_tutorial.html#perf">rag_tutorial</a></div></div>
+        <div class="concept-item"><div class="concept-num">18</div><div class="concept-body"><div class="concept-name">监控告警</div><div class="concept-desc">健康检查 + Prometheus + 日志管理 + 备份恢复</div><a class="concept-source" href="./rag_tutorial.html#monitor">rag_tutorial</a></div></div>
+        <div class="concept-item"><div class="concept-num">19</div><div class="concept-body"><div class="concept-name">数据合规（GDPR）</div><div class="concept-desc">个人信息保护法 + 跨境数据 + 第三方数据授权</div><a class="concept-source" href="./rag_tutorial.html#compliance">rag_tutorial</a></div></div>
+        <div class="concept-item"><div class="concept-num">20</div><div class="concept-body"><div class="concept-name">医疗行业特殊合规</div><div class="concept-desc">病历数据脱敏 + 卫健委审批 + HIPAA 等价</div><a class="concept-source" href="./rag_tutorial.html#medical">rag_tutorial</a></div></div>
+        <div class="concept-item"><div class="concept-num">21</div><div class="concept-body"><div class="concept-name">数据清洗 5 步</div><div class="concept-desc">去重/格式规范化/编码统一/特殊字符/敏感信息</div><a class="concept-source" href="./rag_tutorial.html#clean">rag_tutorial</a></div></div>
+        <div class="concept-item"><div class="concept-num">22</div><div class="concept-body"><div class="concept-name">3 类数据源</div><div class="concept-desc">PDF/Word/Markdown + 数据库 + API/Notion</div><a class="concept-source" href="./rag_tutorial.html#datasource">rag_tutorial</a></div></div>
+        <div class="concept-item"><div class="concept-num">23</div><div class="concept-body"><div class="concept-name">Streamlit Web 界面</div><div class="concept-desc">5 行代码搭前端；会话状态管理</div><a class="concept-source" href="./rag_tutorial.html#streamlit">rag_tutorial</a></div></div>
+        <div class="concept-item"><div class="concept-num">24</div><div class="concept-body"><div class="concept-name">避坑指南 7 大问题</div><div class="concept-desc">回答不准/速度慢/被刷爆/数据泄露/并发/答非所问/持续优化</div><a class="concept-source" href="./rag_tutorial.html#pitfalls">rag_tutorial</a></div></div>
+        <div class="concept-item"><div class="concept-num">25</div><div class="concept-body"><div class="concept-name">内部审批流程</div><div class="concept-desc">采购 + 法务 + 安全 + 业务 4 道关</div><a class="concept-source" href="./rag_tutorial.html#approval">rag_tutorial</a></div></div>
+        <div class="concept-item"><div class="concept-num">26</div><div class="concept-body"><div class="concept-name">求职包装（简历）</div><div class="concept-desc">3 句一两句亮点 + STAR 故事模板</div><a class="concept-source" href="./rag_tutorial.html#resume">rag_tutorial</a></div></div>
+        <div class="concept-item"><div class="concept-num">27</div><div class="concept-body"><div class="concept-name">接私活报价</div><div class="concept-desc">按次 / 按订阅 / 按结果 3 种收费 + 价格区间</div><a class="concept-source" href="./rag_tutorial.html#freelance">rag_tutorial</a></div></div>
+      </div>
+    </div>
+
+    <!-- 类别 3: Harness Engineering -->
+    <div class="cat-card">
+      <div class="cat-header">
+        <div class="cat-emoji gold">🏗️</div>
+        <div class="cat-title">Harness Engineering 工程师手册（9 PART）</div>
+        <div class="cat-count">15 知识点 · 5 案例</div>
+      </div>
+      <div class="concept-grid">
+        <div class="concept-item"><div class="concept-num">1</div><div class="concept-body"><div class="concept-name">Harness 本质</div><div class="concept-desc">LLM 是发动机，Harness 是整车工程；一个能稳定运行的系统</div><a class="concept-source" href="./harness_engineering.html#what">harness</a></div></div>
+        <div class="concept-item"><div class="concept-num">2</div><div class="concept-body"><div class="concept-name">7 层架构</div><div class="concept-desc">用户层/接口层/编排层/工具层/记忆层/模型层/基础设施</div><a class="concept-source" href="./harness_engineering.html#arch">harness</a></div></div>
+        <div class="concept-item"><div class="concept-num">3</div><div class="concept-body"><div class="concept-name">6 阶段生命周期</div><div class="concept-desc">需求→设计→实现→评估→部署→运营的完整闭环</div><a class="concept-source" href="./harness_engineering.html#lifecycle">harness</a></div></div>
+        <div class="concept-item"><div class="concept-num">4</div><div class="concept-body"><div class="concept-name">4 种 Harness 模式</div><div class="concept-desc">Tool-Use / RAG / Memory / Multi-Agent 4 种组合</div><a class="concept-source" href="./harness_engineering.html#patterns">harness</a></div></div>
+        <div class="concept-item"><div class="concept-num">5</div><div class="concept-body"><div class="concept-name">3 层评估</div><div class="concept-desc">单元测试 / 集成测试 / 用户反馈 3 层闭环</div><a class="concept-source" href="./harness_engineering.html#eval">harness</a></div></div>
+        <div class="concept-item"><div class="concept-num">6</div><div class="concept-body"><div class="concept-name">4 道护栏（Guardrails）</div><div class="concept-desc">输入校验 / 输出审核 / 权限控制 / 异常熔断</div><a class="concept-source" href="./harness_engineering.html#guard">harness</a></div></div>
+        <div class="concept-item"><div class="concept-num">7</div><div class="concept-body"><div class="concept-name">CI/CD 流水线</div><div class="concept-desc">Prompt 测试 + 回归集 + 自动评估 + 金丝雀发布</div><a class="concept-source" href="./harness_engineering.html#cicd">harness</a></div></div>
+        <div class="concept-item"><div class="concept-num">8</div><div class="concept-body"><div class="concept-name">避坑清单</div><div class="concept-desc">Token 浪费 / 上下文污染 / 工具爆炸 / 死循环 4 大坑</div><a class="concept-source" href="./harness_engineering.html#pitfalls">harness</a></div></div>
+        <div class="concept-item"><div class="concept-num">9</div><div class="concept-body"><div class="concept-name">5 天实操路线图</div><div class="concept-desc">v0.1→v0.5 完整可运行；医疗 RAG 助手模板</div><a class="concept-source" href="./harness_engineering.html#s9">harness</a></div></div>
+        <div class="concept-item"><div class="concept-num">10</div><div class="concept-body"><div class="concept-name">Day 1 - 环境搭建</div><div class="concept-desc">Python venv + 依赖 + 第一个 Agent hello world</div><a class="concept-source" href="./harness_engineering.html#day1">harness</a></div></div>
+        <div class="concept-item"><div class="concept-num">11</div><div class="concept-body"><div class="concept-name">Day 2 - Tool 定义</div><div class="concept-desc">3 个工具：搜索/计算/邮件；Function Calling 协议</div><a class="concept-source" href="./harness_engineering.html#day2">harness</a></div></div>
+        <div class="concept-item"><div class="concept-num">12</div><div class="concept-body"><div class="concept-name">Day 3 - Memory 接入</div><div class="concept-desc">短期记忆 + 长期记忆 + 摘要压缩</div><a class="concept-source" href="./harness_engineering.html#day3">harness</a></div></div>
+        <div class="concept-item"><div class="concept-num">13</div><div class="concept-body"><div class="concept-name">Day 4 - 评估闭环</div><div class="concept-desc">10 个测试用例 + 评估脚本 + 红绿报告</div><a class="concept-source" href="./harness_engineering.html#day4">harness</a></div></div>
+        <div class="concept-item"><div class="concept-num">14</div><div class="concept-body"><div class="concept-name">Day 5 - 部署上线</div><div class="concept-desc">FastAPI 包装 + Docker 化 + 监控</div><a class="concept-source" href="./harness_engineering.html#day5">harness</a></div></div>
+        <div class="concept-item"><div class="concept-num">15</div><div class="concept-body"><div class="concept-name">3 大 Q&A</div><div class="concept-desc">Harness 是不是过度设计？/ 怎么说服老板？/ 小团队怎么起步？</div><a class="concept-source" href="./harness_engineering.html#qa">harness</a></div></div>
+      </div>
+    </div>
+
+    <!-- 类别 4: 协议 + 模型 + 寓言 -->
+    <div class="cat-card">
+      <div class="cat-header">
+        <div class="cat-emoji teal">🧙</div>
+        <div class="cat-title">协议 + 架构 + 寓言（MCP / Transformer / RAG 寓言）</div>
+        <div class="cat-count">14 知识点 · 3 案例</div>
+      </div>
+      <div class="concept-grid">
+        <div class="concept-item"><div class="concept-num">1</div><div class="concept-body"><div class="concept-name">MCP - Discover（发现）</div><div class="concept-desc">Agent 如何知道有哪些工具可用</div><a class="concept-source" href="./mcp_story.html">mcp</a></div></div>
+        <div class="concept-item"><div class="concept-num">2</div><div class="concept-body"><div class="concept-name">MCP - Connect（连接）</div><div class="concept-desc">万能插头 + 统一协议；USB-C 之于 AI 工具</div><a class="concept-source" href="./mcp_story.html">mcp</a></div></div>
+        <div class="concept-item"><div class="concept-num">3</div><div class="concept-body"><div class="concept-name">MCP - Call（调用）</div><div class="concept-desc">JSON-RPC 协议；参数校验 + 超时控制</div><a class="concept-source" href="./mcp_story.html">mcp</a></div></div>
+        <div class="concept-item"><div class="concept-num">4</div><div class="concept-body"><div class="concept-name">MCP - Response（响应）</div><div class="concept-desc">结构化返回 + 错误码 + 流式输出</div><a class="concept-source" href="./mcp_story.html">mcp</a></div></div>
+        <div class="concept-item"><div class="concept-num">5</div><div class="concept-body"><div class="concept-name">MCP - Guard（防护）</div><div class="concept-desc">权限分级 + 资源限制 + 审计日志</div><a class="concept-source" href="./mcp_story.html">mcp</a></div></div>
+        <div class="concept-item"><div class="concept-num">6</div><div class="concept-body"><div class="concept-name">Self-Attention 切片</div><div class="concept-desc">把输入切成 token 序列；议事王国的 8 大臣</div><a class="concept-source" href="./transformer_story.html">transformer</a></div></div>
+        <div class="concept-item"><div class="concept-num">7</div><div class="concept-body"><div class="concept-name">全场互联（K₈ 完全图）</div><div class="concept-desc">每个 token 都能看到所有其他 token；信息无障碍</div><a class="concept-source" href="./transformer_story.html">transformer</a></div></div>
+        <div class="concept-item"><div class="concept-num">8</div><div class="concept-body"><div class="concept-name">QK 打分机制</div><div class="concept-desc">Query · Key = 关注度；相关性矩阵</div><a class="concept-source" href="./transformer_story.html">transformer</a></div></div>
+        <div class="concept-item"><div class="concept-num">9</div><div class="concept-body"><div class="concept-name">Softmax 加权</div><div class="concept-desc">分数→概率分布；归一化为 0-1 区间</div><a class="concept-source" href="./transformer_story.html">transformer</a></div></div>
+        <div class="concept-item"><div class="concept-num">10</div><div class="concept-body"><div class="concept-name">Value 加权汇总</div><div class="concept-desc">Value × 概率 = 加权信息流</div><a class="concept-source" href="./transformer_story.html">transformer</a></div></div>
+        <div class="concept-item"><div class="concept-num">11</div><div class="concept-body"><div class="concept-name">多头注意力（Multi-Head）</div><div class="concept-desc">8 个议事小组并行；不同视角看问题</div><a class="concept-source" href="./transformer_story.html">transformer</a></div></div>
+        <div class="concept-item"><div class="concept-num">12</div><div class="concept-body"><div class="concept-name">RAG 博学老人</div><div class="concept-desc">遇到不懂的先查典籍；检索增强</div><a class="concept-source" href="./rag_story.html">rag_story</a></div></div>
+        <div class="concept-item"><div class="concept-num">13</div><div class="concept-body"><div class="concept-name">RAG 索引女巫</div><div class="concept-desc">把所有典籍编成索引；毫秒级查找</div><a class="concept-source" href="./rag_story.html">rag_story</a></div></div>
+        <div class="concept-item"><div class="concept-num">14</div><div class="concept-body"><div class="concept-name">RAG 国王决策</div><div class="concept-desc">LLM 拿到检索结果后组织语言回答</div><a class="concept-source" href="./rag_story.html">rag_story</a></div></div>
+      </div>
+    </div>
+
+    <!-- 类别 5: Codex + 商业化 + 综述 -->
+    <div class="cat-card">
+      <div class="cat-header">
+        <div class="cat-emoji pink">📘</div>
+        <div class="cat-title">Codex 编码智能体 + 商业化全景（24+5 章节）</div>
+        <div class="cat-count">29 知识点 · 5 案例</div>
+      </div>
+      <div class="concept-grid">
+        <div class="concept-item"><div class="concept-num">1</div><div class="concept-body"><div class="concept-name">Codex Quickstart</div><div class="concept-desc">5 分钟跑通第一个编码 Agent</div><a class="concept-source" href="./codex-docs.html#quickstart">codex</a></div></div>
+        <div class="concept-item"><div class="concept-num">2</div><div class="concept-body"><div class="concept-name">Codex CLI</div><div class="concept-desc">命令行参数 + 配置文件</div><a class="concept-source" href="./codex-docs.html#cli">codex</a></div></div>
+        <div class="concept-item"><div class="concept-num">3</div><div class="concept-body"><div class="concept-name">Codex Rules</div><div class="concept-desc">AGENTS.md 规则文件；项目级约束</div><a class="concept-source" href="./codex-docs.html#rules">codex</a></div></div>
+        <div class="concept-item"><div class="concept-num">4</div><div class="concept-body"><div class="concept-name">Codex Hooks</div><div class="concept-desc">Pre/Post 钩子；自动评估 + 提交拦截</div><a class="concept-source" href="./codex-docs.html#hooks">codex</a></div></div>
+        <div class="concept-item"><div class="concept-num">5</div><div class="concept-body"><div class="concept-name">Codex MCP</div><div class="concept-desc">编码 Agent 接入 MCP 工具</div><a class="concept-source" href="./codex-docs.html#mcp">codex</a></div></div>
+        <div class="concept-item"><div class="concept-num">6</div><div class="concept-body"><div class="concept-name">Codex Subagents</div><div class="concept-desc">子 Agent 委派；任务拆分</div><a class="concept-source" href="./codex-docs.html#subagents">codex</a></div></div>
+        <div class="concept-item"><div class="concept-num">7</div><div class="concept-body"><div class="concept-name">Codex Sandbox</div><div class="concept-desc">沙箱隔离；安全执行代码</div><a class="concept-source" href="./codex-docs.html#sandbox">codex</a></div></div>
+        <div class="concept-item"><div class="concept-num">8</div><div class="concept-body"><div class="concept-name">Codex Approval</div><div class="concept-desc">人机协作审批；高危操作确认</div><a class="concept-source" href="./codex-docs.html#approval">codex</a></div></div>
+        <div class="concept-item"><div class="concept-num">9</div><div class="concept-body"><div class="concept-name">Codex Web 端</div><div class="concept-desc">vs Cloud IDE 协同</div><a class="concept-source" href="./codex-docs.html#web">codex</a></div></div>
+        <div class="concept-item"><div class="concept-num">10</div><div class="concept-body"><div class="concept-name">Codex VSCode 集成</div><div class="concept-desc">编辑器内对话 + 自动补全</div><a class="concept-source" href="./codex-docs.html#vscode">codex</a></div></div>
+        <div class="concept-item"><div class="concept-num">11</div><div class="concept-body"><div class="concept-name">GitHub Star 商业化</div><div class="concept-desc">200+ 项目按 star 排；筛选标准</div><a class="concept-source" href="./ai_pm_github_projects.html">gh</a></div></div>
+        <div class="concept-item"><div class="concept-num">12</div><div class="concept-body"><div class="concept-name">Dify 商业模式</div><div class="concept-desc">开源 + 商业版；3 万企业客户</div><a class="concept-source" href="./ai_pm_github_projects.html">gh</a></div></div>
+        <div class="concept-item"><div class="concept-num">13</div><div class="concept-body"><div class="concept-name">LangChain 商业化</div><div class="concept-desc">LangSmith + 私有部署；金融/医疗</div><a class="concept-source" href="./ai_pm_github_projects.html">gh</a></div></div>
+        <div class="concept-item"><div class="concept-num">14</div><div class="concept-body"><div class="concept-name">CrewAI 商业化</div><div class="concept-desc">Multi-Agent 框架；企业咨询案例</div><a class="concept-source" href="./ai_pm_github_projects.html">gh</a></div></div>
+        <div class="concept-item"><div class="concept-num">15</div><div class="concept-body"><div class="concept-name">Browser-Use</div><div class="concept-desc">浏览器自动化；客服 + 电商</div><a class="concept-source" href="./ai_pm_github_projects.html">gh</a></div></div>
+        <div class="concept-item"><div class="concept-num">16</div><div class="concept-body"><div class="concept-name">Tabby 编码助手</div><div class="concept-desc">本地代码补全；金融私有化部署</div><a class="concept-source" href="./ai_pm_github_projects.html">gh</a></div></div>
+        <div class="concept-item"><div class="concept-num">17</div><div class="concept-body"><div class="concept-name">PM 视角 5 大启示</div><div class="concept-desc">从 GitHub 项目看 AI 商业化路径</div><a class="concept-source" href="./ai_pm_github_projects.html">gh</a></div></div>
+        <div class="concept-item"><div class="concept-num">18</div><div class="concept-body"><div class="concept-name">求职可讲案例库</div><div class="concept-desc">3+ 商业化项目 + STAR 故事</div><a class="concept-source" href="./ai_pm_github_projects.html">gh</a></div></div>
+        <div class="concept-item"><div class="concept-num">19</div><div class="concept-body"><div class="concept-name">AI Agent 工业实践</div><div class="concept-desc">B 端 80% 项目都先做 Agent 试点</div><a class="concept-source" href="./ai_agent.html">ai_agent</a></div></div>
+        <div class="concept-item"><div class="concept-num">20</div><div class="concept-body"><div class="concept-name">RAG 工业应用 6 场景</div><div class="concept-desc">客服/知识库/合规/合同/培训/营销</div><a class="concept-source" href="./rag_full.html">rag_full</a></div></div>
+        <div class="concept-item"><div class="concept-num">21</div><div class="concept-body"><div class="concept-name">数据指标基线</div><div class="concept-desc">召回率 80% / 准确率 85% / 响应 2s</div><a class="concept-source" href="./rag_full.html">rag_full</a></div></div>
+        <div class="concept-item"><div class="concept-num">22</div><div class="concept-body"><div class="concept-name">5 个 RAG 真实案例</div><div class="concept-desc">Harvey 法律 / Hebbia 金融 / Glean 企业搜索</div><a class="concept-source" href="./rag_full.html">rag_full</a></div></div>
+        <div class="concept-item"><div class="concept-num">23</div><div class="concept-body"><div class="concept-name">RAG 入门 5 步</div><div class="concept-desc">收集→清洗→切片→嵌入→检索</div><a class="concept-source" href="./rag_story.html">rag_story</a></div></div>
+        <div class="concept-item"><div class="concept-num">24</div><div class="concept-body"><div class="concept-name">RAG 进阶 5 步</div><div class="concept-desc">Rerank→过滤→改写→Prompt→评估</div><a class="concept-source" href="./rag_full.html">rag_full</a></div></div>
+        <div class="concept-item"><div class="concept-num">25</div><div class="concept-body"><div class="concept-name">Codex 性能优化</div><div class="concept-desc">模型选择 + 上下文压缩 + 并行</div><a class="concept-source" href="./codex-docs.html#perf">codex</a></div></div>
+        <div class="concept-item"><div class="concept-num">26</div><div class="concept-body"><div class="concept-name">Codex 故障排查</div><div class="concept-desc">10 个常见错误 + 解决方案</div><a class="concept-source" href="./codex-docs.html#trouble">codex</a></div></div>
+        <div class="concept-item"><div class="concept-num">27</div><div class="concept-body"><div class="concept-name">Codex 计费模型</div><div class="concept-desc">按 token / 按月 / 按调用 3 种</div><a class="concept-source" href="./codex-docs.html#billing">codex</a></div></div>
+        <div class="concept-item"><div class="concept-num">28</div><div class="concept-body"><div class="concept-name">Codex 团队协作</div><div class="concept-desc">规则共享 + 用量统计 + 权限管理</div><a class="concept-source" href="./codex-docs.html#team">codex</a></div></div>
+        <div class="concept-item"><div class="concept-num">29</div><div class="concept-body"><div class="concept-name">Codex 私有化</div><div class="concept-desc">本地部署 + 离线推理</div><a class="concept-source" href="./codex-docs.html#private">codex</a></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 10 门课程来源 ===== -->
+<section class="section" style="background: linear-gradient(180deg, #FFFFFF 0%, #F0EAD9 100%);">
+  <div class="container">
+    <div class="section-title-row">
+      <span class="section-num">INDEX 02</span>
+      <h2 class="section-title">📂 知识点来源（10 门课程）</h2>
+    </div>
+    <p class="section-subtitle">所有 82+ 知识点都来自这 10 门已发布课程，点击直达。</p>
+    <div class="source-list">
+      <a class="source-chip" href="./ai_agent.html"><strong>1.</strong>AI Agent 企业工程化</a>
+      <a class="source-chip" href="./rag_story.html"><strong>2.</strong>RAG 寓言版</a>
+      <a class="source-chip" href="./rag_full.html"><strong>3.</strong>RAG 全维度解析</a>
+      <a class="source-chip" href="./rag_9concepts.html"><strong>4.</strong>RAG 9 大核心概念</a>
+      <a class="source-chip" href="./codex-docs.html"><strong>5.</strong>Codex 中文翻译</a>
+      <a class="source-chip" href="./mcp_story.html"><strong>6.</strong>MCP 寓言版</a>
+      <a class="source-chip" href="./transformer_story.html"><strong>7.</strong>Transformer 寓言版</a>
+      <a class="source-chip" href="./harness_engineering.html"><strong>8.</strong>Harness Engineering</a>
+      <a class="source-chip" href="./rag_tutorial.html"><strong>9.</strong>RAG 制作全攻略</a>
+      <a class="source-chip" href="./ai_pm_github_projects.html"><strong>10.</strong>GitHub 商业化全景</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 小百的 AI 知识库 · 持续更新中</p>
+  <p style="margin-top: 8px;">
+    <a href="./index.html">📚 课程首页</a> ·
+    <a href="./concepts_index.html">🗂️ 知识点索引</a> ·
+    <a href="#">📱 小红书</a> ·
+    <a href="#">💬 微信</a> ·
+    <a href="#">📧 邮件</a>
+  </p>
+</footer>
+
+</body>
+</html>
