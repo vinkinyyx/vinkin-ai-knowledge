@@ -379,6 +379,57 @@ mark.hl {
 }
 .course-card.dim { display: none; }
 
+/* ====== 搜索历史下拉 ====== */
+.search-box { position: relative; }
+.search-history {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0; right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(26,31,46,0.12);
+  z-index: 100;
+  padding: 8px 0;
+  max-height: 320px;
+  overflow-y: auto;
+}
+.history-head {
+  font-size: 11px; font-weight: 700; color: var(--ink3);
+  padding: 6px 16px; letter-spacing: 1.5px;
+  border-bottom: 1px solid var(--line);
+}
+.history-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 16px; cursor: pointer;
+  font-size: 14px; color: var(--ink);
+  transition: background 0.15s;
+}
+.history-item:hover { background: var(--blue-soft); }
+.history-item .h-q { flex: 1; }
+.history-item .h-x {
+  width: 18px; height: 18px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  font-size: 10px; color: var(--ink3);
+  background: transparent;
+  transition: all 0.15s;
+}
+.history-item .h-x:hover { background: var(--line); color: var(--pink); }
+.history-foot {
+  padding: 6px 16px;
+  border-top: 1px solid var(--line);
+  text-align: right;
+}
+.history-clear {
+  background: none; border: none; cursor: pointer;
+  font-size: 11px; color: var(--ink3);
+  padding: 4px 8px; border-radius: 6px;
+  transition: all 0.15s;
+}
+.history-clear:hover { color: var(--pink); background: var(--pink-soft); }
+
 /* ====== 占位行（敬请期待） ====== */
 .course-item.placeholder {
   background: var(--bg);
@@ -777,7 +828,7 @@ footer a {
 </footer>
 
 <script>
-// ===== 主页搜索功能 =====
+// ===== 主页搜索功能（增强版 v2.0）=====
 (function() {
   const SEARCH_INDEX = {
   "ai_agent.html": {
@@ -1109,48 +1160,200 @@ footer a {
   const resultSpan = document.getElementById('searchResult');
   const cards = document.querySelectorAll('.course-card');
   const catBlocks = document.querySelectorAll('.cat-block');
+  const catGrid = document.querySelector('.cat-grid');
+
+  // Hero 数字（保存原始值，用于恢复）
+  const heroNums = document.querySelectorAll('.hero-stat-num');
+  const originalHero = [];
+  heroNums.forEach(n => {
+    originalHero.push(n.textContent);
+  });
+
+  // 真实卡数（用于动态计算概念/案例数）
+  let totalConceptsAll = 0, totalCasesAll = 0;
+  Object.values(SEARCH_INDEX).forEach(idx => {
+    totalConceptsAll += (idx.concepts || []).length;
+    totalCasesAll += (idx.tags || []).filter(t => t.includes('案例')).length;
+  });
 
   function escapeHtml(s) {
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
+  // ===== 相关度评分 =====
+  function scoreMatch(idx, q) {
+    let score = 0;
+    const ql = q.toLowerCase();
+    if (idx.title.toLowerCase().includes(ql)) score += 10;
+    if (idx.category.toLowerCase().includes(ql)) score += 5;
+    if ((idx.short || '').toLowerCase().includes(ql)) score += 2;
+    (idx.tags || []).forEach(t => {
+      if (t.toLowerCase().includes(ql)) score += 3;
+    });
+    (idx.concepts || []).forEach(c => {
+      if (c.toLowerCase().includes(ql)) score += 1;
+    });
+    // 完全匹配标题额外加分
+    if (idx.title.toLowerCase() === ql) score += 20;
+    return score;
+  }
+
+  // ===== 动态 Hero 数字 =====
+  function updateHero(matchedCards) {
+    if (matchedCards.length === 0) {
+      // 恢复原始 Hero
+      heroNums.forEach((n, i) => { n.textContent = originalHero[i]; });
+      return;
+    }
+    // 计算匹配的概念数
+    let matchConcepts = 0, matchCases = 0;
+    matchedCards.forEach(card => {
+      const href = card.getAttribute('href').replace('./', '');
+      const idx = SEARCH_INDEX[href];
+      if (!idx) return;
+      (idx.concepts || []).forEach(c => {
+        if (c.toLowerCase().includes(input.value.trim().toLowerCase())) matchConcepts++;
+      });
+      (idx.tags || []).forEach(t => {
+        if (t.includes('案例') || t.includes('PART') || t.includes('PHASE')) matchCases++;
+      });
+    });
+    // 更新 Hero
+    if (heroNums[0]) heroNums[0].textContent = matchedCards.length;
+    if (heroNums[1]) heroNums[1].textContent = matchConcepts + '+';
+    if (heroNums[2]) heroNums[2].textContent = matchCases + '+';
+    if (heroNums[3]) heroNums[3].textContent = '🔍';
+  }
+
+  // ===== 相关度排序（DOM 重排）=====
+  function sortByRelevance(matchedCardHrefs) {
+    // 对每个 cat-block 内的卡片重排
+    catBlocks.forEach(block => {
+      const container = block.querySelector('.cat-cards');
+      if (!container) return;
+      const innerCards = Array.from(container.querySelectorAll('.course-card'));
+      innerCards.sort((a, b) => {
+        const ha = a.getAttribute('href').replace('./', '');
+        const hb = b.getAttribute('href').replace('./', '');
+        const ia = SEARCH_INDEX[ha];
+        const ib = SEARCH_INDEX[hb];
+        if (!ia || !ib) return 0;
+        return (ib._score || 0) - (ia._score || 0);
+      });
+      innerCards.forEach(c => container.appendChild(c));
+    });
+  }
+
+  // ===== localStorage 搜索历史 =====
+  const HISTORY_KEY = 'vinkin_search_history';
+  function getHistory() {
+    try {
+      return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+    } catch (e) { return []; }
+  }
+  function saveToHistory(q) {
+    if (!q) return;
+    let h = getHistory().filter(x => x !== q);
+    h.unshift(q);
+    h = h.slice(0, 5);
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
+  }
+
+  // ===== 历史下拉 UI =====
+  let historyBox = null;
+  function showHistory() {
+    const h = getHistory();
+    if (h.length === 0) { hideHistory(); return; }
+    if (!historyBox) {
+      historyBox = document.createElement('div');
+      historyBox.className = 'search-history';
+      input.parentElement.appendChild(historyBox);
+    }
+    historyBox.innerHTML = `
+      <div class="history-head">🕐 最近搜索</div>
+      ${h.map(q => `<div class="history-item" data-q="${escapeHtml(q)}">
+        <span class="h-q">${escapeHtml(q)}</span>
+        <span class="h-x" title="删除">✕</span>
+      </div>`).join('')}
+      <div class="history-foot"><button id="historyClear" class="history-clear">清空历史</button></div>
+    `;
+    historyBox.style.display = 'block';
+
+    // 绑定点击
+    historyBox.querySelectorAll('.history-item').forEach(it => {
+      it.addEventListener('click', (e) => {
+        if (e.target.classList.contains('h-x')) {
+          // 删除单条
+          const q = it.dataset.q;
+          const h2 = getHistory().filter(x => x !== q);
+          localStorage.setItem(HISTORY_KEY, JSON.stringify(h2));
+          showHistory();
+          return;
+        }
+        input.value = it.dataset.q;
+        doSearch();
+        hideHistory();
+      });
+    });
+    const clr = historyBox.querySelector('#historyClear');
+    if (clr) clr.addEventListener('click', () => {
+      localStorage.removeItem(HISTORY_KEY);
+      hideHistory();
+    });
+  }
+  function hideHistory() {
+    if (historyBox) historyBox.style.display = 'none';
+  }
+
+  // ===== 主搜索函数 =====
   function doSearch() {
-    const q = input.value.trim().toLowerCase();
+    const q = input.value.trim();
+    const ql = q.toLowerCase();
     clearBtn.style.display = q ? 'block' : 'none';
     if (!q) {
       cards.forEach(c => { c.style.display = ''; c.classList.remove('dim'); });
       catBlocks.forEach(b => { b.style.display = ''; });
       resultSpan.textContent = '';
+      updateHero([]);  // 恢复 Hero
+      hideHistory();
       return;
     }
 
+    // 评分
+    const matchedCards = [];
     let totalMatch = 0, totalCard = 0;
     cards.forEach(card => {
       const href = card.getAttribute('href').replace('./', '');
       const idx = SEARCH_INDEX[href];
       if (!idx) return;
-      const searchText = [
-        idx.title, idx.category, idx.short,
-        ...(idx.tags || []),
-        ...(idx.concepts || [])
-      ].join(' ').toLowerCase();
-      if (searchText.includes(q)) {
-        card.style.display = ''; card.classList.remove('dim'); totalMatch++;
+      const score = scoreMatch(idx, ql);
+      idx._score = score;
+      if (score > 0) {
+        card.style.display = ''; card.classList.remove('dim');
+        totalMatch++;
+        matchedCards.push(card);
       } else {
         card.style.display = 'none'; card.classList.add('dim');
       }
       totalCard++;
     });
 
+    // 分组折叠 + 相关度排序
     catBlocks.forEach(b => {
       const visible = b.querySelectorAll('.course-card:not([style*="none"])');
       b.style.display = visible.length > 0 ? '' : 'none';
     });
+    sortByRelevance(matchedCards.map(c => c.getAttribute('href').replace('./', '')));
 
+    // 动态 Hero
+    updateHero(matchedCards);
+
+    // 结果统计
     if (totalMatch === 0) {
-      resultSpan.innerHTML = `<span style="color:#C97A8E;">未找到匹配「{escapeHtml(input.value.trim())}」</span>`;
+      resultSpan.innerHTML = `<span style="color:#C97A8E;">未找到匹配「${escapeHtml(q)}」</span>`;
     } else {
-      resultSpan.innerHTML = `匹配 <strong style="color:#3A6FA8;">${totalMatch}</strong>/${totalCard} 门课程`;
+      const topScore = SEARCH_INDEX[matchedCards[0].getAttribute('href').replace('./', '')]._score || 0;
+      resultSpan.innerHTML = `匹配 <strong style="color:#3A6FA8;">${totalMatch}</strong>/${totalCard} 门 · 最高分 <strong style="color:#B89B6A;">${topScore}</strong>`;
       const first = document.querySelector('.course-card:not([style*="none"])');
       if (first && totalMatch < totalCard) {
         first.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1158,18 +1361,33 @@ footer a {
     }
   }
 
+  // ===== 事件绑定 =====
   let timer;
   input.addEventListener('input', () => {
     clearTimeout(timer); timer = setTimeout(doSearch, 200);
+    if (!input.value.trim()) showHistory();
+    else hideHistory();
+  });
+  input.addEventListener('focus', () => {
+    if (!input.value.trim()) showHistory();
+  });
+  input.addEventListener('blur', () => {
+    setTimeout(hideHistory, 200);  // 延迟以允许点击
   });
   input.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') { input.value = ''; doSearch(); }
+    if (e.key === 'Escape') { input.value = ''; doSearch(); hideHistory(); }
+    if (e.key === 'Enter') {
+      saveToHistory(input.value.trim());
+      doSearch();
+      input.blur();
+    }
   });
   clearBtn.addEventListener('click', () => {
-    input.value = ''; doSearch(); input.focus();
+    input.value = ''; doSearch(); input.focus(); showHistory();
   });
 })();
 </script>
+
 
 </body>
 </html>
