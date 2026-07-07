@@ -230,6 +230,35 @@
     ],
     "short": "议事王国 + 8 大臣讲清 Self-Attention"
   },
+  "ai_core_principles.html": {
+    "title": "AI 核心原理图谱",
+    "category": "大模型原理",
+    "emoji": "🧠",
+    "tags": [
+      "12 概念",
+      "SVG 信息图",
+      "黑盒/接龙"
+    ],
+    "concepts": [
+      "AI",
+      "LLM",
+      "Algorithm",
+      "Token",
+      "Prompt",
+      "Context Window",
+      "RAG",
+      "Function Calling",
+      "Agent",
+      "MCP",
+      "Embedding",
+      "Vector DB",
+      "Hallucination",
+      "黑盒",
+      "文字接龙",
+      "短期记忆"
+    ],
+    "short": "12 张 SVG 信息图 · 黑盒/接龙/漏斗/幻觉"
+  },
   "concepts_index.html": {
     "title": "82+ 核心知识点索引",
     "category": "索引 + 工具",
