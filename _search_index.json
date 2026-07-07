@@ -363,5 +363,26 @@
       "AI 弱点"
     ],
     "short": "AI 金字塔结构 + 提示词工程四大天王公式 + AI 弱点边界"
+  },
+  "kids_ai_agent_practice.html": {
+    "title": "智能体实操 · 全流程开发手册",
+    "category": "亲子 AI 启蒙",
+    "emoji": "🛠️",
+    "tags": [
+      "1 页",
+      "Ollama",
+      "AnythingLLM",
+      "Hermes 3",
+      "实操"
+    ],
+    "concepts": [
+      "Ollama",
+      "AnythingLLM",
+      "Hermes 3",
+      "知识库",
+      "System Prompt",
+      "Few-Shot"
+    ],
+    "short": "从 Ollama 安装到 AnythingLLM 配置智能体全流程：引擎、灵魂、记忆"
   }
 }

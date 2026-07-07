@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>打造专属 AI 智能体：全流程开发手册</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; color: #1e293b; padding: 40px; line-height: 1.6; }
+        .wrapper { max-width: 900px; margin: auto; background: white; padding: 50px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        h1 { color: #0f172a; text-align: center; border-bottom: 3px solid #3b82f6; padding-bottom: 20px; margin-bottom: 40px; }
+        h2 { color: #2563eb; margin-top: 40px; }
+        .step-section { border-left: 5px solid #e2e8f0; padding-left: 25px; margin: 20px 0; }
+        .code { background: #1e293b; color: #34d399; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 16px; margin: 10px 0; display: block; }
+        .highlight { background: #dbeafe; padding: 2px 6px; border-radius: 4px; color: #1e40af; font-weight: bold; }
+        .warning { background: #fffbeb; border: 2px solid #f59e0b; padding: 15px; border-radius: 8px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>🛠️ 打造专属 AI 智能体：全流程开发手册</h1>
+
+        <h2>第一部分：基础环境安装 (构建骨架)</h2>
+        <div class="step-section">
+            <p><b>1. 安装 Ollama (AI 引擎)</b>：访问 <a href="https://ollama.com/">ollama.com</a> 下载。安装后，它是你电脑里运行 AI 的“发动机”。</p>
+            <p><b>2. 启动大脑</b>：打开电脑的终端（CMD/Terminal），输入以下命令下载并运行 Hermes 3：</p>
+            <code class="code">ollama run hermes3</code>
+            <p>此时，你的电脑已经具备了运行智能体的大脑基础。</p>
+        </div>
+
+        <div class="step-section">
+            <p><b>3. 安装 AnythingLLM (可视化控制台)</b>：访问 <a href="https://useanything.com/">useanything.com</a> 下载桌面版。这是你用来设置 AI “灵魂”和“知识库”的图形化工具。</p>
+            <p><b>4. 绑定引擎</b>：打开 AnythingLLM，在设置中选择 Ollama 作为 LLM Provider，它会自动识别到你刚才安装的 Hermes 3。</p>
+        </div>
+
+        <h2>第二部分：灵魂与记忆配置 (智能体塑造)</h2>
+        <div class="step-section">
+            <p><b>1. 创建智能体 (Workspace)</b>：点击左下角 <span class="highlight">+ New Workspace</span>，命名为“课表小管家”。</p>
+            <p><b>2. 喂入记忆 (Knowledge Base)</b>：</p>
+            <ul>
+                <li>点击左侧“文档”图标。</li>
+                <li>上传你的《课表.txt》或作业要求文件。</li>
+                <li>点击 <b>Embed</b>（向量化），将这些文件转为 AI 可读取的“记忆”。</li>
+            </ul>
+        </div>
+
+        <div class="step-section">
+            <p><b>3. 注入灵魂 (System Prompt 设置)</b>：进入该 Workspace 的设置页面，找到 <b>System Prompt</b> 输入框，填入以下详细模板：</p>
+            <code class="code">
+# Role: 你是五年级学生的“课表小助手”。
+# Objective: 确保主人准时完成作业和运动。
+# Constraint (灵魂禁区):
+    1. 绝不代写作业！遇到作业题，只允许提供思路，严禁给出答案。
+    2. 只根据上传的“知识库”内容回答。不知道的内容请说：“我还没学到，请查阅书本”。
+# Examples (Few-Shot 示例):
+    - 用户：课表里周三有什么课？
+    - Agent：周三有科学和体育！记得体育课要穿运动鞋哦，体育老师很看重这个。
+    - 用户：帮我写一下数学题吧。
+    - Agent：那我可不能帮，但我可以给你一个类似的计算公式，你自己试试看能不能解开？
+            </code>
+        </div>
+
+        <div class="warning">
+            <b>给家长的调教建议：</b> 配置完成后，先测试“灵魂”是否稳定。如果它回答得太啰嗦，修改 Prompt 中的 <b>Action (沟通风格)</b> 部分，添加“语气要简短、高效”这样的指令。
+        </div>
+    </div>
+</body>
+</html>
