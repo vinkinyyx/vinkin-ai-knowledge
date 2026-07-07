@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五年级 AI 魔法课 - 2026 最新金字塔版</title>
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #f0fdf4; font-family: 'Nunito', sans-serif; display: flex; flex-direction: column; align-items: center; gap: 50px; padding: 50px 20px; }
+        .slide { width: 1200px; height: 675px; background: white; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.1); overflow: hidden; position: relative; display: flex; flex-direction: column; padding: 30px 50px; /* 减小了上下边距以腾出空间 */ }
+        h1, h2, h3 { font-family: 'ZCOOL KuaiLe', cursive; }
+        .title-slide { background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%); color: white; justify-content: center; align-items: center; text-align: center; }
+        .title-slide h1 { font-size: 80px; margin-bottom: 20px; text-shadow: 3px 3px 0px rgba(0,0,0,0.2); }
+        .title-slide p { font-size: 40px; font-weight: bold; background: rgba(255,255,255,0.2); padding: 10px 30px; border-radius: 50px;}
+        .slide-header { font-size: 42px; color: #1e293b; margin-bottom: 15px; border-left: 10px solid #f59e0b; padding-left: 20px; }
+        .content { flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-start; }
+        p { font-size: 26px; color: #475569; line-height: 1.6; margin-bottom: 15px; }
+        
+        /* 金字塔结构特定样式 - 空间压缩版 */
+        .pyramid-container { display: flex; flex-direction: column-reverse; align-items: center; gap: 6px; height: 100%; margin-top: 5px; }
+        .pyramid-layer { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 14px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 3px solid transparent; transition: transform 0.2s; }
+        .pyramid-layer:hover { transform: scale(1.02); }
+        .p-title { font-size: 22px; font-weight: bold; font-family: 'ZCOOL KuaiLe', cursive; display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+        .p-products { font-size: 15px; font-weight: bold; text-align: center; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+        .p-products span { background: rgba(255,255,255,0.9); padding: 3px 8px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        
+        /* 阶梯宽度与颜色 */
+        .p-l1 { width: 100%; background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
+        .p-l1 .p-products span { color: #b91c1c; }
+        .p-l2 { width: 92%; background: #f3e8ff; border-color: #d8b4fe; color: #5b21b6; }
+        .p-l2 .p-products span { color: #6d28d9; }
+        .p-l3 { width: 84%; background: #dcfce7; border-color: #86efac; color: #166534; }
+        .p-l3 .p-products span { color: #15803d; }
+        .p-l4 { width: 76%; background: #fef3c7; border-color: #fcd34d; color: #92400e; }
+        .p-l4 .p-products span { color: #b45309; }
+        .p-l5 { width: 68%; background: #e0f2fe; border-color: #7dd3fc; color: #075985; }
+        .p-l5 .p-products span { color: #0369a1; }
+
+        /* 两列布局 */
+        .two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; height: 100%;}
+        .spell-box { background: #fffbeb; border: 4px dashed #f59e0b; padding: 30px; border-radius: 20px; font-size: 26px; position: relative; }
+        .formula-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .formula-card { background: #f0fdf4; border-left: 10px solid #22c55e; padding: 20px; border-radius: 0 20px 20px 0; }
+        .formula-card h3 { font-size: 30px; color: #166534; margin-bottom: 10px; }
+        .formula-card p { font-size: 22px; color: #15803d; margin: 0; line-height: 1.4;}
+        .vs-box { display: flex; align-items: stretch; gap: 30px; height: 100%;}
+        .bad-prompt { flex: 1; background: #fef2f2; border: 4px solid #ef4444; padding: 30px; border-radius: 20px; }
+        .good-prompt { flex: 1; background: #ecfdf5; border: 4px solid #10b981; padding: 30px; border-radius: 20px; }
+        .vs-icon { align-self: center; font-size: 60px; font-family: 'ZCOOL KuaiLe'; color: #f59e0b; }
+        
+        .weakness-list { display: flex; flex-direction: column; gap: 16px; }
+        .weakness-item { display: flex; align-items: center; background: #fff; border: 3px solid #f87171; border-radius: 20px; padding: 15px 25px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); }
+        .w-icon { font-size: 50px; margin-right: 25px; background: #fee2e2; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; border-radius: 50%; flex-shrink: 0; }
+        .w-content { flex: 1; }
+        .w-content h4 { font-size: 26px; color: #991b1b; margin-bottom: 5px; font-family: 'ZCOOL KuaiLe', cursive;}
+        .w-content p { font-size: 20px; color: #475569; margin: 0; line-height: 1.4; }
+        .w-action { background: #fef2f2; padding: 10px 15px; border-radius: 8px; margin-top: 8px; border-left: 6px solid #ef4444; font-size: 18px; color: #b91c1c; font-weight: bold;}
+    </style>
+</head>
+<body>
+
+    <!-- Slide 1 -->
+    <div class="slide title-slide">
+        <h1>给小学生的 AI 魔法课</h1>
+        <p>AI 金字塔全景图 & 提示词工程 (2026更新版)</p>
+        <div style="font-size: 150px; margin-top: 40px;">🧙‍♂️🤖✨</div>
+    </div>
+
+    <!-- Slide 2: 金字塔结构页 (修复高度溢出问题) -->
+    <div class="slide">
+        <h2 class="slide-header">1. AI 机器人的“金字塔”结构 & 2026 最新产品</h2>
+        <div class="content">
+            <div class="pyramid-container">
+                
+                <!-- L1: 底层基础 -->
+                <div class="pyramid-layer p-l1">
+                    <div class="p-title"><i class="fa-solid fa-brain"></i> 第一层：大模型 (LLM) - 机器人的“超级大脑”</div>
+                    <div class="p-products">
+                        <span>GPT-5 / GPT-5o (OpenAI)</span>
+                        <span>Gemini 3.5 Pro / Omni (Google)</span>
+                        <span>Claude 4 (Anthropic)</span>
+                        <span>DeepSeek-V3 (深度求索)</span>
+                        <span>Llama 4 (Meta)</span>
+                        <span>通义千问 Qwen 3</span>
+                        <span>文心大模型 5.0</span>
+                    </div>
+                </div>
+
+                <!-- L2: 协议层 -->
+                <div class="pyramid-layer p-l2">
+                    <div class="p-title"><i class="fa-solid fa-plug"></i> 第二层：框架与协议 (MCP) - 连接世界的“万能数据线”</div>
+                    <div class="p-products">
+                        <span>MCP 模型上下文协议</span>
+                        <span>LangChain</span>
+                        <span>Dify 工作流</span>
+                        <span>AutoGen</span>
+                    </div>
+                </div>
+
+                <!-- L3: 工具层 -->
+                <div class="pyramid-layer p-l3">
+                    <div class="p-title"><i class="fa-solid fa-screwdriver-wrench"></i> 第三层：技能工具 (Skills) - 干活的“机器手脚”</div>
+                    <div class="p-products">
+                        <span>SearchGPT / Perplexity</span>
+                        <span>Midjourney v7</span>
+                        <span>Sora / 可灵(Kling) v2</span>
+                        <span>Runway Gen-4</span>
+                        <span>Suno v4</span>
+                        <span>高级代码解释器</span>
+                    </div>
+                </div>
+
+                <!-- L4: 智能体层 -->
+                <div class="pyramid-layer p-l4">
+                    <div class="p-title"><i class="fa-solid fa-robot"></i> 第四层：智能体 (Agent) - 自动跑腿的“数字小秘书”</div>
+                    <div class="p-products">
+                        <span>扣子 (Coze)</span>
+                        <span>Google Astra</span>
+                        <span>Devin (AI程序员)</span>
+                        <span>GPTs 商店</span>
+                        <span>钉钉/飞书AI助理</span>
+                    </div>
+                </div>
+
+                <!-- L5: 顶层应用 -->
+                <div class="pyramid-layer p-l5">
+                    <div class="p-title"><i class="fa-solid fa-mobile-screen"></i> 第五层：应用层 (App) - 漂亮的“聊天外衣”</div>
+                    <div class="p-products">
+                        <span>ChatGPT</span>
+                        <span>豆包</span>
+                        <span>Kimi 智能助手</span>
+                        <span>Claude.ai</span>
+                        <span>秘塔搜索</span>
+                        <span>NotebookLM</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide">
+        <h2 class="slide-header">2. 我们平时用的软件在金字塔的哪层？</h2>
+        <div class="content two-cols">
+            <div>
+                <p><strong>我们常用的“豆包”或“Kimi”，其实都在金字塔的最顶层（App层）！</strong></p>
+                <p>它们就像穿在最外面的漂亮衣服，让你能轻松打字聊天。</p>
+                <p>但它们真正的本事，来自于底层的<strong>超级大脑（第一层 LLM）</strong>。</p>
+                <p style="color:#d97706; font-weight:bold; margin-top:20px;">进阶玩法：<br>如果你用 Coze(扣子) 给它设定好规则，让它自己去搜集资料并画图，你就创造了一个智能体（第四层 Agent）！</p>
+            </div>
+            <div style="background: #eff6ff; padding: 40px; border-radius: 30px; text-align: center; border: 4px dashed #3b82f6;">
+                <img src="https://api.iconify.design/fluent-emoji:robot.svg" width="150" style="margin-bottom:20px;">
+                <h3 style="font-size: 40px; color: #1e3a8a; margin-bottom: 10px;">我们眼中的 AI</h3>
+                <p style="font-weight: bold; color: #1d4ed8; font-size: 24px;">外表是第五层 App<br>内心是第一层 大脑</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide">
+        <h2 class="slide-header">3. 什么是“提示词工程”？</h2>
+        <div class="content">
+            <div class="two-cols">
+                <div>
+                    <p style="font-size: 35px; color: #b45309; font-weight: bold;">提示词 (Prompt) = 咒语</p>
+                    <p>AI 的大脑很聪明，但如果你念错咒语，它就会表现得像个大笨蛋。</p>
+                    <p><strong>提示词工程</strong>，就是学习如何精准地点菜，让 AI 100% 听懂你的指挥！</p>
+                </div>
+                <div class="spell-box">
+                    <p><strong>❌ 坏咒语 (随便点菜)：</strong><br>"给我弄点好吃的。" <br><span style="font-size:20px; color:#6b7280;">(厨师不知道你爱吃啥，可能端上苦瓜)</span></p>
+                    <p style="margin-top: 20px;"><strong>✅ 好咒语 (精准点菜)：</strong><br>"我想要一份番茄炒蛋，多放糖少放盐，装在蓝色的盘子里。"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 5 -->
+    <div class="slide">
+        <h2 class="slide-header">4. 施展魔法的“四大天王”公式</h2>
+        <div class="content">
+            <div class="formula-grid">
+                <div class="formula-card">
+                    <h3>👑 1. 角色 (Role)</h3>
+                    <p>让 AI 戴上面具变成专家。<br><em>"你是一个幽默的历史老师。"</em></p>
+                </div>
+                <div class="formula-card" style="border-left-color: #3b82f6; background: #eff6ff;">
+                    <h3 style="color: #1e3a8a;">🎯 2. 任务 (Task)</h3>
+                    <p style="color: #1d4ed8;">明确告诉它你要什么。<br><em>"请给我讲恐龙是怎么灭绝的。"</em></p>
+                </div>
+                <div class="formula-card" style="border-left-color: #f59e0b; background: #fffbeb;">
+                    <h3 style="color: #b45309;">🚦 3. 要求 (Steps)</h3>
+                    <p style="color: #b45309;">告诉它必须遵守的规则。<br><em>"用五年级能懂的词，用乐高打比方。"</em></p>
+                </div>
+                <div class="formula-card" style="border-left-color: #8b5cf6; background: #faf5ff;">
+                    <h3 style="color: #5b21b6;">📦 4. 格式 (Format)</h3>
+                    <p style="color: #6d28d9;">你希望它输出什么样子。<br><em>"请用讲故事的形式，并出2道选择题。"</em></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 6 -->
+    <div class="slide">
+        <h2 class="slide-header">5. 咒语大比拼：青铜 VS 王者</h2>
+        <div class="content">
+            <div class="vs-box">
+                <div class="bad-prompt">
+                    <h3 style="color: #b91c1c; font-size: 35px; margin-bottom: 20px;">🥉 青铜玩家提问</h3>
+                    <p style="font-size: 35px; font-weight: bold; color: #ef4444;">"什么是黑洞？"</p>
+                    <p style="font-size: 22px; margin-top: 30px;">结果：AI 会给你一堆看不懂的物理公式和复杂词汇，让你昏昏欲睡。</p>
+                </div>
+                <div class="vs-icon">VS</div>
+                <div class="good-prompt">
+                    <h3 style="color: #047857; font-size: 35px; margin-bottom: 20px;">🏆 王者玩家提问</h3>
+                    <p style="font-size: 26px; color: #059669; font-weight: bold; line-height: 1.5;">
+                        "你是一个幽默的太空导游【角色】。<br>
+                        请给10岁小朋友解释黑洞【任务】。<br>
+                        多用吸尘器打比方【要求】。<br>
+                        最后出 2 道选择题考考我【格式】。"
+                    </p>
+                    <p style="font-size: 22px; margin-top: 20px;">结果：得到一篇超级有趣的互动科普文章！</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 7 -->
+    <div class="slide">
+        <h2 class="slide-header">6. AI 的弱点与边界 (千万要警惕！)</h2>
+        <div class="content">
+            <div class="weakness-list">
+                <div class="weakness-item">
+                    <div class="w-icon">🤥</div>
+                    <div class="w-content">
+                        <h4>1. 幻觉 (会胡说八道)</h4>
+                        <p>AI 像个爱接话茬的鹦鹉。如果不懂，它会编造一个听起来很像真的假答案。</p>
+                        <div class="w-action">🛡️ 应对方法：重要的知识（年份、公式）必须去查书本核实！</div>
+                    </div>
+                </div>
+                <div class="weakness-item" style="border-color: #fb923c;">
+                    <div class="w-icon" style="background: #ffedd5;">🧮</div>
+                    <div class="w-content">
+                        <h4 style="color: #c2410c;">2. 纯逻辑与数学计算差</h4>
+                        <p>语言大脑擅长“文字接龙”，但不擅长真正的硬核逻辑计算。</p>
+                        <div class="w-action" style="background: #fff7ed; border-color: #f97316; color: #c2410c;">🛡️ 应对方法：让它调用“计算器插件”或“代码工具”来算数。</div>
+                    </div>
+                </div>
+                <div class="weakness-item" style="border-color: #60a5fa;">
+                    <div class="w-icon" style="background: #dbeafe;">🧊</div>
+                    <div class="w-content">
+                        <h4 style="color: #1d4ed8;">3. 没有真实感情与常识</h4>
+                        <p>AI 没吃过冰淇淋，体会不到真实的甜味和快乐。它的一切都来自数据。</p>
+                        <div class="w-action" style="background: #eff6ff; border-color: #3b82f6; color: #1d4ed8;">🛡️ 应对方法：去感受真实生活，那是人类独一无二的超能力。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
