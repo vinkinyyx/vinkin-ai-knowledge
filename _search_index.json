@@ -231,9 +231,9 @@
     "short": "议事王国 + 8 大臣讲清 Self-Attention"
   },
   "ai_core_principles.html": {
-    "title": "AI 核心原理图谱",
-    "category": "大模型原理",
-    "emoji": "🧠",
+    "title": "AI 核心名词解释",
+    "category": "AI 新手村",
+    "emoji": "📖",
     "tags": [
       "12 概念",
       "SVG 信息图",
@@ -352,7 +352,7 @@
   },
   "kids_ai_personal_agent.html": {
     "title": "创造你的专属智能体",
-    "category": "亲子 AI 启蒙",
+    "category": "AI 新手村",
     "emoji": "🤖",
     "tags": [
       "6 页",
@@ -371,7 +371,7 @@
   },
   "kids_ai_magic_course.html": {
     "title": "小学生 AI 魔法课",
-    "category": "亲子 AI 启蒙",
+    "category": "AI 新手村",
     "emoji": "🧙‍♂️",
     "tags": [
       "7 页",
@@ -395,7 +395,7 @@
   },
   "kids_ai_agent_practice.html": {
     "title": "智能体实操 · 全流程开发手册",
-    "category": "亲子 AI 启蒙",
+    "category": "AI 新手村",
     "emoji": "🛠️",
     "tags": [
       "1 页",
