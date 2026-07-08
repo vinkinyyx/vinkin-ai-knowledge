@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="kids-playful">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>小 AI 探险家：23 页完整课 - Vinkin AI Knowledge</title>
+<meta name="description" content="小 AI 探险家：23 页完整 AI 魔法课（2 周 4 课），含大脑小镇/武侠世界/智能管家/小达人 4 大拟人故事 + 6 个动手实操 + AI 伦理规则。由 Gemini 生成。">
+<style>
+/* ==========================================================
+   终极幻灯片渲染引擎：绝对比例、防止溢出、全局自适应
+   ========================================================== */
+
+:root {
+  --accent: #3b82f6;
+  --accent-2: #8b5cf6;
+  --accent-3: #10b981;
+  --warn: #f59e0b;
+  --bad: #ef4444;
+  --good: #10b981;
+  --text-1: #0f172a;
+  --text-2: #334155;
+  --text-3: #64748b;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --border: #e2e8f0;
+  --radius: 20px;
+  --radius-sm: 12px;
+  --shadow: 0 4px 15px rgba(0,0,0,0.03);
+  --font-mono: "Fira Code", monospace;
+}
+
+* { box-sizing: border-box; }
+
+/* 1. 沉浸式放映台背景 */
+body, html {
+  margin: 0; padding: 0; width: 100%; height: 100%;
+  background-color: #1e293b; /* 极客深灰背景 */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", sans-serif;
+  color: var(--text-1);
+  overflow: hidden;
+}
+
+/* 2. 幻灯片滚动容器 */
+.deck {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 水平居中 */
+}
+
+/* 3. 严格 16:9 幻灯片画板 (1280x720) */
+.slide {
+  width: 1280px;
+  height: 720px;
+  min-height: 720px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  
+  margin: calc(50vh - 360px) 0; /* 垂直居中 */
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  transform-origin: center center;
+}
+
+/* 屏幕尺寸自适应等比例缩放 (绝不破坏内部排版) */
+@media (max-width: 1400px), (max-height: 800px) { .slide { transform: scale(0.85); margin: calc(50vh - 306px) 0; } }
+@media (max-width: 1200px), (max-height: 700px) { .slide { transform: scale(0.70); margin: calc(50vh - 252px) 0; } }
+@media (max-width: 900px), (max-height: 600px) { .slide { transform: scale(0.55); margin: calc(50vh - 198px) 0; } }
+
+/* 4. 封面与全屏页处理 */
+.slide[data-title="Cover"] { padding: 0; }
+.cover-illustration { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+.cover-scrim { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; background: rgba(0,0,0,0.15); }
+.cover-content { 
+  position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; 
+  display: flex; flex-direction: column; justify-content: center; 
+  padding: 0 100px;
+}
+.cover-content .deck-header { position: absolute; top: 40px; left: 100px; right: 100px; display: flex; justify-content: space-between; font-weight: bold; }
+.cover-content .h1 { font-size: 80px; margin: 20px 0; font-weight: 900; text-shadow: 0 4px 20px rgba(0,0,0,0.2); line-height: 1.1; }
+.cover-content .lede { font-size: 24px; font-weight: 600; margin-bottom: 30px; }
+.cover-content .kicker { background: transparent; padding: 0; font-size: 20px; }
+.cover-content .pill { padding: 10px 24px; font-size: 16px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; border-radius: 30px; }
+
+/* 5. 幻灯片全局内部边距与标题字号 */
+.slide.dense { padding: 40px 70px 60px; }
+.slide.center { justify-content: center; align-items: center; text-align: center; padding: 40px 100px;}
+
+.kicker { font-size: 14px; font-weight: 800; color: #fff; background: var(--accent); padding: 4px 14px; border-radius: 20px; display: inline-block; margin-bottom: 12px; letter-spacing: 1px; }
+.dense h2 { font-size: 36px; font-weight: 900; color: var(--text-1); margin: 0 0 10px; line-height: 1.2; }
+.dense .lede { font-size: 18px; color: var(--text-2); margin: 0 0 25px; line-height: 1.5; font-weight: 500; }
+
+h3 { font-size: 20px; font-weight: 800; margin: 0 0 10px; color: var(--text-1); }
+h4 { font-size: 16px; font-weight: 800; margin: 0 0 6px; color: var(--text-1); }
+h5 { font-size: 15px; font-weight: 800; margin: 0 0 6px; color: var(--text-1); }
+p, li { font-size: 14px; line-height: 1.5; color: var(--text-2); margin: 0; font-weight: 500;}
+ul { padding-left: 20px; margin-top: 8px; }
+li { margin-bottom: 6px; }
+
+/* 6. 内容区网格引擎 (彻底防止内容超出 720px 高度) */
+.content { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+
+/* 左右双列排版 (第4, 7, 12, 14, 17页) */
+.grid.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; height: 100%; min-height: 0; }
+
+/* 6宫格：严格 2行3列 (第6, 9, 16, 20页) */
+.cat-grid, .model-cards, .agent-cards, .resource-map { 
+  display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); 
+  gap: 20px; height: 100%; min-height: 0; 
+}
+
+/* 4宫格：严格 2行2列 (第7, 12, 17, 21页) */
+.prompt-tips, .ethics-list { 
+  display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); 
+  gap: 15px; height: 100%; min-height: 0;
+}
+.prompt-tips > div:nth-child(3) { grid-column: 1 / -1; } /* 跨列处理 */
+
+/* 7. 卡片统一质感 */
+.card, .cat-card, .model-card, .agent-card, .resource-card, .toc-card, .ethics-item, .prompt-tip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* 8. 组件精细化修整 */
+.compact-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+.compact-table td { padding: 10px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.compact-table tr:last-child td { border-bottom: none; }
+
+.pill { font-size: 13px; padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); display: inline-flex; align-items: center; background: #fff; font-weight: 700; color: var(--text-2); margin-bottom: 6px;}
+.tag { font-size: 12px; padding: 4px 10px; border-radius: 6px; background: var(--surface-2); color: var(--text-3); display: inline-block; margin-top: auto; font-weight: 700;}
+
+/* Emoji/Icons */
+.emoji, .icon { font-size: 26px; margin-bottom: 8px; display: block; line-height: 1; }
+.step-item span:first-child { font-size: 20px; }
+
+/* 步骤条重构 (第7, 12, 17页) */
+.steps { display: grid; grid-template-rows: repeat(4, 1fr); gap: 12px; height: 100%; min-height: 0;}
+.step {
+  position: relative;
+  padding: 10px 15px 10px 55px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  display: flex; flex-direction: column; justify-content: center;
+}
+.step .num {
+  position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+  width: 32px; height: 32px; font-size: 16px; font-weight: 900;
+  background: var(--accent); color: white; border-radius: 50%;
+  display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(59,130,246,0.3);
+}
+
+/* 提示框代码示例 */
+.prompt-tip .eg { display: block; margin-top: 8px; padding: 8px 12px; background: var(--surface-2); border-radius: 6px; font-family: var(--font-mono); font-size: 13px; color: var(--text-2); border: 1px dashed var(--border);}
+
+/* 9. 图文混排页修复 (第5, 10, 15页) */
+.story-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; height: 100%; min-height: 0; align-items: center;}
+.story-img-box { height: 100%; min-height: 380px; border-radius: var(--radius-sm); box-shadow: var(--shadow); position: relative; overflow: hidden; }
+.story-img-box img { width: 100%; height: 100%; object-fit: cover; }
+.img-marker { position: absolute; z-index: 10; display: flex; align-items: center;}
+.marker-dot { width: 16px; height: 16px; background: var(--warn); border: 2px solid white; border-radius: 50%; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+.marker-label { margin-left: 8px; background: rgba(255,255,255,0.95); color: var(--text-1); font-weight: 800; padding: 4px 10px; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 13px; white-space: nowrap; }
+.img-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); padding: 30px 20px 20px; }
+.img-overlay .label { color: white; font-size: 14px; line-height: 1.8;}
+.img-overlay .label span { background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; margin: 0 4px; }
+
+/* 10. 对比页修复 (第11, 18页) */
+.pc, .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; flex: 1; min-height: 0; }
+.vs { grid-template-columns: 1fr 60px 1fr; }
+.pc .card, .vs .card { padding: 25px 30px; justify-content: flex-start; height: 100%; }
+.pc .card ul, .vs .card ul { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; margin-top: 10px; }
+.pc .card li, .vs .card li { margin-bottom: 0; }
+
+.mid { font-size: 24px; font-weight: 900; color: #fff; background: var(--border); border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; margin: auto 0;}
+.alert-box { padding: 15px 20px; border-radius: var(--radius-sm); margin-top: 20px; flex-shrink: 0; border-left: 5px solid var(--warn); background: #fffbeb; }
+
+/* 11. 终极挑战页修复 (第22页) */
+.challenge-box { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-radius: var(--radius); padding: 30px 40px; color: white; display: flex; flex-direction: column; justify-content: center; flex: 1; min-height: 0;}
+.challenge-box h3 { color: white; font-size: 28px; margin-bottom: 10px; }
+.challenge-box p { color: rgba(255,255,255,0.9); font-size: 16px; margin-bottom: 20px; }
+.step-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;}
+.step-item { background: rgba(0,0,0,0.2); padding: 10px 15px; border-radius: 8px; font-size: 14px; color: #fff; display: flex; align-items: center; gap: 8px;}
+.challenge-box .btn { background: white; color: var(--accent); padding: 12px 30px; font-size: 18px; border-radius: 30px; box-shadow: 0 8px 15px rgba(0,0,0,0.2); font-weight: 900; align-self: center; cursor: pointer;}
+.rubric { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 20px; flex-shrink: 0;}
+
+/* 页脚 */
+.deck-footer { position: absolute; bottom: 20px; left: 70px; right: 70px; display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: var(--text-3); border-top: 1px solid var(--border); padding-top: 15px; font-weight: 600; }
+
+/* 颜色强调体系 */
+.border-blue { border-top: 5px solid var(--accent) !important; }
+.border-purple { border-top: 5px solid var(--accent-2) !important; }
+.border-green { border-top: 5px solid var(--accent-3) !important; }
+.border-yellow { border-top: 5px solid var(--warn) !important; }
+.border-red { border-top: 5px solid var(--bad) !important; }
+
+.bg-blue { background: #eff6ff !important; border-color: #93c5fd !important; }
+.bg-green { background: #ecfdf5 !important; border-color: #6ee7b7 !important; }
+.bg-yellow { background: #fffbeb !important; border-color: #fcd34d !important; }
+.bg-purple { background: #f5f3ff !important; border-color: #c4b5fd !important; }
+
+.txt-good { color: var(--good) !important; font-weight: bold; }
+.txt-bad { color: var(--bad) !important; font-weight: bold; }
+
+/* 中间过渡页 */
+.divider-accent { margin: 20px auto; width: 80px; height: 5px; border-radius: 3px; background: #fff;}
+.center h1 { font-size: 68px; color: #fff; margin: 10px 0; }
+.center p { font-size: 22px; color: rgba(255,255,255,0.9); }
+</style>
+</head>
+
+<body data-themes="kids-playful,soft-pastel,memphis-pop,scholar-teal" data-theme-base="./_shared/themes/">
+<div class="deck">
+
+<!-- ============================================================ -->
+<!-- Slide 1: Cover -->
+<!-- ============================================================ -->
+<section class="slide" data-title="Cover">
+  <div class="cover-illustration">
+    <div style="width:100%;height:100%;background:radial-gradient(80% 60% at 30% 40%,rgba(255,107,138,.4),transparent 70%),radial-gradient(70% 50% at 75% 60%,rgba(95,195,228,.35),transparent 70%),linear-gradient(135deg,#ff6b8a,#5fc3e4 55%,#ffd166)"></div>
+  </div>
+  <div class="cover-scrim"></div>
+  <div class="cover-content">
+    <div class="deck-header">
+      <span style="color:rgba(255,255,255,.7);font-size:14px;">AI Explorer · 2026</span>
+      <span style="color:rgba(255,255,255,.7);font-size:14px;">五年级 · 魔法课</span>
+    </div>
+    <div style="display:flex;flex-direction:column;justify-content:center">
+      <p class="kicker">🌟 小AI探险家</p>
+      <h1 class="h1">AI <span style="color:#ffd166">魔法</span>课</h1>
+      <p class="lede">给五年级小学生的 AI 探险之旅 · 2周成为AI小达人</p>
+      <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+        <span class="pill">🤖 GPT-5.5 / Claude 5 / Gemini 3.5</span>
+        <span class="pill">🎨 AI Agent 实操</span>
+        <span class="pill">📚 每课动手做</span>
+        <span class="pill">⚡ 终极挑战</span>
+      </div>
+    </div>
+    <div class="deck-footer" style="border:none!important; bottom:40px;">
+      <span style="color:rgba(255,255,255,.6);">给五年级小学生的 AI 课</span>
+      <span style="color:rgba(255,255,255,.6);">1 / 23</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 2: TOC -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="目录">
+  <p class="kicker">Contents · 课程目录</p>
+  <h2>我们将学到什么？</h2>
+  <p class="lede">4节课 × 2小时 = 8小时，从认识AI到搭建自己的AI助手</p>
+  <div class="content">
+    <div class="prompt-tips" style="gap: 20px;">
+      <div class="toc-card border-blue">
+        <div style="display:flex; gap:15px; align-items:flex-start;">
+          <div style="font-size:32px; font-weight:900; color:var(--text-3);">01</div>
+          <div>
+            <h4>🤔 AI是什么？</h4>
+            <p>AI不是魔法，是数据训练出的机器大脑。认识2026年最新大模型。</p>
+            <span class="tag">🎯 理解AI基本原理</span>
+          </div>
+        </div>
+      </div>
+      <div class="toc-card border-purple">
+        <div style="display:flex; gap:15px; align-items:flex-start;">
+          <div style="font-size:32px; font-weight:900; color:var(--text-3);">02</div>
+          <div>
+            <h4>🗺️ AI工具大观园</h4>
+            <p>6大分类：文字/绘画/视频/音乐/编程/搜索。每个AI的特长和软肋。</p>
+            <span class="tag">🎯 熟悉AI工具生态</span>
+          </div>
+        </div>
+      </div>
+      <div class="toc-card border-green">
+        <div style="display:flex; gap:15px; align-items:flex-start;">
+          <div style="font-size:32px; font-weight:900; color:var(--text-3);">03</div>
+          <div>
+            <h4>🤖 AI Agent智能体</h4>
+            <p>Agent = 会思考+会动手的"AI管家"。2026最新Agent工具。</p>
+            <span class="tag">🎯 理解Agent概念并实操</span>
+          </div>
+        </div>
+      </div>
+      <div class="toc-card border-yellow">
+        <div style="display:flex; gap:15px; align-items:flex-start;">
+          <div style="font-size:32px; font-weight:900; color:var(--text-3);">04</div>
+          <div>
+            <h4>🚀 成为AI小达人</h4>
+            <p>自学AI的宝藏地图 + AI伦理4条规矩。边界讨论+终极挑战。</p>
+            <span class="tag">🎯 建立AI素养和伦理观</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span>小AI探险家</span><span>2 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 3: Section Divider - Week 1 -->
+<!-- ============================================================ -->
+<section class="slide tc center" data-title="第一周" style="background:linear-gradient(135deg,var(--accent),var(--accent-2));">
+  <p class="kicker" style="background:transparent; font-size:18px;">第一周 · 认识AI世界</p>
+  <h1>AI 是什么？</h1>
+  <div class="divider-accent"></div>
+  <p>从魔法盒子到机器大脑，揭开AI的奥秘</p>
+  <div class="deck-footer" style="border:none!important; bottom:40px;">
+    <span style="color:rgba(255,255,255,.8);">第一周</span><span style="color:rgba(255,255,255,.8);">3 / 23</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 4: AI定义 -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="AI定义">
+  <p class="kicker">Lesson 1 · 什么是AI</p>
+  <h2>AI = 用数据训练出来的「机器大脑」</h2>
+  <p class="lede">就像你学数学做的题越多越厉害，AI也是"吃"的数据越多越聪明。</p>
+  <div class="content">
+    <div class="grid g2">
+      <div class="card border-blue">
+        <h3>🧠 AI的4个核心概念</h3>
+        <table class="compact-table">
+          <tr><td style="font-weight:800;">🎯 训练</td><td>让AI做大量练习题，每次答对就强化"正确路径"</td></tr>
+          <tr><td style="font-weight:800;">📊 数据</td><td>AI的"教科书"——互联网上所有文字、图片、视频、代码</td></tr>
+          <tr><td style="font-weight:800;">🧠 模型</td><td>AI的"大脑"——训练完成后得到的知识网络</td></tr>
+          <tr><td style="font-weight:800;">💡 推理</td><td>AI"动脑筋"的过程——用学到的知识回答新问题</td></tr>
+        </table>
+        <div class="prompt-tip bg-blue" style="margin-top:auto;">
+          <p><b>💡 类比：</b>训练AI就像你学骑自行车——摔了很多次，找到平衡感，最后不用想就能骑。</p>
+        </div>
+      </div>
+      <div class="card border-purple">
+        <h3>🔍 2026年你身边的AI工具</h3>
+        <table class="compact-table">
+          <tr><td style="font-weight:800;">📱 豆包</td><td>字节跳动 · 对话/翻译/写作，月活超3亿</td></tr>
+          <tr><td style="font-weight:800;">📱 Kimi</td><td>月之暗面 · 长文档阅读，上下文200万字</td></tr>
+          <tr><td style="font-weight:800;">📱 文心一言</td><td>百度 · 全能型，ERNIE 4.5 模型加持</td></tr>
+          <tr><td style="font-weight:800;">📱 通义千问</td><td>阿里巴巴 · 多模态，免费开源Qwen系列</td></tr>
+          <tr><td style="font-weight:800;">📱 ChatGPT</td><td>OpenAI · GPT-5.5 Pro，推理能力超强</td></tr>
+          <tr><td style="font-weight:800;">📱 DeepSeek</td><td>深度求索 · 国产开源，免费使用</td></tr>
+        </table>
+        <div style="margin-top:auto;">
+          <span class="tag">💡 2026年全球AI模型超过2000个</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span>第一周 · 第1课</span><span>4 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 5: Story - AI大脑小镇 -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="AI大脑小镇">
+  <p class="kicker">🎨 故事化讲解 · 一图看懂LLM</p>
+  <h2>「AI 大脑小镇」</h2>
+  <div class="content">
+    <div class="story-layout">
+      <div class="story-img-box">
+        <img src="https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="AI大脑小镇">
+        <div class="img-marker" style="top:25%;left:22%"><div class="marker-dot"></div><div class="marker-label">🏠 神经元</div></div>
+        <div class="img-marker" style="top:50%;left:55%"><div class="marker-dot"></div><div class="marker-label">👫 数据传递</div></div>
+        <div class="img-marker" style="top:70%;left:30%"><div class="marker-dot"></div><div class="marker-label">🌟 正确路径</div></div>
+        <div class="img-marker" style="top:35%;left:70%"><div class="marker-dot"></div><div class="marker-label">🌈 知识网络</div></div>
+        <div class="img-overlay">
+          <div class="label">🎨 <b>AI大脑小镇</b><br><span>🏠 繁星光点</span> = 神经元 <span>👫 能量传递</span> = 数据 <span>🌟 发光轨迹</span> = 路径</div>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:16px; margin-bottom: 20px;">大语言模型（LLM）听起来很复杂，把它想象成一个热闹的小镇就简单了。</p>
+        <div class="pill bg-blue" style="width:100%;">🏠 <b>神经元</b> = 小镇里成千上万的小房子，GPT-5.5有超10万亿个</div>
+        <div class="pill bg-blue" style="width:100%;">👫 <b>数据</b> = 在小路上走来走去送信的小人，传递信息</div>
+        <div class="pill bg-blue" style="width:100%;">📚 <b>训练</b> = 让小人们大量读书，修好道路（调整连接权重）</div>
+        <div class="pill bg-blue" style="width:100%;">💡 <b>推理</b> = 小人们一起讨论找出答案，走的路越多回答越准</div>
+        <div class="pill bg-yellow" style="width:100%; margin-top:10px;">🧑‍🏫 <b>老师的话：</b>GPT-5.5的"小镇"比人脑860亿个神经元还多！</div>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span>🎨 故事化讲解</span><span>5 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 6: 大模型速览 -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="大模型速览">
+  <p class="kicker">2026 · 最新动态</p>
+  <h2>2026年最新大模型速览</h2>
+  <p class="lede">AI界最火的"明星"们，你认识几个？写文章找GPT，写代码找Claude，查资料找Gemini。</p>
+  <div class="content">
+    <div class="model-cards">
+      <div class="model-card border-blue">
+        <h4><span class="emoji">🤖</span> GPT-5.5 Pro</h4>
+        <p style="font-size:13px; color:var(--text-3); margin-bottom:10px;">OpenAI · 全能型王者 · 约50万亿参数</p>
+        <p class="txt-good">✅ 超强推理+多模态理解</p>
+        <p class="txt-good" style="margin-bottom:8px;">✅ 生态最成熟，市场份额68%</p>
+        <p class="txt-bad">⚠️ 部分功能需付费订阅</p>
+      </div>
+      <div class="model-card border-purple">
+        <h4><span class="emoji">🎭</span> Claude Fable 5</h4>
+        <p style="font-size:13px; color:var(--text-3); margin-bottom:10px;">Anthropic · 安全型专家 · 约30万亿参数</p>
+        <p class="txt-good">✅ 代码能力业界最强</p>
+        <p class="txt-good" style="margin-bottom:8px;">✅ 超长文档处理(500K tokens)</p>
+        <p class="txt-bad">⚠️ 创意写作能力较弱</p>
+      </div>
+      <div class="model-card border-green">
+        <h4><span class="emoji">🔮</span> Gemini 3.5 Ultra</h4>
+        <p style="font-size:13px; color:var(--text-3); margin-bottom:10px;">Google · 多模态之王 · 百万级上下文</p>
+        <p class="txt-good">✅ 视频理解能力超强</p>
+        <p class="txt-good" style="margin-bottom:8px;">✅ 一口气看完《三体》三部曲</p>
+        <p class="txt-bad">⚠️ 国内访问受限</p>
+      </div>
+      <div class="model-card border-yellow">
+        <h4><span class="emoji">🐋</span> DeepSeek-R1</h4>
+        <p style="font-size:13px; color:var(--text-3); margin-bottom:10px;">深度求索 · 国产之光 · 完全开源免费</p>
+        <p class="txt-good">✅ 推理极强，数学竞赛超越GPT</p>
+        <p class="txt-good" style="margin-bottom:8px;">✅ API价格仅为GPT的1/10</p>
+        <p class="txt-bad">⚠️ 多模态能力较弱</p>
+      </div>
+      <div class="model-card border-red">
+        <h4><span class="emoji">🌊</span> 通义千问3</h4>
+        <p style="font-size:13px; color:var(--text-3); margin-bottom:10px;">阿里巴巴 · 国产全能 · 开源Qwen3</p>
+        <p class="txt-good">✅ 多模态+中文理解强</p>
+        <p class="txt-good" style="margin-bottom:8px;">✅ 阿里系生态整合好</p>
+        <p class="txt-bad">⚠️ 国际影响力较小</p>
+      </div>
+      <div class="model-card border-blue">
+        <h4><span class="emoji">🧊</span> 豆包 (字节跳动)</h4>
+        <p style="font-size:13px; color:var(--text-3); margin-bottom:10px;">月活超3亿 · 中文场景最优</p>
+        <p class="txt-good">✅ 对话/翻译/写作体验流畅</p>
+        <p class="txt-good" style="margin-bottom:8px;">✅ 支持语音输入+图片识别</p>
+        <p class="txt-bad">⚠️ 复杂逻辑推理较弱</p>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span>第一周 · 第1课</span><span>6 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 7: 动手体验 -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="动手体验">
+  <p class="kicker">Hands-on · 动手做</p>
+  <h2>用AI帮我写一份暑假计划</h2>
+  <p class="lede">拿起豆包或Kimi，学会写提示词（Prompt）。提示词越清晰，AI的回答越好。</p>
+  <div class="content">
+    <div class="grid g2">
+      <div class="steps">
+        <div class="step"><div class="num">1</div><h4>打开豆包/Kimi</h4><p>登录你常用的AI工具，准备好输入框。建议同时打开2-3个工具方便对比。</p></div>
+        <div class="step"><div class="num">2</div><h4>写提示词（Prompt）</h4><p>输入："帮我写一份暑假计划，包含学习、运动。我是五年级学生，暑假60天。"</p></div>
+        <div class="step"><div class="num">3</div><h4>看回答 + 追问优化</h4><p>观察AI生成了什么。再问："能不能更具体一些？把运动时间增加到每天1小时"</p></div>
+        <div class="step"><div class="num">4</div><h4>对比不同AI的结果</h4><p>把同样的问题给不同AI试试。观察：谁的计划最合理？谁最详细？</p></div>
+      </div>
+      <div class="prompt-tips">
+        <div class="prompt-tip bg-blue">
+          <h5>📝 提示词黄金法则</h5>
+          <p>① <b>具体</b>：说清楚你要什么<br>② <b>背景</b>：给出角色与约束<br>③ <b>格式</b>：指定输出格式<br>④ <b>迭代</b>：先简单指令，再追问</p>
+        </div>
+        <div class="prompt-tip bg-yellow">
+          <h5>❌ 常见错误</h5>
+          <p>① <b>太模糊</b> → "帮我写个计划"<br>② <b>一次问太多</b> → "写计划并画图"<br>③ <b>不给反馈</b> → 不满意不说，AI不知道怎么改</p>
+        </div>
+        <div class="prompt-tip bg-green">
+          <h5>🎯 进阶技巧：角色设定 + 思维链</h5>
+          <p>给AI设定一个"角色" + 要求它"逐步思考"，回答质量会大幅提升！</p>
+          <span class="eg">"你是一名小学班主任，请逐步思考：首先分析五年级学生的暑期需求，然后制定分阶段的计划，最后给出具体安排。"</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span>第一周 · 第1课 · 动手实操</span><span>7 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 8: Section Divider - AI工具大观园 -->
+<!-- ============================================================ -->
+<section class="slide tc center" data-title="AI工具大观园" style="background:linear-gradient(135deg,var(--accent-2),var(--accent-3));">
+  <p class="kicker" style="background:transparent; font-size:18px;">第一周 · 第2课</p>
+  <h1>AI 工具大观园</h1>
+  <div class="divider-accent"></div>
+  <p>分类、特长与局限，体验AI画图+AI写歌</p>
+  <div class="deck-footer" style="border:none!important; bottom:40px;">
+    <span style="color:rgba(255,255,255,.8);">第一周 · 第2课</span><span style="color:rgba(255,255,255,.8);">8 / 23</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 9: AI分类 -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="AI分类">
+  <p class="kicker">AI Taxonomy · 分类地图</p>
+  <h2>AI工具大家族的「独门绝技」</h2>
+  <p class="lede">每个AI都有自己的特长和软肋，选对工具事半功倍。没有"最强"的AI，只有"最适合"的。</p>
+  <div class="content">
+    <div class="cat-grid">
+      <div class="cat-card border-blue">
+        <h4><span class="emoji">📝</span> 文字AI</h4>
+        <p style="margin-bottom:10px;">写作文、翻译、总结、问答</p>
+        <div style="border-top:1px dashed var(--border); padding-top:10px; flex:1;">
+          <p><b>代表：</b>豆包、Kimi</p>
+          <p class="txt-good">✅ 快速写作、翻译</p>
+          <p class="txt-bad">❌ 有"幻觉"问题</p>
+        </div>
+      </div>
+      <div class="cat-card border-purple">
+        <h4><span class="emoji">🎨</span> 绘画AI</h4>
+        <p style="margin-bottom:10px;">根据文字描述生成图片/插画</p>
+        <div style="border-top:1px dashed var(--border); padding-top:10px; flex:1;">
+          <p><b>代表：</b>通义万相、Midjourney</p>
+          <p class="txt-good">✅ 快速出图，风格多样</p>
+          <p class="txt-bad">❌ 手指画错，文字乱码</p>
+        </div>
+      </div>
+      <div class="cat-card border-green">
+        <h4><span class="emoji">🎬</span> 视频AI</h4>
+        <p style="margin-bottom:10px;">文字/图片生成短视频动画</p>
+        <div style="border-top:1px dashed var(--border); padding-top:10px; flex:1;">
+          <p><b>代表：</b>可灵AI、Sora</p>
+          <p class="txt-good">✅ 快速生成视频素材</p>
+          <p class="txt-bad">❌ 视频时长通常很短</p>
+        </div>
+      </div>
+      <div class="cat-card border-yellow">
+        <h4><span class="emoji">🎵</span> 音乐AI</h4>
+        <p style="margin-bottom:10px;">作词、作曲、生成完整歌曲</p>
+        <div style="border-top:1px dashed var(--border); padding-top:10px; flex:1;">
+          <p><b>代表：</b>Suno、天工音乐</p>
+          <p class="txt-good">✅ 零基础也能写歌</p>
+          <p class="txt-bad">❌ 歌词有时不通顺</p>
+        </div>
+      </div>
+      <div class="cat-card border-red">
+        <h4><span class="emoji">💻</span> 编程AI</h4>
+        <p style="margin-bottom:10px;">写代码、找bug、解释逻辑</p>
+        <div style="border-top:1px dashed var(--border); padding-top:10px; flex:1;">
+          <p><b>代表：</b>Cursor、Copilot</p>
+          <p class="txt-good">✅ 快速生成代码</p>
+          <p class="txt-bad">❌ 代码逻辑需要人核验</p>
+        </div>
+      </div>
+      <div class="cat-card border-blue">
+        <h4><span class="emoji">🔍</span> 搜索AI</h4>
+        <p style="margin-bottom:10px;">联网搜索、整合信息附来源</p>
+        <div style="border-top:1px dashed var(--border); padding-top:10px; flex:1;">
+          <p><b>代表：</b>Perplexity、天工</p>
+          <p class="txt-good">✅ 实时检索附来源</p>
+          <p class="txt-bad">❌ 依赖搜索结果质量</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span>第一周 · 第2课</span><span>9 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 10: Story - AI武侠世界 -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="AI武侠世界">
+  <p class="kicker">🎨 故事化讲解 · 一图看懂AI分类</p>
+  <h2>「AI 武侠世界」</h2>
+  <div class="content">
+    <div class="story-layout">
+      <div style="display:flex;flex-direction:column;justify-content:center;">
+        <p style="font-size:16px; margin-bottom:20px;">不同的AI工具就像不同的武林门派，各有各的独门绝技和致命软肋。</p>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="pill bg-blue" style="width:100%;">📝 <b>文字AI = 书生（文派）</b> — 能写万言书，出口成章，但不会画画</div>
+          <div class="pill bg-blue" style="width:100%;">🎨 <b>绘画AI = 画师（丹青派）</b> — 能画出千里江山，但不会写诗</div>
+          <div class="pill bg-blue" style="width:100%;">🎬 <b>视频AI = 导演（影派）</b> — 能拍出精彩大片，但不会算数</div>
+          <div class="pill bg-blue" style="width:100%;">💻 <b>编程AI = 工匠（机巧派）</b> — 能打造精密机关，但不懂人情</div>
+          <div class="pill bg-blue" style="width:100%;">🎵 <b>音乐AI = 琴师（乐音派）</b> — 能谱曲弹奏，但不会写文章</div>
+          <div class="pill bg-yellow" style="width:100%; margin-top:8px;">🧑‍🏫 <b>老师的话：</b>没有"最强"的AI门派，只有"最适合"你的工具。选对工具事半功倍！</div>
+        </div>
+      </div>
+      <div class="story-img-box">
+        <img src="https://images.unsplash.com/photo-1502657877623-f66bf489d236?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="AI武侠世界">
+        <div class="img-marker" style="top:20%;left:25%"><div class="marker-dot"></div><div class="marker-label">📖 书生=文字AI</div></div>
+        <div class="img-marker" style="top:40%;left:60%"><div class="marker-dot"></div><div class="marker-label">🎨 画师=绘画AI</div></div>
+        <div class="img-marker" style="top:60%;left:30%"><div class="marker-dot"></div><div class="marker-label">🎬 导演=视频AI</div></div>
+        <div class="img-marker" style="top:75%;left:65%"><div class="marker-dot"></div><div class="marker-label">💻 工匠=编程AI</div></div>
+        <div class="img-overlay">
+          <div class="label">🎨 <b>AI武侠世界</b><br><span>📖 书生</span> = 文字AI <span>🎨 画师</span> = 绘画AI <span>🎬 摄像机</span> = 视频AI <span>💻 工匠</span> = 编程AI <span>🎵 琴师</span> = 音乐AI</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span>🎨 故事化讲解</span><span>10 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 11: Pros/Cons -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="特长与局限">
+  <p class="kicker">Trade-offs · 诚实的取舍</p>
+  <h2>AI的「特长」与「软肋」</h2>
+  <p class="lede">AI不是万能的，知道它擅长什么和不擅长什么，才能用好它。就像你不会让鱼去爬树。</p>
+  <div class="content">
+    <div class="pc">
+      <div class="card good-side">
+        <h3 style="display:flex;align-items:center;gap:10px; color:var(--good);"><span style="background:var(--good);color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;">✓</span> AI 擅长的事</h3>
+        <ul>
+          <li>📚 <b>快速阅读</b> — 10秒读完100页书，提炼核心要点</li>
+          <li>🌍 <b>翻译</b> — 中英日韩法德，3秒翻译一段话</li>
+          <li>🎨 <b>创意生成</b> — 输入"一只穿宇航服的猫"，AI秒出图</li>
+          <li>🔢 <b>数据分析</b> — 给AI一堆数据，5分钟生成图表总结</li>
+          <li>🧹 <b>整理归纳</b> — 把杂乱无章的笔记变成结构化文档</li>
+          <li>💡 <b>头脑风暴</b> — 要写作文没思路？让AI给10个方向</li>
+          <li>📖 <b>解释概念</b> — "用三年级听懂的话解释光合作用"</li>
+        </ul>
+      </div>
+      <div class="card bad-side">
+        <h3 style="display:flex;align-items:center;gap:10px; color:var(--bad);"><span style="background:var(--bad);color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;">✗</span> AI 不擅长的事</h3>
+        <ul>
+          <li>❤️ <b>真实情感</b> — AI说"我理解你"，但它其实没有感受</li>
+          <li>🤔 <b>真正思考</b> — AI不懂"为什么"，它只是预测下一个字</li>
+          <li>🎯 <b>判断真假</b> — AI会"幻觉"：编造看起来合理但错误的信息</li>
+          <li>📅 <b>预测未来</b> — AI不能算命，不能准确预测考试题</li>
+          <li>🤝 <b>人际交往</b> — AI不能代替真实的朋友和家人</li>
+          <li>⚖️ <b>道德判断</b> — AI不知道什么是对什么是错</li>
+          <li>🔢 <b>精确计算</b> — 复杂的硬核数学题AI可能算错</li>
+        </ul>
+      </div>
+    </div>
+    <div class="alert-box">
+      <p style="margin:0;"><b>⚡ 关键提醒：AI的"幻觉"问题</b> — AI有时会非常自信地给出错误答案，像"做梦"一样编造事实。比如问"李白用什么手机"，它可能回答"iPhone 15"。<b>重要信息一定要自己验证！</b></p>
+    </div>
+  </div>
+  <div class="deck-footer"><span>第一周 · 第2课</span><span>11 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 12: 动手体验2 -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="动手体验2">
+  <p class="kicker">Hands-on · 动手做</p>
+  <h2>🎨 AI画图 + 🎵 AI写歌</h2>
+  <p class="lede">体验AI的创造力，同时对比不同AI的"审美"差异。同一个提示词，不同AI画出来的完全不同！</p>
+  <div class="content">
+    <div class="grid g2">
+      <div class="steps">
+        <div class="step"><div class="num">1</div><h4>🎨 AI画图体验</h4><p>打开<b>通义万相</b>，输入提示词："一只穿着宇航服的猫在月球上吃冰淇淋，卡通风格，色彩明亮"</p></div>
+        <div class="step"><div class="num">2</div><h4>🎵 AI写歌体验</h4><p>打开<b>Suno</b>，输入："写一首关于夏天的歌，欢快流行风格，适合小学生唱"</p></div>
+        <div class="step"><div class="num">3</div><h4>🔍 对比不同AI的回答</h4><p>把同样的问题给Kimi和DeepSeek试试。观察谁最详细、最准确、最有创意。</p></div>
+        <div class="step"><div class="num">4</div><h4>💬 讨论分享</h4><p>你觉得哪个AI画得最好？为什么同一个提示词，不同AI给出不同结果？</p></div>
+      </div>
+      <div class="prompt-tips">
+        <div class="prompt-tip bg-blue">
+          <h5>🎨 AI画图提示词技巧</h5>
+          <p><b>公式：</b>[主体] + [动作] + [环境] + [风格]</p>
+          <span class="eg">✅ "一只穿宇航服的猫，在月球上，卡通风格"</span>
+        </div>
+        <div class="prompt-tip bg-green">
+          <h5>🎵 AI写歌提示词技巧</h5>
+          <p><b>公式：</b>[风格] + [主题] + [情感]</p>
+          <span class="eg">✅ "欢快流行，夏天和冰淇淋，开心"</span>
+        </div>
+        <div class="prompt-tip bg-yellow">
+          <h5>🔍 对比分析关注点</h5>
+          <p>① 回答的<b>完整性</b>：有没有遗漏你的要求？<br>② 回答的<b>准确性</b>：有没有事实错误？<br>③ 回答的<b>创意性</b>：有没有惊喜的内容？</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span>第一周 · 第2课 · 动手实操</span><span>12 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 13: Section Divider - Week 2 -->
+<!-- ============================================================ -->
+<section class="slide tc center" data-title="第二周" style="background:linear-gradient(135deg,var(--accent-3),var(--accent));">
+  <p class="kicker" style="background:transparent; font-size:18px;">第二周 · 进阶实战</p>
+  <h1>AI Agent 智能体</h1>
+  <div class="divider-accent"></div>
+  <p>你的私人智能助理，从概念到实操</p>
+  <div class="deck-footer" style="border:none!important; bottom:40px;">
+    <span style="color:rgba(255,255,255,.8);">第二周</span><span style="color:rgba(255,255,255,.8);">13 / 23</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 14: Agent定义 -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="Agent定义">
+  <p class="kicker">Lesson 3 · AI Agent 智能体</p>
+  <h2>AI Agent = 会思考 + 会动手的「智能管家」</h2>
+  <p class="lede">普通AI是"顾问"——你问它答。Agent是"管家"——你给目标，它自己想办法完成。</p>
+  <div class="content">
+    <div class="grid g2">
+      <div class="card border-blue">
+        <h3>🤖 Agent的3大核心能力</h3>
+        <table class="compact-table" style="flex:1; margin-bottom: 20px;">
+          <tr><td style="width:100px;font-weight:800;">🧠 独立思考</td><td>把大任务拆成小步骤，自己规划执行顺序</td></tr>
+          <tr><td style="font-weight:800;">🛠️ 自主执行</td><td>调用各种工具：搜索网页、计算、画图、代码</td></tr>
+          <tr><td style="font-weight:800;">🔄 持续迭代</td><td>做错了会反思改进，不需要你每一步指导</td></tr>
+        </table>
+        <div class="pill bg-blue" style="justify-content:center; margin-top:auto;">AI Agent = LLM × (规划 + 记忆 + 工具 + 行动)</div>
+      </div>
+      <div class="card border-purple">
+        <h3>🌰 对比例子：普通AI vs Agent</h3>
+        <div style="flex:1; display:flex; flex-direction:column; justify-content:space-evenly;">
+          <div>
+            <h4 style="color:var(--text-1); margin-bottom:5px;">📋 写市场报告</h4>
+            <p><b>普通AI：</b>你问"帮我写报告"，它直接给你一份纯文案。<br><b>Agent：</b>①拆解步骤 → ②搜索最新数据 → ③生成图表 → ④整合报告</p>
+          </div>
+          <div>
+            <h4 style="color:var(--text-1); margin-bottom:5px;">🌍 规划旅行</h4>
+            <p><b>普通AI：</b>你问"去北京怎么玩"，它给你一份攻略。<br><b>Agent：</b>①查日期 → ②查航班酒店 → ③对比价格 → ④生成行程单</p>
+          </div>
+        </div>
+        <div class="prompt-tip bg-purple" style="margin-top:10px;">
+          <p style="margin:0;"><b>💡 Agent vs Copilot：</b>Copilot是"副驾驶"——提供建议，你做决定。Agent是"主驾驶"——你给目标，它自己执行。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span>第二周 · 第3课</span><span>14 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 15: Story - AI管家小剧场 -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="AI管家小剧场">
+  <p class="kicker">🎨 故事化讲解 · 一图看懂Agent</p>
+  <h2>「AI 管家小剧场」</h2>
+  <div class="content">
+    <div class="story-layout">
+      <div class="story-img-box">
+        <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="AI管家小剧场">
+        <div class="img-marker" style="top:25%;left:30%"><div class="marker-dot"></div><div class="marker-label">🤖 机器人管家</div></div>
+        <div class="img-marker" style="top:45%;left:65%"><div class="marker-dot"></div><div class="marker-label">🧑 小主人</div></div>
+        <div class="img-marker" style="top:70%;left:25%"><div class="marker-dot"></div><div class="marker-label">🛠️ 工具箱</div></div>
+        <div class="img-overlay">
+          <div class="label">🎨 <b>AI管家小剧场</b><br><span>🤖 机器人管家</span> = Agent <span>🧑 小朋友</span> = 你 <span>🛠️ 工具箱</span> = 调用能力</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:center;">
+        <p style="font-size:16px; margin-bottom: 20px;">Agent就像你家请了一个超级管家，你只需要告诉它"要什么"，它自己想办法"怎么做到"。</p>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div class="pill bg-blue" style="width:100%;">🧑 <b>你（主人）说：</b>"我要去北京玩，帮我安排一下"——只给目标</div>
+          <div class="pill bg-surface" style="width:100%;background:var(--surface-2)!important;">🤖 <b>管家（Agent）：</b>查天气→查航班→比价→订酒店→生成行程单</div>
+          <div class="pill bg-surface" style="width:100%;background:var(--surface-2)!important;">🔄 <b>遇到问题：</b>航班取消，Agent自动查替代航班并改签</div>
+          <div class="pill bg-surface" style="width:100%;background:var(--surface-2)!important;">📋 <b>最终交付：</b>完整的行程单+预算表+打包清单，甚至订好门票</div>
+          <div class="alert-box" style="margin-top: 10px!important; padding: 15px!important;">
+            <p style="margin:0;"><b>⚡ 关键边界：</b>管家帮你跑腿，但"去哪玩"这些<span style="color:var(--bad);font-weight:900;">决定</span>，还得你自己做！</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span>🎨 故事化讲解</span><span>15 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 16: Agent工具 -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="Agent工具">
+  <p class="kicker">2026 · 最新Agent工具</p>
+  <h2>2026年最新Agent工具，让"AI管家"变成现实</h2>
+  <p class="lede">从OpenAI到国产工具，选择越来越多。对五年级同学来说，最推荐从豆包智能体或Coze（扣子）开始。</p>
+  <div class="content">
+    <div class="agent-cards">
+      <div class="agent-card border-blue">
+        <h4><span class="emoji">🟢</span> ChatGPT Operator</h4>
+        <p style="font-size:13px; color:var(--text-3); margin-bottom:10px;">OpenAI · 浏览型Agent · 需付费</p>
+        <div style="flex:1; border-top:1px dashed var(--border); padding-top:10px;">像真人一样浏览网页，能精准点击按钮、填写表单。基于GPT-4o的视觉能力。</div>
+      </div>
+      <div class="agent-card border-purple">
+        <h4><span class="emoji">🔵</span> 实在Agent</h4>
+        <p style="font-size:13px; color:var(--text-3); margin-bottom:10px;">国产 · 企业级RPA进化版</p>
+        <div style="flex:1; border-top:1px dashed var(--border); padding-top:10px;">"一句话生成流程"——你说"帮我报销"，它自动走完报销流程。适合重复性工作。</div>
+      </div>
+      <div class="agent-card border-yellow">
+        <h4><span class="emoji">🟠</span> 豆包智能体</h4>
+        <p style="font-size:13px; color:var(--text-3); margin-bottom:10px;">字节跳动 · 免费 · 适合入门</p>
+        <div style="flex:1; border-top:1px dashed var(--border); padding-top:10px;">在豆包App里直接创建自己的AI助手，完全免费。支持自定义角色，操作极简。</div>
+      </div>
+      <div class="agent-card border-green">
+        <h4><span class="emoji">🟣</span> Coze（扣子）</h4>
+        <p style="font-size:13px; color:var(--text-3); margin-bottom:10px;">字节跳动 · 免费 · 零代码搭建</p>
+        <div style="flex:1; border-top:1px dashed var(--border); padding-top:10px;">拖拽式搭建AI机器人，无需代码。支持100+插件、知识库、工作流。</div>
+      </div>
+      <div class="agent-card border-blue">
+        <h4><span class="emoji">🟤</span> Dify</h4>
+        <p style="font-size:13px; color:var(--text-3); margin-bottom:10px;">开源 · 免费 · 可自托管</p>
+        <div style="flex:1; border-top:1px dashed var(--border); padding-top:10px;">可视化搭建AI应用，支持多种大模型。支持知识库、工作流编排，完全免费。</div>
+      </div>
+      <div class="agent-card border-purple">
+        <h4><span class="emoji">⚪</span> 飞书智能助手</h4>
+        <p style="font-size:13px; color:var(--text-3); margin-bottom:10px;">字节跳动 · 团队协作型</p>
+        <div style="flex:1; border-top:1px dashed var(--border); padding-top:10px;">深度集成飞书生态，自动生成会议纪要并分配待办事项，跟踪工作进度。</div>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span>第二周 · 第3课</span><span>16 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 17: 搭建Agent -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="搭建Agent">
+  <p class="kicker">Hands-on · 动手做</p>
+  <h2>搭建一个「作业助手 Agent」</h2>
+  <p class="lede">用豆包智能体或Coze（扣子）创建一个你的专属AI助手，让它帮你辅导作业、解答问题</p>
+  <div class="content">
+    <div class="grid g2">
+      <div class="steps">
+        <div class="step"><div class="num">1</div><h4>打开平台</h4><p>打开豆包App → 找到"创建智能体"；或打开Coze官网 → 点击"创建Bot"。</p></div>
+        <div class="step"><div class="num">2</div><h4>设定角色和人格</h4><p>设定："你是五年级的辅导老师，耐心有趣，用简单的语言解释复杂问题。"</p></div>
+        <div class="step"><div class="num">3</div><h4>添加能力和工具</h4><p>在插件市场一键添加：✅ 搜索功能 ✅ 计算器 ✅ 画图功能 ✅ 错题知识库。</p></div>
+        <div class="step"><div class="num">4</div><h4>测试并分享</h4><p>提问："帮我解释什么是光合作用，用三年级听懂的话"。测试通过后分享！</p></div>
+      </div>
+      <div class="prompt-tips">
+        <div class="prompt-tip bg-green">
+          <h5>🎯 角色设定模板</h5>
+          <p><b>公式：</b>"你是[角色]，擅长[技能]。如果遇到[情况]，你要[行动]。</p>
+          <span class="eg" style="background:#fff!important;">"你是数学老师。绝不能直接给出答案。"</span>
+        </div>
+        <div class="prompt-tip bg-blue">
+          <h5>🛠️ 实用工具包</h5>
+          <p>🔍 联网搜索 · 🧮 计算器 · 📊 绘图<br>📚 知识库 · 📅 日历 · 🗣️ 语音识别</p>
+        </div>
+        <div class="prompt-tip bg-yellow">
+          <h5>⚠️ 常见问题排查</h5>
+          <p><b>Agent不理我？</b> → 检查角色设定是否清晰。<br><b>回答不准确？</b> → 给Agent加搜索工具。<br><b>太啰嗦？</b> → 在设定里写上"回答要简洁，每次不超过100字"。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span>第二周 · 第3课 · 动手实操</span><span>17 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 18: 边界讨论 -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="边界讨论">
+  <p class="kicker">Boundary · 边界在哪里</p>
+  <h2>利用工具做事 vs 自己动脑筋 — 黄金法则</h2>
+  <p class="lede">AI是工具，你是主人。这是最重要的原则，没有之一。AI帮你提高效率，但不能代替你成长。</p>
+  <div class="content">
+    <div class="vs">
+      <div class="card good-side">
+        <h3 style="display:flex;align-items:center;gap:10px; color:var(--good);"><span style="background:var(--good);color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;">✅</span> 该用AI做的事（绿灯）</h3>
+        <ul>
+          <li>💡 <b>让AI给你灵感</b> — 你来决定，AI提供选项</li>
+          <li>📖 <b>让AI解释概念</b> — 免费家教24小时在线</li>
+          <li>✏️ <b>让AI检查作文</b> — 查错别字、语法、逻辑漏洞</li>
+          <li>🗺️ <b>让AI规划路线</b> — 制定系统的学习计划</li>
+          <li>🎯 <b>让AI出练习题</b> — 你做AI批改，带答案解析</li>
+          <li>📚 <b>让AI总结长文</b> — 快速了解大意，提高效率</li>
+        </ul>
+      </div>
+      <div class="mid">VS</div>
+      <div class="card bad-side">
+        <h3 style="display:flex;align-items:center;gap:10px; color:var(--bad);"><span style="background:var(--bad);color:white;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;">❌</span> 不该用AI做的事（红线）</h3>
+        <ul>
+          <li>📝 <b>让AI代写作业交上去</b> — 这叫"作弊"</li>
+          <li>🧠 遇到问题<b>直接问AI</b> — 放弃了独立思考</li>
+          <li>✅ <b>完全相信AI说的一切</b> — 忘记了AI会"幻觉"</li>
+          <li>🔒 <b>把隐私信息告诉AI</b> — 姓名、住址、密码</li>
+          <li>📋 <b>让AI替你考试</b> — 严重违反学校规则</li>
+          <li>📄 <b>直接复制AI回答</b> — 不做任何修改与思考</li>
+        </ul>
+      </div>
+    </div>
+    <div class="alert-box">
+      <p style="margin:0;"><b>⚡ 黄金法则自检：</b>问自己「如果AI不存在，我愿不愿意自己做这件事？」如果答案是不愿意，那可能就不该让AI做。<br><b>正确姿势：</b>先自己打草稿 → 让AI给建议 → 自己修改 → 再让AI检查错别字。</p>
+    </div>
+  </div>
+  <div class="deck-footer"><span>第二周 · 第3课</span><span>18 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 19: Section Divider - 成为AI小达人 -->
+<!-- ============================================================ -->
+<section class="slide tc center" data-title="AI小达人" style="background:linear-gradient(135deg,var(--accent-2),var(--accent-3));">
+  <p class="kicker" style="background:transparent; font-size:18px;">第二周 · 第4课</p>
+  <h1>成为 AI 小达人</h1>
+  <div class="divider-accent"></div>
+  <p>学习路径、伦理思考、终极挑战</p>
+  <div class="deck-footer" style="border:none!important; bottom:40px;">
+    <span style="color:rgba(255,255,255,.8);">第二周 · 第4课</span><span style="color:rgba(255,255,255,.8);">19 / 23</span>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 20: 学习资源 -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="学习资源">
+  <p class="kicker">Resources · 学习资源</p>
+  <h2>自学AI的宝藏地图</h2>
+  <p class="lede">从这些地方可以获取更多AI知识，全部免费。推荐顺序：先玩豆包→再学Coze→看B站→挑战AI Studio。</p>
+  <div class="content">
+    <div class="resource-map">
+      <div class="resource-card border-blue">
+        <span class="icon">🥇</span>
+        <h4>百度AI Studio</h4>
+        <p>免费学习平台，从入门到进阶教程体系。提供在线编程环境，无需安装软件。</p>
+      </div>
+      <div class="resource-card border-purple">
+        <span class="icon">🥈</span>
+        <h4>阿里天池</h4>
+        <p>AI竞赛平台，有专门为初学者设计的"新人赛"。边比边学进步最快。</p>
+      </div>
+      <div class="resource-card border-green">
+        <span class="icon">🥉</span>
+        <h4>和鲸社区</h4>
+        <p>中文AI学习社区，大量教程和真实项目案例。社区氛围友好，有前辈解答。</p>
+      </div>
+      <div class="resource-card border-yellow">
+        <span class="icon">📺</span>
+        <h4>B站UP主教程</h4>
+        <p>搜索"小学生学AI"。推荐：李永乐老师、同济子豪兄。看视频最容易上手。</p>
+      </div>
+      <div class="resource-card border-red">
+        <span class="icon">📘</span>
+        <h4>Coze（扣子）文档</h4>
+        <p>字节跳动的AI Bot搭建平台，文档极其清晰。有海量示例模板可以直接复制。</p>
+      </div>
+      <div class="resource-card border-blue">
+        <span class="icon">🧭</span>
+        <h4>AI工具导航站</h4>
+        <p>搜索"AI导航"，发现最新潮的国内外AI应用，每周更新，保持科技最前沿。</p>
+      </div>
+    </div>
+    <div class="alert-box" style="margin-top:20px!important; padding:15px 20px!important;">
+      <p style="margin:0; font-size:14px!important;"><b>💡 学习建议：</b>每周花30分钟玩一个新AI工具，自己动手搭建是最有效、最快乐的学习方式！</p>
+    </div>
+  </div>
+  <div class="deck-footer"><span>第二周 · 第4课</span><span>20 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 21: AI伦理 -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="AI伦理">
+  <p class="kicker">AI Ethics · 伦理</p>
+  <h2>AI伦理小课堂：用好AI，先懂「规矩」</h2>
+  <p class="lede">学AI不仅要学技术，还要学会负责任地使用AI。牢记 AI 伦理四原则。</p>
+  <div class="content">
+    <div class="ethics-list">
+      <div class="ethics-item danger">
+        <h4>⚠️ 不轻信：提防幻觉</h4>
+        <p>AI会"编造"看起来合理但错误的信息。比如问它最深的湖，它可能乱答马里亚纳海沟。<br><br><b>✅ 做法：</b>重要的知识信息必须自己查资料验证！</p>
+      </div>
+      <div class="ethics-item warn">
+        <h4>🔒 不裸奔：保护隐私</h4>
+        <p>绝不要把真实姓名、家庭住址、电话号码、学校名称、家长身份证号发给对话框。<br><br><b>✅ 做法：</b>用"小明"代替真名，"某小学"代替真实学校。</p>
+      </div>
+      <div class="ethics-item warn">
+        <h4>🎭 不盲从：警惕偏见</h4>
+        <p>AI的训练数据来自互联网，互联网有偏见，AI也会有。比如让它画护士，它默认只画女性。<br><br><b>✅ 做法：</b>对AI的"刻板印象"保持警惕，学会批判性思考。</p>
+      </div>
+      <div class="ethics-item success">
+        <h4>💪 不外包：你是主人</h4>
+        <p>AI是工具，不是替身。你的思考能力、创造力和判断力才是最珍贵的，机器无法替代。<br><br><b>✅ 做法：</b>先自己思考，再问AI获取建议。</p>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span>第二周 · 第4课</span><span>21 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 22: 终极挑战 -->
+<!-- ============================================================ -->
+<section class="slide dense" data-title="终极挑战">
+  <p class="kicker">Final Challenge · 终极挑战</p>
+  <h2>结业任务：用AI完成「暑假旅行计划书」</h2>
+  <p class="lede">综合运用这两周学到的所有AI技能，自己主导完成一份精彩的项目！</p>
+  <div class="content">
+    <div class="challenge-box">
+      <h3>🚀 挑战任务：策划一次完美的旅行</h3>
+      <p>目的地国内国外皆可，真实或科幻(如去火星)都可以，充分发挥你的想象力！</p>
+      <div class="step-list">
+        <div class="step-item"><span>1️⃣</span><span>用 <b>豆包/Kimi</b> 规划旅行目的地和每日行程表</span></div>
+        <div class="step-item"><span>2️⃣</span><span>用 <b>通义万相</b> 画出目的地的绝美风景概念图</span></div>
+        <div class="step-item"><span>3️⃣</span><span>用自己搭的 <b>Agent</b> 搜索真实的天气、交通和预算</span></div>
+        <div class="step-item"><span>4️⃣</span><span>用AI伦理自检：绝不直接复制粘贴，融入思考</span></div>
+      </div>
+      <div class="btn">🎯 点击领取挑战卡！</div>
+    </div>
+    <div class="rubric">
+      <div class="card bg-surface" style="padding:15px; text-align:center;">
+        <span style="font-size:28px;">⭐</span>
+        <p style="font-weight:800; margin:5px 0; color:var(--text-1);">基础版 (60分)</p>
+        <p style="font-size:13px;">有明确的目的地行程<br>+ 至少1张AI生成的配图</p>
+      </div>
+      <div class="card bg-surface" style="padding:15px; text-align:center;">
+        <span style="font-size:28px;">⭐⭐</span>
+        <p style="font-weight:800; margin:5px 0; color:var(--text-1);">进阶版 (80分)</p>
+        <p style="font-size:13px;">+ Agent搜索的实时信息<br>+ 综合使用了3种AI工具</p>
+      </div>
+      <div class="card bg-yellow" style="padding:15px; text-align:center;">
+        <span style="font-size:28px;">⭐⭐⭐</span>
+        <p style="font-weight:800; margin:5px 0; color:var(--warn);">达人版 (100分)</p>
+        <p style="font-size:13px;">+ 与AI进行多轮对话优化<br>+ 精美排版，获得最高投票</p>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer"><span>第二周 · 第4课 · 结业</span><span>22 / 23</span></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- Slide 23: Thanks -->
+<!-- ============================================================ -->
+<section class="slide center tc" data-title="Thanks" style="background:linear-gradient(135deg,var(--accent),var(--accent-2),var(--accent-3));padding:0">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center">
+    <h1 style="font-size:100px;line-height:1;color:#fff;margin:0">🎉</h1>
+    <h2 style="font-size:42px;color:#fff;margin:20px 0;">你是未来的 AI 小达人！</h2>
+    <p class="lede" style="margin:20px auto 0;color:rgba(255,255,255,.9);font-size:20px;">记住：AI是工具，你才是主人。保持好奇心，勇敢探索世界！</p>
+    <div style="margin-top:40px;display:flex;flex-wrap:wrap;justify-content:center;gap:15px">
+      <div class="pill" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.25);font-size:16px; padding: 10px 25px;">🧠 先思考，再问AI</div>
+      <div class="pill" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.25);font-size:16px; padding: 10px 25px;">🔍 验证AI的回答</div>
+      <div class="pill" style="background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.25);font-size:16px; padding: 10px 25px;">💪 你是真正的决策者</div>
+    </div>
+  </div>
+  <div class="deck-footer" style="border:none!important; bottom:40px;">
+    <span style="color:rgba(255,255,255,.8);">结业</span><span style="color:rgba(255,255,255,.8);">23 / 23</span>
+  </div>
+</section>
+
+</div>
+</body>
+</html>
